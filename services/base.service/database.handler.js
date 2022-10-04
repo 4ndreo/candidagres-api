@@ -1,12 +1,12 @@
 import { MongoClient, ObjectId,ServerApiVersion } from "mongodb";
-const uri = "mongodb+srv://admindeap:p22ftbR5KH4L7yC2@emergenciappcluster.1alqqul.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://admin:cgres123gueiser456andreo789@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 // const client = new MongoClient("mongodb://127.0.0.1:27017");
 
 async function connectDB(action) {
   // const client = new MongoClient("mongodb://127.0.0.1:27017");
-  const db = await client.db("DEAp");
+  const db = await client.db("cgres-app-turnos");
   let response;
   try {
     await client.connect().catch(() => {
