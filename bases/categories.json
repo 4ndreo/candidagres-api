@@ -1,0 +1,25 @@
+[{
+  "_id": {
+    "$oid": "62a134cf57e9f5d110943f81"
+  },
+  "id": 1,
+  "name": "Hospital",
+  "deleted": false,
+  "link": "hospital.svg"
+},{
+  "_id": {
+    "$oid": "62a66f7ad7a85f662fd6fd60"
+  },
+  "id": 2,
+  "name": "comisaria",
+  "deleted": false,
+  "link": "police.svg"
+},{
+  "_id": {
+    "$oid": "62b529a2b4df1592df44f211"
+  },
+  "id": 3,
+  "name": "Estacion Bomberos",
+  "deleted": false,
+  "link": "firefighters.svg"
+}]

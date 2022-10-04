@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "62e6c4bd1835851d94caad90"
+  },
+  "name": "icon-cat-hospital",
+  "link": "hospital.svg"
+},{
+  "_id": {
+    "$oid": "62e6dcc41835851d94caad9b"
+  },
+  "name": "icon-cat-police",
+  "link": "police.svg"
+},{
+  "_id": {
+    "$oid": "62e6dcfd1835851d94caad9c"
+  },
+  "name": "icon-cat-firefighters",
+  "link": "firefighters.svg"
+}]

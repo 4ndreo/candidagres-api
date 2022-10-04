@@ -1,0 +1,16 @@
+[{
+  "_id": {
+    "$oid": "62e70dd11adff102fc1f1488"
+  },
+  "name": "Comisaría Franciscana",
+  "category": 2,
+  "street": "Lascano",
+  "streetNumber": "3849",
+  "city": "Ciudad Autónoma de Buenos Aires",
+  "country": "Argentina",
+  "lat": -34.61276578587523,
+  "lon": -58.49632376500187,
+  "user": "62ba58d131c346def433fac7",
+  "approved": true,
+  "deleted": false
+}]
