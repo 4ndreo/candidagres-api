@@ -3,21 +3,11 @@ import jwt from "jsonwebtoken";
 const whitelistedEndPoints = ["/api/users/login", "/api/users/user"];
 
 const adminEndPoints = [
-  { uri: "/api/location", method: "POST" },
-  { uri: "/api/locations/", method: "DELETE" },
-  { uri: "/api/locations/", method: "PATCH" },
-  { uri: "/api/category", method: "POST" },
-  { uri: "/api/categories/", method: "DELETE" },
-  { uri: "/api/categories/", method: "PATCH" },
+  
   { uri: "/api/user", method: "POST" },
   { uri: "/api/users/", method: "DELETE" },
   { uri: "/api/users/", method: "PATCH" },
-  { uri: "/api/roles", method: "GET" },
-  { uri: "/api/roles/", method: "GET" },
-  { uri: "/api/role", method: "POST" },
-  { uri: "/api/roles/", method: "DELETE" },
-  { uri: "/api/roles/", method: "PATCH" },
-  { uri: "/api/locationRequests/", method: "PATCH", approved: true },
+  // { uri: "/api/locationRequests/", method: "PATCH", approved: true },
 ];
 
 function authorization(req, res, next) {
