@@ -1,6 +1,7 @@
 import express from "express";
 import userController from "../controllers/users.controller.js";
 import turnosController from "../controllers/turnos.controller.js";
+import cursosController from "../controllers/cursos.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
 
 const route = express.Router();
@@ -31,5 +32,14 @@ route.patch("/api/turnos/:idTurnos", turnosController.update);
 // route.post("/api/turnos/auth", turnosController.auth)
 
 
+
+// Cursos
+route.get("/api/cursos", cursosController.find);
+route.get("/api/cursos/:idCursos", cursosController.findById);
+route.post("/api/cursos/curso", cursosController.create);
+route.delete("/api/cursos/:idCursos", cursosController.remove);
+route.patch("/api/cursos/:idCursos", cursosController.update);
+// route.post("/api/turnos/login", cursosController.login)
+// route.post("/api/turnos/auth", cursosController.auth)
 
 export default route;

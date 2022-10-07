@@ -1,12 +1,14 @@
-import * as turnosServices from "../services/turnos.service.js"
+import * as cursosService from "../services/cursos.service.js"
+
+
 
 
 async function create(req, res) {
-    const newTurno = req.body;
+    const newCurso = req.body;
 
-    await turnosServices.create(newTurno)
-        .then(function (newTurno) {
-            res.status(201).json(newTurno);
+    await cursosService.create(newCurso)
+        .then(function (newCurso) {
+            res.status(201).json(newCurso);
             // req.socketClient.emit('newLocation', { newLocation })
         })
         .catch(function (err) {
@@ -16,9 +18,9 @@ async function create(req, res) {
 
 
 async function find(req, res) {
-    turnosServices.find()
-        .then(function (turno) {
-            res.status(200).json(turno);
+    cursosService.find()
+        .then(function (curso) {
+            res.status(200).json(curso);
             // req.socketClient.emit('locationsList', { turno })
         })
         .catch(function (err) {
@@ -27,11 +29,11 @@ async function find(req, res) {
 }
 
 async function findById(req, res) {
-    const turnoId = req.params.idTurnos;
+    const cursoID = req.params.idCursos;
 
-    turnosServices.findTurnoById(turnoId)
-        .then(function (turno) {
-            res.status(200).json(turno);
+    cursosService.findTurnoById(cursoID)
+        .then(function (curso) {
+            res.status(200).json(curso);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -39,17 +41,17 @@ async function findById(req, res) {
 }
 
 async function remove(req, res) {
-    const turnoId = req.params.idTurnos;
+    const cursoID = req.params.idCursos;
 
-    turnosServices.remove(turnoId)
-        .then(function (turno) {
-            if (turno) {
-                res.status(200).json(turno);
+    cursosService.remove(cursoID)
+        .then(function (curso) {
+            if (curso) {
+                res.status(200).json(curso);
                 // req.socketClient.emit('locationsList', { location })
             } else {
                 res
                     .status(404)
-                    .json({ message: `El alumno con id ${turno} no existe` });
+                    .json({ message: `El alumno con id ${curso} no existe` });
             }
         })
         .catch(function (err) {
@@ -59,12 +61,12 @@ async function remove(req, res) {
 
 
 async function update(req, res) {
-    const turnoId = req.params.idTurnos;
+    const cursoID = req.params.idCursos;
     const data = req.body;
 
-    turnosServices.update(turnoId, data)
-        .then(function (turno) {
-            res.status(201).json(turno);
+    cursosService.update(cursoID, data)
+        .then(function (curso) {
+            res.status(201).json(curso);
         })
         .catch(function (err) {
             res.status(500).json({ err });
