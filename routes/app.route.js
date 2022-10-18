@@ -10,7 +10,7 @@ route.get("/", (req, res) => {
   res.send("Candida Gres - Web");
 });
 
-//route.all('/api/*', authorization)
+route.all('/api/*', authorization)
 
 // Users
 route.get("/api/users", userController.find);
@@ -28,9 +28,6 @@ route.get("/api/turnos/:idTurnos", turnosController.findById);
 route.post("/api/turnos/turno", turnosController.create);
 route.delete("/api/turnos/:idTurnos", turnosController.remove);
 route.patch("/api/turnos/:idTurnos", turnosController.update);
-// route.post("/api/turnos/login", turnosController.login)
-// route.post("/api/turnos/auth", turnosController.auth)
-
 
 
 // Cursos
@@ -39,7 +36,5 @@ route.get("/api/cursos/:idCursos", cursosController.findById);
 route.post("/api/cursos/curso", cursosController.create);
 route.delete("/api/cursos/:idCursos", cursosController.remove);
 route.patch("/api/cursos/:idCursos", cursosController.update);
-// route.post("/api/turnos/login", cursosController.login)
-// route.post("/api/turnos/auth", cursosController.auth)
 
 export default route;

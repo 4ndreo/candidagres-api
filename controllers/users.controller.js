@@ -70,7 +70,7 @@ async function login(req, res) {
     .then((userData) => {
       const token = jwt.sign(
         { id: userData._id, email: userData.email, role: userData.role },
-        "FFR"
+        "FARG"
       );
       //res.header('auth-token', token).status(200).json(user);
       res.status(200).json({
@@ -90,11 +90,11 @@ async function auth(req, res) {
     .then((userData) => {
       const token = jwt.sign(
         { id: userData._id, email: userData.email, role: userData.role },
-        "FFR"
+        "FARG"
       );
       //res.header('auth-token', token).status(200).json(user);
-      const userVerify1 = jwt.verify(incomingToken, "FFR");
-      const userVerify2 = jwt.verify(token, "FFR");
+      const userVerify1 = jwt.verify(incomingToken, "FARG");
+      const userVerify2 = jwt.verify(token, "FARG");
       if (
         userVerify1.email === userVerify2.email &&
         userVerify1.role === userVerify2.role

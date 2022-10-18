@@ -18,16 +18,14 @@ function authorization(req, res, next) {
     } else {
       // Si no está en whitelist, verifico que esté logeado un usuario existente.
       const token = req.headers["auth-token"] || "";
-      const user = jwt.verify(token, "FFR");
+      const user = jwt.verify(token, "FARG");
       if (
         // Verifico si url está en la lista de administrador.
         adminEndPoints.some((endpoint) => 
         // {
           req.url.includes(endpoint.uri)
            &&
-          endpoint.method === req.method 
-          &&
-          (req.body.approved  === undefined ? true : req.body.approved)
+          endpoint.method === req.method
         // }
         )
       ) {
