@@ -1,9 +1,12 @@
 import jwt from "jsonwebtoken";
 
-const whitelistedEndPoints = ["/api/users/login", "/api/users/user"];
+const whitelistedEndPoints = [
+  "/api/users/login",
+  "/api/users/user",
+  "/api/cursos"
+];
 
 const adminEndPoints = [
-  
   { uri: "/api/user", method: "POST" },
   { uri: "/api/users/", method: "DELETE" },
   { uri: "/api/users/", method: "PATCH" },
@@ -21,12 +24,11 @@ function authorization(req, res, next) {
       const user = jwt.verify(token, "FARG");
       if (
         // Verifico si url está en la lista de administrador.
-        adminEndPoints.some((endpoint) => 
-        // {
-          req.url.includes(endpoint.uri)
-           &&
-          endpoint.method === req.method
-        // }
+        adminEndPoints.some(
+          (endpoint) =>
+            // {
+            req.url.includes(endpoint.uri) && endpoint.method === req.method
+          // }
         )
       ) {
         // Verifico que el usuario sea administrador.
