@@ -31,7 +31,7 @@ async function find(req, res) {
 async function findById(req, res) {
     const cursoID = req.params.idCursos;
 
-    cursosService.findTurnoById(cursoID)
+    cursosService.findCursoById(cursoID)
         .then(function (curso) {
             res.status(200).json(curso);
         })

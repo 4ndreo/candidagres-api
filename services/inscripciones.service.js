@@ -1,11 +1,13 @@
 import * as dataBase from "./base.service/database.handler.js";
 
 
-const collection = "cursos"
+const collection = "inscripciones"
 
-async function create(curso) {
 
-    await dataBase.create(collection, curso);
+
+async function create(inscripcion) {
+
+    await dataBase.create(collection, inscripcion);
     return await dataBase.filter(collection, { deleted: false })
 
 }
@@ -16,7 +18,7 @@ async function find() {
 
 }
 
-async function findCursoById(id) {
+async function findInscripcionById(id) {
     return await dataBase.findById(collection, id)
 }
 
@@ -39,7 +41,7 @@ async function update(id, data) {
 export {
     create,
     find,
-    findCursoById,
+    findInscripcionById,
     remove,
     update
 }
