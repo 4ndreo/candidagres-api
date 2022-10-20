@@ -11,7 +11,7 @@ route.get("/", (req, res) => {
   res.send("Candida Gres - Web");
 });
 
-//route.all('/api/*', authorization)
+route.all('/api/*', authorization)
 
 // Users
 route.get("/api/users", userController.find);
