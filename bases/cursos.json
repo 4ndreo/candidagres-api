@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "634076e6f046996eea60cdeb"
+  },
+  "id": 1,
+  "edad": "adultos",
+  "duracion": 2,
+  "profesor": "evangelina",
+  "deleted": false,
+  "nombre": "Cerámica en Gres",
+  "descripcion": "Descripcion del curso aquí",
+  "precio": 5000
+},{
+  "_id": {
+    "$oid": "63407706f046996eea60cdec"
+  },
+  "id": 2,
+  "edad": "jovenes",
+  "duracion": 6,
+  "profesor": "anita",
+  "deleted": false,
+  "nombre": "Cerámica clásica",
+  "descripcion": "Descripcion del curso aquí",
+  "precio": 5000
+},{
+  "_id": {
+    "$oid": "635ca90553cc185a344ccddb"
+  },
+  "nombre": "654165165",
+  "descripcion": "615651651",
+  "duracion": 11,
+  "deleted": false
+}]

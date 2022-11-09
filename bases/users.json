@@ -1,42 +1,5 @@
 [{
   "_id": {
-    "$oid": "62a132bb57e9f5d110943f65"
-  },
-  "id": 1,
-  "created_at": {
-    "$date": {
-      "$numberLong": "1654398000000"
-    }
-  },
-  "email": "francisco.andreo@davinci.edu.ar",
-  "name": "Francisco",
-  "role": "1",
-  "password": "1234",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "62a1344957e9f5d110943f74"
-  },
-  "id": 2,
-  "created_at": {
-    "$date": {
-      "$numberLong": "1654398000000"
-    }
-  },
-  "email": "roni.gueiser@davinci.edu.ar",
-  "name": "Roni",
-  "role": 2,
-  "password": "1234",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "62ba552b1852f15f060ada54"
-  },
-  "email": "franjandreo@gmail.com",
-  "password": "$2b$10$QOT2IWHCoVuVynOTNXXBFuAho4wmdyJPhI8G7C2G.VOg7WRr1pESS",
-  "deleted": false
-},{
-  "_id": {
     "$oid": "62ba58d131c346def433fac7"
   },
   "email": "fran",
@@ -57,6 +20,22 @@
   },
   "email": "fran3",
   "password": "$2b$10$wWipkp8IccvysY0huOioteigCWfx1dO9yzBvoboAGJ5p872tHg/IS",
+  "role": 2,
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "635b01e7202a52c78485ce2a"
+  },
+  "email": "roni",
+  "password": "$2b$10$FWiYR2dPswHH30MaEhr1I.BmqPCx4eLhcsGyZYxpYJD9DvbKFHeyK",
+  "role": 2,
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "635b0596202a52c78485ce2b"
+  },
+  "email": "roni2",
+  "password": "$2b$10$y7mABZV5Yezl6cgklh8heuQNh2hIhxSs8MSCX7XJesba.kDgdspN2",
   "role": 2,
   "deleted": false
 }]

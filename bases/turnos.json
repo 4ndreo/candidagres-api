@@ -1,0 +1,41 @@
+[{
+  "_id": {
+    "$oid": "63558d7cad02f9b831da05fc"
+  },
+  "dia": "Lunes",
+  "horario": 11,
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "63558d87ad02f9b831da05fd"
+  },
+  "dia": "Lunes",
+  "horario": "14",
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "63558d8aad02f9b831da05fe"
+  },
+  "dia": "Lunes",
+  "horario": "17",
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "63558d95ad02f9b831da05ff"
+  },
+  "dia": "Miercoles",
+  "horario": "10",
+  "idCurso": "63407706f046996eea60cdec",
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "63558d98ad02f9b831da0600"
+  },
+  "dia": "Miercoles",
+  "horario": "13",
+  "idCurso": "63407706f046996eea60cdec",
+  "deleted": false
+}]
