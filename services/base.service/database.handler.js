@@ -1,4 +1,5 @@
 import { MongoClient, ObjectId,ServerApiVersion } from "mongodb";
+import {promise} from "bcrypt/promises.js";
 const uri = "mongodb+srv://admin:cgres123gueiser456andreo789@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -15,7 +16,8 @@ async function connectDB(action) {
     response = await action(db);
   } catch (error) {
     console.log(error);
-    response = { message: error.toString() };
+    // response = { message: error.toString() };
+    response = Promise.reject({message: error.toString()})
   } finally {
     await client.close();
   }
