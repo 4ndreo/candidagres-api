@@ -7,9 +7,19 @@ const whitelistedEndPoints = [
 ];
 
 const adminEndPoints = [
+  // { uri: "/api/user", method: "GET" }, // FIXME: Arreglar que un usuario solo pueda ver la info de SU PROPIO USUARIO (TOKEN)
   { uri: "/api/user", method: "POST" },
   { uri: "/api/users/", method: "DELETE" },
   { uri: "/api/users/", method: "PATCH" },
+  { uri: "/api/curso", method: "POST" },
+  { uri: "/api/cursos/", method: "DELETE" },
+  { uri: "/api/cursos/", method: "PATCH" },
+  { uri: "/api/turno", method: "POST" },
+  { uri: "/api/turnos/", method: "DELETE" },
+  { uri: "/api/turnos/", method: "PATCH" },
+  // { uri: "/api/inscripcion", method: "POST" }, // FIXME: Arreglar que un usuario solo pueda subir una inscripción PARA SU PROPIO USUARIO (TOKEN)
+  // { uri: "/api/inscripciones/", method: "DELETE" }, // FIXME: Arreglar que un usuario solo pueda eliminar una inscripción PARA SU PROPIO USUARIO (TOKEN)
+  { uri: "/api/inscripciones/", method: "PATCH" },
   // { uri: "/api/locationRequests/", method: "PATCH", approved: true },
 ];
 
