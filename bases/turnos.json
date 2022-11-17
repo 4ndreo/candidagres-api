@@ -1,41 +1,55 @@
 [{
   "_id": {
-    "$oid": "63558d7cad02f9b831da05fc"
+    "$oid": "6372a8b279cfea91311750ea"
   },
   "dia": "Lunes",
-  "horario": 11,
   "idCurso": "634076e6f046996eea60cdeb",
-  "deleted": false
+  "deleted": false,
+  "horarioFin": "12",
+  "horarioInicio": 9
 },{
   "_id": {
-    "$oid": "63558d87ad02f9b831da05fd"
+    "$oid": "637436fd932195c12d9856ef"
   },
-  "dia": "Lunes",
-  "horario": "14",
-  "idCurso": "634076e6f046996eea60cdeb",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "63558d8aad02f9b831da05fe"
-  },
-  "dia": "Lunes",
-  "horario": "17",
-  "idCurso": "634076e6f046996eea60cdeb",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "63558d95ad02f9b831da05ff"
-  },
-  "dia": "Miercoles",
-  "horario": "10",
+  "dia": "Martes",
+  "horarioInicio": "13",
+  "horarioFin": "17",
   "idCurso": "63407706f046996eea60cdec",
   "deleted": false
 },{
   "_id": {
-    "$oid": "63558d98ad02f9b831da0600"
+    "$oid": "63743748932195c12d9856f0"
   },
-  "dia": "Miercoles",
-  "horario": "13",
+  "dia": "Martes",
+  "horarioInicio": "9",
+  "horarioFin": "10",
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "637437a2932195c12d9856f1"
+  },
+  "dia": "Jueves",
+  "horarioInicio": "14",
+  "horarioFin": "18",
+  "idCurso": "63407706f046996eea60cdec",
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "63757c21628595d7187661a1"
+  },
+  "dia": "Jueves",
+  "horarioInicio": "10",
+  "horarioFin": "14",
+  "idCurso": "63407706f046996eea60cdec",
+  "deleted": false
+},{
+  "_id": {
+    "$oid": "63757c49628595d7187661a2"
+  },
+  "dia": "Miércoles",
+  "horarioInicio": "11",
+  "horarioFin": "15",
   "idCurso": "63407706f046996eea60cdec",
   "deleted": false
 }]

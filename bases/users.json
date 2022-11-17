@@ -16,14 +16,6 @@
   "deleted": false
 },{
   "_id": {
-    "$oid": "62ba9932bb172c6eaaef4d6d"
-  },
-  "email": "fran3",
-  "password": "$2b$10$wWipkp8IccvysY0huOioteigCWfx1dO9yzBvoboAGJ5p872tHg/IS",
-  "role": 2,
-  "deleted": false
-},{
-  "_id": {
     "$oid": "635b01e7202a52c78485ce2a"
   },
   "email": "roni",

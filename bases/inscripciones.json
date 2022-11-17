@@ -1,91 +1,31 @@
 [{
   "_id": {
-    "$oid": "6355ae77416da84ac27d9ff8"
+    "$oid": "63756b9987092b094dfe8ed4"
   },
-  "nombre": "Matias Ale",
-  "monto": 9500,
+  "nombre": "Karl Marx",
   "formaPago": "efectivo",
-  "idTurno": "63558d95ad02f9b831da05ff",
-  "deleted": true
-},{
-  "_id": {
-    "$oid": "6355bbbc416da84ac27d9ff9"
-  },
-  "nombre": "Martin Chuqui",
-  "monto": 5000,
-  "formaPago": "transferencia",
-  "idTurno": "63558d7cad02f9b831da05fc",
-  "deleted": true
-},{
-  "_id": {
-    "$oid": "6355bbeb416da84ac27d9ffa"
-  },
-  "nombre": "Marcos Rojo",
-  "monto": 6000,
-  "formaPago": "efectivo",
-  "idTurno": "63558d95ad02f9b831da05ff",
+  "idTurno": "637436fd932195c12d9856ef",
+  "idUser": "62ba58d131c346def433fac7",
+  "idCurso": "63407706f046996eea60cdec",
   "deleted": false
 },{
   "_id": {
-    "$oid": "635847c8008895ec907c703f"
-  },
-  "nombre": "Martin Paty",
-  "monto": 6000,
-  "formaPago": "Efectivo",
-  "idTurno": "63558d95ad02f9b831da05ff",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "63586fef008895ec907c7043"
-  },
-  "formaPago": "efectivo",
-  "idTurno": "63558d7cad02f9b831da05fc",
-  "deleted": false,
-  "monto": 5000,
-  "nombre": "fran"
-},{
-  "_id": {
-    "$oid": "635b171f316792bc9ad74825"
-  },
-  "nombre": "Tony Montana",
-  "monto": 6000,
-  "formaPago": "transferencia",
-  "idTurno": "63558d87ad02f9b831da05fd",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "635b1778316792bc9ad74826"
-  },
-  "nombre": "Mami que tu quiere",
-  "monto": 5000,
-  "formaPago": "efectivo",
-  "idTurno": "63558d95ad02f9b831da05ff",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "635b1785316792bc9ad74827"
+    "$oid": "63757d83628595d7187661a3"
   },
   "nombre": "fran",
-  "monto": 5000,
-  "formaPago": "transferencia",
-  "idTurno": "63558d98ad02f9b831da0600",
+  "formaPago": "efectivo",
+  "idTurno": "63743748932195c12d9856f0",
+  "idUser": "62ba58d131c346def433fac7",
+  "idCurso": "634076e6f046996eea60cdeb",
   "deleted": false
 },{
   "_id": {
-    "$oid": "635b178e316792bc9ad74828"
+    "$oid": "637586a7628595d7187661a4"
   },
   "nombre": "fran",
-  "monto": 5000,
   "formaPago": "transferencia",
-  "idTurno": "63558d87ad02f9b831da05fd",
-  "deleted": true
-},{
-  "_id": {
-    "$oid": "635ca8ab53cc185a344ccdda"
-  },
-  "nombre": "fran",
-  "monto": 5000,
-  "formaPago": "transferencia",
-  "idTurno": "63558d7cad02f9b831da05fc",
+  "idTurno": "637437a2932195c12d9856f1",
+  "idUser": "62ba58d131c346def433fac7",
+  "idCurso": "63407706f046996eea60cdec",
   "deleted": true
 }]

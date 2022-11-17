@@ -1,9 +1,9 @@
 import { MongoClient, ObjectId,ServerApiVersion } from "mongodb";
 import {promise} from "bcrypt/promises.js";
-const uri = "mongodb+srv://admin:cgres123gueiser456andreo789@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+// const uri = "mongodb+srv://admin:cgres123gueiser456andreo789@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
-// const client = new MongoClient("mongodb://127.0.0.1:27017");
+const client = new MongoClient("mongodb://127.0.0.1:27017");
 
 async function connectDB(action) {
   // const client = new MongoClient("mongodb://127.0.0.1:27017");
