@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId,ServerApiVersion } from "mongodb";
 import {promise} from "bcrypt/promises.js";
-const uri = "mongodb+srv://admin:cgres123gueiser456andreo789@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://admin:1234@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 //const client = new MongoClient("mongodb://127.0.0.1:27017");
@@ -10,7 +10,7 @@ async function connectDB(action) {
   const db = await client.db("cgres-app-turnos");
   let response;
   try {
-    await client.connect().catch(() => {hice
+    await client.connect().catch(() => {
       console.log(`No me pude conectar a ${db.namespace}`);
     });
     response = await action(db);
