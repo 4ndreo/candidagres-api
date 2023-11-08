@@ -13,9 +13,12 @@ async function create(inscripcion) {
 }
 
 async function find() {
-
     return await dataBase.find(collection)
+}
 
+async function findByUser(idUser) {
+    console.log('En findByUser:', idUser)
+    return await dataBase.filter(collection, {idUser: idUser, deleted: false})
 }
 
 async function findInscripcionById(id) {
@@ -41,6 +44,7 @@ async function update(id, data) {
 export {
     create,
     find,
+    findByUser,
     findInscripcionById,
     remove,
     update

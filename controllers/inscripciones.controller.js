@@ -39,6 +39,18 @@ async function findById(req, res) {
         });
 }
 
+async function findByUser(req, res) {
+    const userID = req.params.idUser;
+    console.log(req)
+    inscripcionesService.findByUser(userID)
+        .then(function (inscripcion) {
+            res.status(200).json(inscripcion);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
 async function remove(req, res) {
     const inscripcionID = req.params.idInscripciones;
 
@@ -77,6 +89,7 @@ export default {
     create,
     find,
     findById,
+    findByUser,
     remove,
     update
 }
