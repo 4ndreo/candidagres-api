@@ -43,6 +43,8 @@ route.patch("/api/cursos/:idCursos", cursosController.update);
 route.get("/api/inscripciones", inscripcionesController.find);
 route.get("/api/inscripciones/:idInscripciones", inscripcionesController.findById);
 route.get("/api/inscripciones/user/:idUser", inscripcionesController.findByUser);
+route.get("/api/inscripcionesAll/user/:idUser", inscripcionesController.findAllByUser);
+route.get("/api/inscripcionesAll/user/:idUser/turno/:idTurno", inscripcionesController.findAllByUserAndTurno);
 route.post("/api/inscripciones/inscripcion", inscripcionesController.create);
 route.delete("/api/inscripciones/:idInscripciones", inscripcionesController.remove);
 route.patch("/api/inscripciones/:idInscripciones", inscripcionesController.update);

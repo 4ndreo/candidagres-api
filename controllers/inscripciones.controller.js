@@ -51,6 +51,30 @@ async function findByUser(req, res) {
         });
 }
 
+async function findAllByUser(req, res) {
+    const userID = req.params.idUser;
+    console.log(req)
+    inscripcionesService.findAllByUser(userID)
+        .then(function (inscripcion) {
+            res.status(200).json(inscripcion);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+async function findAllByUserAndTurno(req, res) {
+    const userID = req.params.idUser;
+    const turnoID = req.params.idTurno;
+    console.log(req)
+    inscripcionesService.findAllByUserAndTurno(userID,turnoID)
+        .then(function (inscripcion) {
+            res.status(200).json(inscripcion);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
 async function remove(req, res) {
     const inscripcionID = req.params.idInscripciones;
 
@@ -89,6 +113,8 @@ export default {
     create,
     find,
     findById,
+    findAllByUser,
+    findAllByUserAndTurno,
     findByUser,
     remove,
     update

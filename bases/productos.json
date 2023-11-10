@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "648a3341bdc67e3a02de8d9e"
+  },
+  "colores": [
+    "rojo",
+    "azul",
+    "verde"
+  ],
+  "descripcion": "vasija para mate",
+  "precio": 1000,
+  "demora_producto": 3,
+  "material": "gres"
+},
+{
+  "_id": {
+    "$oid": "648a349bbdc67e3a02de8d9f"
+  },
+  "colores": [
+    "rojo",
+    "azul",
+    "verde"
+  ],
+  "descripcion": "vasija para café",
+  "precio": 1000,
+  "demora_producto": 3,
+  "material": "gres"
+}]
