@@ -3,6 +3,7 @@ import userController from "../controllers/users.controller.js";
 import turnosController from "../controllers/turnos.controller.js";
 import cursosController from "../controllers/cursos.controller.js";
 import inscripcionesController from "../controllers/inscripciones.controller.js";
+import productosController from "../controllers/productos.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
 
 const route = express.Router();
@@ -46,5 +47,12 @@ route.post("/api/inscripciones/inscripcion", inscripcionesController.create);
 route.delete("/api/inscripciones/:idInscripciones", inscripcionesController.remove);
 route.patch("/api/inscripciones/:idInscripciones", inscripcionesController.update);
 
+
+// Productos
+route.get("/api/productos", productosController.find);
+route.get("/api/productos/:idProductos", productosController.findById);
+route.post("/api/productos/idProducto", productosController.create);
+route.delete("/api/productos/:idProductos", productosController.remove);
+route.patch("/api/productos/:idProductos", productosController.update);
 
 export default route;
