@@ -51,7 +51,7 @@ route.patch("/api/inscripciones/:idInscripciones", inscripcionesController.updat
 // Productos
 route.get("/api/productos", productosController.find);
 route.get("/api/productos/:idProductos", productosController.findById);
-route.post("/api/productos/idProducto", productosController.create);
+route.post("/api/productos/producto", productosController.create);
 route.delete("/api/productos/:idProductos", productosController.remove);
 route.patch("/api/productos/:idProductos", productosController.update);
 
