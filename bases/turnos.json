@@ -1,55 +1,48 @@
 [{
   "_id": {
-    "$oid": "6372a8b279cfea91311750ea"
-  },
-  "dia": "Lunes",
-  "idCurso": "634076e6f046996eea60cdeb",
-  "deleted": false,
-  "horarioFin": "12",
-  "horarioInicio": 9
-},{
-  "_id": {
-    "$oid": "637436fd932195c12d9856ef"
-  },
-  "dia": "Martes",
-  "horarioInicio": "13",
-  "horarioFin": "17",
-  "idCurso": "63407706f046996eea60cdec",
-  "deleted": false
-},{
-  "_id": {
     "$oid": "63743748932195c12d9856f0"
   },
-  "dia": "Martes",
-  "horarioInicio": "9",
-  "horarioFin": "10",
+  "dia": "D2",
+  "horarioInicio": "09:00",
+  "horarioFin": "11:00",
   "idCurso": "634076e6f046996eea60cdeb",
-  "deleted": false
-},{
+  "deleted": false,
+  "nombre": "Comisión 1",
+  "dias": [
+    "D3",
+    "D5"
+  ],
+  "color": "yellow"
+},
+{
   "_id": {
-    "$oid": "637437a2932195c12d9856f1"
+    "$oid": "649a38036742af1439eb38a8"
   },
-  "dia": "Jueves",
-  "horarioInicio": "14",
-  "horarioFin": "18",
+  "horarioInicio": "14:00",
+  "horarioFin": "17:30",
   "idCurso": "63407706f046996eea60cdec",
-  "deleted": false
-},{
+  "deleted": false,
+  "idTurno": "abc123",
+  "nombre": "Comisión 2",
+  "dias": [
+    "D1",
+    "D4"
+  ],
+  "color": "lightblue"
+},
+{
   "_id": {
-    "$oid": "63757c21628595d7187661a1"
+    "$oid": "64af57f016acf0cceaa35a52"
   },
-  "dia": "Jueves",
-  "horarioInicio": "10",
-  "horarioFin": "14",
+  "horarioInicio": "12:00",
+  "horarioFin": "13:30",
   "idCurso": "63407706f046996eea60cdec",
-  "deleted": false
-},{
-  "_id": {
-    "$oid": "63757c49628595d7187661a2"
-  },
-  "dia": "Miércoles",
-  "horarioInicio": "11",
-  "horarioFin": "15",
-  "idCurso": "63407706f046996eea60cdec",
-  "deleted": false
+  "deleted": false,
+  "idTurno": "abc123",
+  "nombre": "Comisión 3",
+  "dias": [
+    "D1",
+    "D4"
+  ],
+  "color": "red"
 }]

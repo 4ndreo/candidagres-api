@@ -6,11 +6,12 @@
   "edad": "adultos",
   "duracion": 2,
   "profesor": "evangelina",
-  "deleted": false,
-  "nombre": "Cerámica en Gres",
-  "descripcion": "Descripción del curso aquí",
+  "deleted": true,
+  "nombre": "Cerámica en Gres para niños",
+  "descripcion": "Descripción de la clase aquí",
   "precio": 5000
-},{
+},
+{
   "_id": {
     "$oid": "63407706f046996eea60cdec"
   },
@@ -20,6 +21,15 @@
   "profesor": "anita",
   "deleted": false,
   "nombre": "Cerámica clásica",
-  "descripcion": "Descripción del curso aquí",
+  "descripcion": "Descripción de la clase aquí",
   "precio": 5000
+},
+{
+  "_id": {
+    "$oid": "6549160d8d6ad3f82fc8b3ce"
+  },
+  "nombre": "Ceramica en Grupo",
+  "descripcion": "Grupo grupal de chicos adolecentes",
+  "duracion": 1500,
+  "deleted": false
 }]

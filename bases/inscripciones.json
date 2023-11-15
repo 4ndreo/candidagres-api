@@ -7,18 +7,20 @@
   "idTurno": "637436fd932195c12d9856ef",
   "idUser": "62ba58d131c346def433fac7",
   "idCurso": "63407706f046996eea60cdec",
-  "deleted": false
-},{
+  "deleted": true
+},
+{
   "_id": {
-    "$oid": "63757d83628595d7187661a3"
+    "$oid": "637d52bd790d3c196c8c9899"
   },
-  "nombre": "fran",
-  "formaPago": "efectivo",
-  "idTurno": "63743748932195c12d9856f0",
-  "idUser": "62ba58d131c346def433fac7",
+  "nombre": "fran2",
+  "formaPago": "transferencia",
+  "idTurno": "6372a8b279cfea91311750ea",
+  "idUser": "62ba596a31c346def433fac8",
   "idCurso": "634076e6f046996eea60cdeb",
-  "deleted": false
-},{
+  "deleted": true
+},
+{
   "_id": {
     "$oid": "637586a7628595d7187661a4"
   },
@@ -28,4 +30,70 @@
   "idUser": "62ba58d131c346def433fac7",
   "idCurso": "63407706f046996eea60cdec",
   "deleted": true
+},
+{
+  "_id": {
+    "$oid": "63867cd24d9bb208fcbf8634"
+  },
+  "nombre": "fran",
+  "formaPago": "efectivo",
+  "idTurno": "6372a8b279cfea91311750ea",
+  "idUser": "62ba58d131c346def433fac7",
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": true
+},
+{
+  "_id": {
+    "$oid": "63895703d90619999a7c037e"
+  },
+  "nombre": "fran2",
+  "formaPago": "transferencia",
+  "idTurno": "6372a8b279cfea91311750ea",
+  "idUser": "62ba596a31c346def433fac8",
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "638660704d9bb208fcbf8633"
+  },
+  "nombre": "fran2",
+  "formaPago": "transferencia",
+  "idTurno": "637437a2932195c12d9856f1",
+  "idUser": "62ba596a31c346def433fac8",
+  "idCurso": "63407706f046996eea60cdec",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "638660604d9bb208fcbf8632"
+  },
+  "nombre": "fran2",
+  "formaPago": "transferencia",
+  "idTurno": "63743748932195c12d9856f0",
+  "idUser": "62ba596a31c346def433fac8",
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "649a2e836742af1439eb38a7"
+  },
+  "nombre": "fran",
+  "formaPago": "efectivo",
+  "idTurno": "63757c21628595d7187661a1",
+  "idUser": "62ba58d131c346def433fac7",
+  "idCurso": "63407706f046996eea60cdec",
+  "deleted": false
+},
+{
+  "_id": {
+    "$oid": "654a84de3bfa5e5c0bea1131"
+  },
+  "nombre": "fran",
+  "formaPago": "efectivo",
+  "idTurno": "63743748932195c12d9856f0",
+  "idUser": "62ba58d131c346def433fac7",
+  "idCurso": "634076e6f046996eea60cdeb",
+  "deleted": false
 }]
