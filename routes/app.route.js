@@ -1,4 +1,5 @@
 import express from "express";
+import fileUpload from "express-fileupload";
 import userController from "../controllers/users.controller.js";
 import turnosController from "../controllers/turnos.controller.js";
 import cursosController from "../controllers/cursos.controller.js";
@@ -7,6 +8,8 @@ import productosController from "../controllers/productos.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
 
 const route = express.Router();
+
+route.use(fileUpload());
 
 route.get("/", (req, res) => {
   res.send("Candida Gres - Web");
