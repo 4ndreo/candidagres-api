@@ -49,6 +49,7 @@ route.get("/api/inscripcionesAll/user/:idUser/turno/:idTurno", inscripcionesCont
 route.post("/api/inscripciones/inscripcion", inscripcionesController.create);
 route.delete("/api/inscripciones/:idInscripciones", inscripcionesController.remove);
 route.patch("/api/inscripciones/:idInscripciones", inscripcionesController.update);
+route.get("/api/inscripcionesByCurso/:idCurso", inscripcionesController.countInscripcionesByCurso);
 
 
 // Productos

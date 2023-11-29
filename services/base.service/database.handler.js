@@ -77,6 +77,19 @@ async function findOneByEmail(collection, email) {
   return connectDB((db) => db.collection(collection).findOne(email));
 }
 
+async function countInscripcionesByCurso(collection, idCurso) {
+  return connectDB((db) => db
+  .collection(collection)
+  .aggregate([
+    {
+        $match: { idCurso: idCurso }
+    },
+    {
+        $group: { _id:"$idTurno", totalQuantity:  {$sum: 1} }
+    }
+    ]).toArray());
+}
+
 async function closeDB() {
   client.close();
 }
@@ -93,4 +106,5 @@ export {
   parseToObjectId,
   findOne,
   findOneByEmail,
+  countInscripcionesByCurso,
 };

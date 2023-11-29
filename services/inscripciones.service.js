@@ -37,6 +37,10 @@ async function update(id, data) {
     return await dataBase.filter(collection, { deleted: false })
 }
 
+async function countInscripcionesByCurso(idCurso) {
+    return await dataBase.countInscripcionesByCurso(collection, idCurso)
+}
+
 export {
     create,
     find,
@@ -45,5 +49,6 @@ export {
     findAllByUser,
     findInscripcionById,
     remove,
-    update
+    update,
+    countInscripcionesByCurso,
 }

@@ -41,7 +41,7 @@ async function findById(req, res) {
 
 async function findByUser(req, res) {
     const userID = req.params.idUser;
-    console.log(req)
+
     inscripcionesService.findByUser(userID)
         .then(function (inscripcion) {
             res.status(200).json(inscripcion);
@@ -108,6 +108,18 @@ async function update(req, res) {
         });
 }
 
+async function countInscripcionesByCurso(req, res) {
+    const cursoId = req.params.idCurso;
+    
+    inscripcionesService.countInscripcionesByCurso(cursoId)
+        .then(function (agg) {
+            res.status(201).json(agg);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
 
 export default {
     create,
@@ -117,5 +129,6 @@ export default {
     findAllByUserAndTurno,
     findByUser,
     remove,
-    update
+    update,
+    countInscripcionesByCurso,
 }
