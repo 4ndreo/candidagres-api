@@ -36,6 +36,10 @@ async function update(id, total, detallesProducto) {
     await dataBase.updateCarrito(collection, id, { total, productosComprar: detallesProducto });
     return await dataBase.filter(collection, { deleted: false });
 }
+async function updateEliminarProducto(id, total, detallesProducto) {
+    await dataBase.updateCarritoActualizado(collection, id, { total, productosComprar: detallesProducto });
+    return await dataBase.findByIdCarrito(collection, id);
+}
 
 
 export {
@@ -45,4 +49,5 @@ export {
     findCarritoByIdUser,
     remove,
     update,
+    updateEliminarProducto
 }

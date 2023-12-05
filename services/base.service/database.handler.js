@@ -57,6 +57,16 @@ async function updateCarrito(collection, id, { total, productosComprar }) {
           )
   );
 }
+async function updateCarritoActualizado(collection, id, { total, productosComprar }) {
+  return connectDB((db) =>
+      db
+          .collection(collection)
+          .updateOne(
+              { _id: new ObjectId(id) },
+              { $set: { total , productosComprar } }
+          )
+  );
+}
 
 async function remove(collection, id) {
   return connectDB((db) =>
@@ -74,6 +84,11 @@ async function findById(collection, id) {
 async function findByIdUser(collection, id) {
   return connectDB((db) =>
     db.collection(collection).findOne({ usuarioId:id, deleted: false})
+  );
+}
+async function findByIdCarrito(collection, id) {
+  return connectDB((db) =>
+    db.collection(collection).findOne({ _id: new ObjectId(id), deleted: false})
   );
 }
 
@@ -116,9 +131,11 @@ export {
   create,
   update,
   updateCarrito,
+  updateCarritoActualizado,
   remove,
   findById,
   findByIdUser,
+  findByIdCarrito,
   filter,
   closeDB,
   parseToObjectId,

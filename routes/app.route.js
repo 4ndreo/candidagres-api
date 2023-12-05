@@ -71,7 +71,7 @@ route.get("/api/carrito/user/:idUser", carritoController.findByIdUser);
 route.post("/api/carrito/carrito", carritoController.create);
 route.delete("/api/carrito/:idCarrito", carritoController.remove);
 route.patch("/api/carrito/:idCarrito", carritoController.update);
-route.patch("/api/carrito/user/:idCarrito", carritoController.update);
+route.patch("/api/carrito/user/:idCarrito", carritoController.updateEliminarProducto);
 
 // Compras Finalizadas
 route.get("/api/comprasFinalizadas", comprasFinalizadasController.find);

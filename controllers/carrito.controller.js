@@ -74,13 +74,22 @@ async function remove(req, res) {
 
 async function update(req, res) {
     const carritoID = req.params.idCarrito;
-    // const data = req.body;
     const { total, productosComprar } = req.body;
     console.log(total, productosComprar)
-    //
-    // let totalActualizado = total + productos.precio
-    // console.log(totalActualizado)
     carritoService.update(carritoID, total, productosComprar)
+        .then(function (carrito) {
+            res.status(201).json(carrito);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+async function updateEliminarProducto(req, res) {
+    const carritoID = req.params.idCarrito;
+    const { total, productosComprar } = req.body;
+   // console.log(total, productosComprar)
+
+    carritoService.updateEliminarProducto(carritoID, total, productosComprar)
         .then(function (carrito) {
             res.status(201).json(carrito);
         })
@@ -98,5 +107,6 @@ export default {
     findById,
     findByIdUser,
     remove,
-    update
+    update,
+    updateEliminarProducto
 }
