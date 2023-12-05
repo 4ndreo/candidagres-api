@@ -5,6 +5,8 @@ import turnosController from "../controllers/turnos.controller.js";
 import cursosController from "../controllers/cursos.controller.js";
 import inscripcionesController from "../controllers/inscripciones.controller.js";
 import productosController from "../controllers/productos.controller.js";
+import carritoController from "../controllers/carrito.controller.js";
+import comprasFinalizadasController from "../controllers/compras.finalizadas.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
 
 const route = express.Router();
@@ -60,5 +62,25 @@ route.get("/api/productos/:idProductos", productosController.findById);
 route.post("/api/productos/producto", productosController.create);
 route.delete("/api/productos/:idProductos", productosController.remove);
 route.patch("/api/productos/:idProductos", productosController.update);
+
+// Carrito
+route.get("/api/carrito", carritoController.find);
+route.get("/api/carrito/:idCarrito", carritoController.findById);
+route.get("/api/carrito/user/:idUser", carritoController.findByIdUser);
+route.post("/api/carrito/carrito", carritoController.create);
+route.delete("/api/carrito/:idCarrito", carritoController.remove);
+route.patch("/api/carrito/:idCarrito", carritoController.update);
+route.patch("/api/carrito/user/:idCarrito", carritoController.update);
+
+// Compras Finalizadas
+route.get("/api/comprasFinalizadas", comprasFinalizadasController.find);
+route.get("/api/comprasFinalizadas/:idCompras", comprasFinalizadasController.findById);
+route.post("/api/comprasFinalizadas/compra", comprasFinalizadasController.create);
+route.delete("/api/comprasFinalizadas/:idCompras", comprasFinalizadasController.remove);
+route.patch("/api/comprasFinalizadas/:idCompras", comprasFinalizadasController.update);
+
+
+
+
 
 export default route;

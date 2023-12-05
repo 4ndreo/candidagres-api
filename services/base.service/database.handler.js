@@ -47,6 +47,17 @@ async function update(collection, id, data) {
   );
 }
 
+async function updateCarrito(collection, id, { total, productosComprar }) {
+  return connectDB((db) =>
+      db
+          .collection(collection)
+          .updateOne(
+              { _id: new ObjectId(id) },
+              { $set: { total }, $push: { productosComprar } }
+          )
+  );
+}
+
 async function remove(collection, id) {
   return connectDB((db) =>
     db
@@ -58,6 +69,11 @@ async function remove(collection, id) {
 async function findById(collection, id) {
   return connectDB((db) =>
     db.collection(collection).findOne({ _id: new ObjectId(id) })
+  );
+}
+async function findByIdUser(collection, id) {
+  return connectDB((db) =>
+    db.collection(collection).findOne({ usuarioId:id, deleted: false})
   );
 }
 
@@ -86,8 +102,10 @@ export {
   find,
   create,
   update,
+  updateCarrito,
   remove,
   findById,
+  findByIdUser,
   filter,
   closeDB,
   parseToObjectId,
