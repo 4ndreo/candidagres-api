@@ -69,6 +69,7 @@ route.patch("/api/productos/:idProductos", productosController.update);
 route.get("/api/carrito", carritoController.find);
 route.get("/api/carrito/:idCarrito", carritoController.findById);
 route.get("/api/carrito/user/:idUser", carritoController.findByIdUser);
+route.get("/api/carrito/user/finalizado/:idUser", carritoController.findByIdUserFinalizado);
 route.post("/api/carrito/carrito", carritoController.create);
 route.delete("/api/carrito/:idCarrito", carritoController.remove);
 route.patch("/api/carrito/:idCarrito", carritoController.update);
