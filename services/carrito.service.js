@@ -22,12 +22,15 @@ async function findCarritoById(id) {
 async function findCarritoByIdUser(id) {
     return await dataBase.findByIdUser(collection, id)
 }
+async function findCarritoByIdUserFinalizado(id) {
+    return await dataBase.findByIdUserFinalizado(collection, id)
+}
 
 
 async function remove(id) {
 
     await dataBase.remove(collection, id);
-    return await dataBase.filter(collection, { deleted: false })
+    return await dataBase.filter(collection, { deleted: true })
 
 }
 
@@ -47,6 +50,7 @@ export {
     find,
     findCarritoById,
     findCarritoByIdUser,
+    findCarritoByIdUserFinalizado,
     remove,
     update,
     updateEliminarProducto

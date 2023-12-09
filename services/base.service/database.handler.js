@@ -86,6 +86,13 @@ async function findByIdUser(collection, id) {
     db.collection(collection).findOne({ usuarioId:id, deleted: false})
   );
 }
+async function findByIdUserFinalizado(collection, id) {
+  return connectDB(async (db) => {
+    const cursor = await db.collection(collection).find({ usuarioId: id, deleted: true });
+    const results = await cursor.toArray();
+    return results;
+  });
+}
 async function findByIdCarrito(collection, id) {
   return connectDB((db) =>
     db.collection(collection).findOne({ _id: new ObjectId(id), deleted: false})
@@ -135,6 +142,7 @@ export {
   remove,
   findById,
   findByIdUser,
+  findByIdUserFinalizado,
   findByIdCarrito,
   filter,
   closeDB,

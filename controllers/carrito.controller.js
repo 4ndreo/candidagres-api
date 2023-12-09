@@ -51,6 +51,17 @@ async function findByIdUser(req, res) {
             res.status(500).json({ err });
         });
 }
+async function findByIdUserFinalizado(req, res) {
+    const userID = req.params.idUser;
+    console.log(userID)
+    carritoService.findCarritoByIdUserFinalizado(userID)
+        .then(function (carrito) {
+            res.status(200).json(carrito);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
 
 async function remove(req, res) {
     const carritoID = req.params.idCarrito;
@@ -106,6 +117,7 @@ export default {
     find,
     findById,
     findByIdUser,
+    findByIdUserFinalizado,
     remove,
     update,
     updateEliminarProducto
