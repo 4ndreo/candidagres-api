@@ -30,6 +30,7 @@ route.post("/api/users/auth", userController.auth)
 // Turnos
 route.get("/api/turnos", turnosController.find);
 route.get("/api/turnos/:idTurnos", turnosController.findById);
+route.get("/api/turnos/curso/:idCurso", turnosController.findByCurso);
 route.post("/api/turnos/turno", turnosController.create);
 route.delete("/api/turnos/:idTurnos", turnosController.remove);
 route.patch("/api/turnos/:idTurnos", turnosController.update);

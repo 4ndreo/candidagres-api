@@ -28,8 +28,19 @@ async function find(req, res) {
 
 async function findById(req, res) {
     const turnoId = req.params.idTurnos;
-
     turnosServices.findTurnoById(turnoId)
+    .then(function (turno) {
+        res.status(200).json(turno);
+    })
+    .catch(function (err) {
+        res.status(500).json({ err });
+    });
+}
+
+async function findByCurso(req, res) {
+    const cursoId = req.params.idCurso;
+
+    turnosServices.findByCurso(cursoId)
         .then(function (turno) {
             res.status(200).json(turno);
         })
@@ -76,6 +87,7 @@ export default {
     create,
     find,
     findById,
+    findByCurso,
     remove,
     update
 }

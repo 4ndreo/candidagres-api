@@ -10,15 +10,16 @@ async function create(turno) {
 }
 
 async function find() {
-
     return await dataBase.find(collection)
-
 }
 
 async function findTurnoById(id) {
     return await dataBase.findById(collection, id)
 }
 
+async function findByCurso(idCurso) {
+    return await dataBase.filter(collection, {idCurso: idCurso, deleted: false})
+}
 
 async function remove(id) {
 
@@ -39,6 +40,7 @@ export {
     create,
     find,
     findTurnoById,
+    findByCurso,
     remove,
     update
 }
