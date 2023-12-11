@@ -8,6 +8,7 @@ import productosController from "../controllers/productos.controller.js";
 import carritoController from "../controllers/carrito.controller.js";
 import comprasFinalizadasController from "../controllers/compras.finalizadas.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
+import { verifyDeletionPatch } from "../middlewares/inscripciones.middlewares.js";
 
 const route = express.Router();
 
@@ -54,7 +55,7 @@ route.get("/api/inscripcionesAll/user/:idUser", inscripcionesController.findAllB
 route.get("/api/inscripcionesAll/user/:idUser/turno/:idTurno", inscripcionesController.findAllByUserAndTurno);
 route.post("/api/inscripciones/inscripcion", inscripcionesController.create);
 route.delete("/api/inscripciones/:idInscripciones", inscripcionesController.remove);
-route.patch("/api/inscripciones/:idInscripciones", inscripcionesController.update);
+route.patch("/api/inscripciones/:idInscripciones", verifyDeletionPatch, inscripcionesController.update);
 route.get("/api/inscripcionesByCurso/:idCurso", inscripcionesController.countInscripcionesByCurso);
 
 
