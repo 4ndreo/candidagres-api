@@ -5,7 +5,8 @@ let client = '';
 let uri = '';
 
 async function connectDB(action) {
-  uri = "mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_PASSWORD + "@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
+  // uri = "mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_PASSWORD + "@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
+  uri = process.env.DB_URI;
   client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
   //const client = new MongoClient("mongodb://127.0.0.1:27017");
 
