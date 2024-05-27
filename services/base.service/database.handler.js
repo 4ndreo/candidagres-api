@@ -1,23 +1,26 @@
-import { MongoClient, ObjectId,ServerApiVersion } from "mongodb";
-import {promise} from "bcrypt/promises.js";
- const uri = "mongodb+srv://admin:1234@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
-   const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+import { promise } from "bcrypt/promises.js";
 
-//const client = new MongoClient("mongodb://127.0.0.1:27017");
+let client = '';
+let uri = '';
 
 async function connectDB(action) {
-  // const client = new MongoClient("mongodb://127.0.0.1:27017");
+  uri = "mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_PASSWORD + "@cgres-back.fe4sygh.mongodb.net/?retryWrites=true&w=majority";
+  client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+  //const client = new MongoClient("mongodb://127.0.0.1:27017");
+
   const db = await client.db("cgres-app-turnos");
   let response;
   try {
     await client.connect().catch(() => {
+      console.log('test', uri)
       console.log(`No me pude conectar a ${db.namespace}`);
     });
     response = await action(db);
   } catch (error) {
     console.log(error);
     // response = { message: error.toString() };
-    response = Promise.reject({message: error.toString()})
+    response = Promise.reject({ message: error.toString() })
   } finally {
     await client.close();
   }
@@ -49,22 +52,22 @@ async function update(collection, id, data) {
 
 async function updateCarrito(collection, id, { total, productosComprar }) {
   return connectDB((db) =>
-      db
-          .collection(collection)
-          .updateOne(
-              { _id: new ObjectId(id) },
-              { $set: { total }, $push: { productosComprar } }
-          )
+    db
+      .collection(collection)
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { total }, $push: { productosComprar } }
+      )
   );
 }
 async function updateCarritoActualizado(collection, id, { total, productosComprar }) {
   return connectDB((db) =>
-      db
-          .collection(collection)
-          .updateOne(
-              { _id: new ObjectId(id) },
-              { $set: { total , productosComprar } }
-          )
+    db
+      .collection(collection)
+      .updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { total, productosComprar } }
+      )
   );
 }
 
@@ -83,7 +86,7 @@ async function findById(collection, id) {
 }
 async function findByIdUser(collection, id) {
   return connectDB((db) =>
-    db.collection(collection).findOne({ usuarioId:id, deleted: false})
+    db.collection(collection).findOne({ usuarioId: id, deleted: false })
   );
 }
 async function findByIdUserFinalizado(collection, id) {
@@ -95,7 +98,7 @@ async function findByIdUserFinalizado(collection, id) {
 }
 async function findByIdCarrito(collection, id) {
   return connectDB((db) =>
-    db.collection(collection).findOne({ _id: new ObjectId(id), deleted: false})
+    db.collection(collection).findOne({ _id: new ObjectId(id), deleted: false })
   );
 }
 
@@ -117,14 +120,14 @@ async function findOneByEmail(collection, email) {
 
 async function countInscripcionesByCurso(collection, idCurso) {
   return connectDB((db) => db
-  .collection(collection)
-  .aggregate([
-    {
-        $match: { idCurso: idCurso, deleted: false}
-    },
-    {
-        $group: { _id:"$idTurno", totalQuantity:  {$sum: 1} }
-    }
+    .collection(collection)
+    .aggregate([
+      {
+        $match: { idCurso: idCurso, deleted: false }
+      },
+      {
+        $group: { _id: "$idTurno", totalQuantity: { $sum: 1 } }
+      }
     ]).toArray());
 }
 
