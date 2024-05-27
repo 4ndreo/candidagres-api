@@ -30,8 +30,8 @@ async function verifyDeletionPatch(req, res, next) {
 				// Verificar que solo tenga la propiedad "deleted" en el cuerpo
 				if (bodyKeys.length === 1 && bodyKeys[0] === 'deleted') {
 					await currentInscripcion;
-          await currentTurno;
-          await totalInscripciones;
+					await currentTurno;
+					await totalInscripciones;
 					if (currentInscripcion.idUser === user.id) {
             if(Object.values(req.body)[0]){
               next();
