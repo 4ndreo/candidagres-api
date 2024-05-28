@@ -8,9 +8,7 @@ async function create(req, res) {
 
     await productosService.create(newProducto)
         .then(function (newProducto) {
-            // console.log(newProducto)
             res.status(201).json(newProducto);
-            // req.socketClient.emit('newLocation', { newLocation })
         })
         .catch(function (err) {
             res.status(500).json({ err });

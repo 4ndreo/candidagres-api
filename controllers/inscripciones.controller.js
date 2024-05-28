@@ -53,7 +53,6 @@ async function findByUser(req, res) {
 
 async function findAllByUser(req, res) {
     const userID = req.params.idUser;
-    console.log(req)
     inscripcionesService.findAllByUser(userID)
         .then(function (inscripcion) {
             res.status(200).json(inscripcion);
@@ -65,7 +64,6 @@ async function findAllByUser(req, res) {
 async function findAllByUserAndTurno(req, res) {
     const userID = req.params.idUser;
     const turnoID = req.params.idTurno;
-    console.log(req)
     inscripcionesService.findAllByUserAndTurno(userID,turnoID)
         .then(function (inscripcion) {
             res.status(200).json(inscripcion);

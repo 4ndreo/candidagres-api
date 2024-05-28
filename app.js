@@ -40,12 +40,7 @@ app.use(express.json()); // para que el servidor pueda recibir los datos en form
 app.use('/', AppRoute);
 app.get('dotenv');
 
-
-
-
 server.listen(2025, () => {
-    // console.log(process.env);
-    console.log(`Your port is ${process.env.DB_USER}`);
     console.log('Servidor corriendo en http://localhost:2025/')
 });
 

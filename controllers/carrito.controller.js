@@ -8,7 +8,6 @@ async function create(req, res) {
 
     await carritoService.create(newCarrito)
         .then(function (newCarrito) {
-            // console.log(newProducto)
             res.status(201).json(newCarrito);
             // req.socketClient.emit('newLocation', { newLocation })
         })
@@ -42,7 +41,6 @@ async function findById(req, res) {
 }
 async function findByIdUser(req, res) {
     const userID = req.params.idUser;
-    console.log(userID)
     carritoService.findCarritoByIdUser(userID)
         .then(function (carrito) {
             res.status(200).json(carrito);
@@ -53,7 +51,6 @@ async function findByIdUser(req, res) {
 }
 async function findByIdUserFinalizado(req, res) {
     const userID = req.params.idUser;
-    console.log(userID)
     carritoService.findCarritoByIdUserFinalizado(userID)
         .then(function (carrito) {
             res.status(200).json(carrito);
@@ -86,7 +83,6 @@ async function remove(req, res) {
 async function update(req, res) {
     const carritoID = req.params.idCarrito;
     const { total, productosComprar } = req.body;
-    console.log(total, productosComprar)
     carritoService.update(carritoID, total, productosComprar)
         .then(function (carrito) {
             res.status(201).json(carrito);
@@ -98,8 +94,6 @@ async function update(req, res) {
 async function updateEliminarProducto(req, res) {
     const carritoID = req.params.idCarrito;
     const { total, productosComprar } = req.body;
-   // console.log(total, productosComprar)
-
     carritoService.updateEliminarProducto(carritoID, total, productosComprar)
         .then(function (carrito) {
             res.status(201).json(carrito);
