@@ -3,10 +3,9 @@ import * as dataBase from "./base.service/database.handler.js";
 
 const collection = "carrito"
 
-async function create(carrito) {
-
-    await dataBase.create(collection, carrito);
-    return await dataBase.filter(collection, { deleted: false })
+async function create(usuarioId) {
+    let newCarrito = await dataBase.create(collection, usuarioId);
+    return await dataBase.findById(collection, newCarrito.insertedId)
 
 }
 
@@ -35,8 +34,8 @@ async function remove(id) {
 }
 
 
-async function update(id, total, detallesProducto) {
-    await dataBase.updateCarrito(collection, id, { total, productosComprar: detallesProducto });
+async function update(carritoId, productos) {
+    await dataBase.updateCarrito(collection, carritoId, productos);
     return await dataBase.filter(collection, { deleted: false });
 }
 async function updateEliminarProducto(id, total, detallesProducto) {

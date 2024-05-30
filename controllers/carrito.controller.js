@@ -4,16 +4,22 @@ import * as carritoService from "../services/carrito.service.js"
 
 
 async function create(req, res) {
-    const newCarrito = req.body;
+    const usuarioId = req.body.usuarioId;
+    
+    if (usuarioId) {
+        await carritoService.create(usuarioId)
+            .then(function (newCarrito) {
+                res.status(201).json(newCarrito);
+                // req.socketClient.emit('newLocation', { newLocation })
+            })
+            .catch(function (err) {
+                res.status(500).json({ err });
+            });
 
-    await carritoService.create(newCarrito)
-        .then(function (newCarrito) {
-            res.status(201).json(newCarrito);
-            // req.socketClient.emit('newLocation', { newLocation })
-        })
-        .catch(function (err) {
-            res.status(500).json({ err });
-        });
+    } else {
+        return res.status(404).json('Debe proveer el id del usuario.');
+
+    }
 }
 
 
@@ -81,9 +87,10 @@ async function remove(req, res) {
 
 
 async function update(req, res) {
-    const carritoID = req.params.idCarrito;
-    const { total, productosComprar } = req.body;
-    carritoService.update(carritoID, total, productosComprar)
+    const carritoId = req.params.idCarrito;
+    const productos = req.body.productos;
+    console.log('test',carritoId, productos)
+    carritoService.update(carritoId, productos)
         .then(function (carrito) {
             res.status(201).json(carrito);
         })

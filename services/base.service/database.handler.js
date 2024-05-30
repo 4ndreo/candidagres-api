@@ -34,9 +34,9 @@ async function find(collection) {
   );
 }
 
-async function create(collection, data) {
+async function create(collection, usuarioId) {
   return connectDB((db) =>
-    db.collection(collection).insertOne({ ...data, deleted: false })
+    db.collection(collection).insertOne({ usuarioId: usuarioId, productos: [], deleted: false })
   );
 }
 
@@ -48,13 +48,14 @@ async function update(collection, id, data) {
   );
 }
 
-async function updateCarrito(collection, id, { total, productosComprar }) {
+async function updateCarrito(collection, id, productos) {
+  console.log("updateCarrito", id, productos)
   return connectDB((db) =>
     db
       .collection(collection)
       .updateOne(
         { _id: new ObjectId(id) },
-        { $set: { total }, $push: { productosComprar } }
+        { $set: {productos: productos} }
       )
   );
 }
