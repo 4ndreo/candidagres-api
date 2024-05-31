@@ -20,6 +20,9 @@ async function findProductoById(id) {
     return await dataBase.findById(collection, id)
 }
 
+async function findMultipleById(ids) {
+    return await dataBase.findMultipleById(collection, ids)
+}
 
 async function remove(id) {
 
@@ -40,6 +43,7 @@ export {
     create,
     find,
     findProductoById,
+    findMultipleById,
     remove,
     update
 }

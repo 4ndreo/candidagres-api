@@ -49,13 +49,12 @@ async function update(collection, id, data) {
 }
 
 async function updateCarrito(collection, id, productos) {
-  console.log("updateCarrito", id, productos)
   return connectDB((db) =>
     db
       .collection(collection)
       .updateOne(
         { _id: new ObjectId(id) },
-        { $set: {productos: productos} }
+        { $set: { productos: productos } }
       )
   );
 }
@@ -83,6 +82,16 @@ async function findById(collection, id) {
     db.collection(collection).findOne({ _id: new ObjectId(id) })
   );
 }
+
+async function findMultipleById(collection, ids) {
+  return connectDB(async (db) => {
+    const cursor = await db.collection(collection).find({ _id: { "$in": ids.map(id => new ObjectId(id)) } });
+    const results = await cursor.toArray();
+    return results;
+  }
+  );
+}
+
 async function findByIdUser(collection, id) {
   return connectDB((db) =>
     db.collection(collection).findOne({ usuarioId: id, deleted: false })
@@ -143,6 +152,7 @@ export {
   updateCarritoActualizado,
   remove,
   findById,
+  findMultipleById,
   findByIdUser,
   findByIdUserFinalizado,
   findByIdCarrito,

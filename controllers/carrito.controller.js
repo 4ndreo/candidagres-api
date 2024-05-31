@@ -1,11 +1,13 @@
+import { ObjectId } from "mongodb";
 import * as carritoService from "../services/carrito.service.js"
+import * as productosService from "../services/productos.service.js"
 
 
 
 
 async function create(req, res) {
     const usuarioId = req.body.usuarioId;
-    
+
     if (usuarioId) {
         await carritoService.create(usuarioId)
             .then(function (newCarrito) {
@@ -49,7 +51,14 @@ async function findByIdUser(req, res) {
     const userID = req.params.idUser;
     carritoService.findCarritoByIdUser(userID)
         .then(function (carrito) {
-            res.status(200).json(carrito);
+            let productosDetalle = [];
+            productosService.findMultipleById(carrito.productos.map(producto => producto.id)).then((data) => {
+                productosDetalle = data;
+                carrito.productos.forEach((producto, index) => {
+                    carrito.productos[index] = { ...carrito.productos[index], ...productosDetalle.find(x => x._id.equals(producto.id)) };
+                })
+                res.status(200).json(carrito);
+            })
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -89,7 +98,6 @@ async function remove(req, res) {
 async function update(req, res) {
     const carritoId = req.params.idCarrito;
     const productos = req.body.productos;
-    console.log('test',carritoId, productos)
     carritoService.update(carritoId, productos)
         .then(function (carrito) {
             res.status(201).json(carrito);
