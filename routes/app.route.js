@@ -77,11 +77,11 @@ route.patch("/api/carrito/:idCarrito", carritoController.update);
 route.patch("/api/carrito/user/:idCarrito", carritoController.updateEliminarProducto);
 
 // Compras Finalizadas
-route.get("/api/comprasFinalizadas", comprasFinalizadasController.find);
-route.get("/api/comprasFinalizadas/:idCompras", comprasFinalizadasController.findById);
-route.post("/api/comprasFinalizadas/compra", comprasFinalizadasController.create);
-route.delete("/api/comprasFinalizadas/:idCompras", comprasFinalizadasController.remove);
-route.patch("/api/comprasFinalizadas/:idCompras", comprasFinalizadasController.update);
+route.get("/api/compras", comprasController.find);
+route.get("/api/compras/:id", comprasController.findById);
+route.post("/api/compras/compra", comprasController.create);
+route.delete("/api/compras/:id", comprasController.remove);
+route.patch("/api/compras/:id", comprasController.update);
 
 
 
