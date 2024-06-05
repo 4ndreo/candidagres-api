@@ -13,11 +13,11 @@ async function connectDB(action) {
   let response;
   try {
     await client.connect().catch(() => {
-      console.log(`No me pude conectar a ${db.namespace}`);
+      console.error(`No me pude conectar a ${db.namespace}`);
     });
     response = await action(db);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     response = Promise.reject({ message: error.toString() })
   } finally {
     await client.close();
@@ -34,9 +34,10 @@ async function find(collection) {
   );
 }
 
-async function create(collection, usuarioId) {
+async function create(collection, data) {
   return connectDB((db) =>
-    db.collection(collection).insertOne({ usuarioId: usuarioId, productos: [], deleted: false })
+    // db.collection(collection).insertOne({ usuarioId: usuarioId, productos: [], deleted: false })
+    db.collection(collection).insertOne({ ...data, deleted: false })
   );
 }
 
@@ -97,6 +98,11 @@ async function findByIdUser(collection, id) {
     db.collection(collection).findOne({ usuarioId: id, deleted: false })
   );
 }
+
+async function findManyByIdUser(collection, id) {
+  return connectDB((db) => db.collection(collection).find({ usuarioId: id, deleted: false }).toArray());
+}
+
 async function findByIdUserFinalizado(collection, id) {
   return connectDB(async (db) => {
     const cursor = await db.collection(collection).find({ usuarioId: id, deleted: true });
@@ -154,6 +160,7 @@ export {
   findById,
   findMultipleById,
   findByIdUser,
+  findManyByIdUser,
   findByIdUserFinalizado,
   findByIdCarrito,
   filter,

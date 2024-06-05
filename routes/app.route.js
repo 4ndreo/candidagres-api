@@ -6,7 +6,7 @@ import cursosController from "../controllers/cursos.controller.js";
 import inscripcionesController from "../controllers/inscripciones.controller.js";
 import productosController from "../controllers/productos.controller.js";
 import carritoController from "../controllers/carrito.controller.js";
-import comprasFinalizadasController from "../controllers/compras.finalizadas.controller.js";
+import comprasController from "../controllers/compras.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
 import { isAllBooked, verifyDeletionPatch } from "../middlewares/inscripciones.middlewares.js";
 
@@ -76,9 +76,10 @@ route.delete("/api/carrito/:idCarrito", carritoController.remove);
 route.patch("/api/carrito/:idCarrito", carritoController.update);
 route.patch("/api/carrito/user/:idCarrito", carritoController.updateEliminarProducto);
 
-// Compras Finalizadas
+// Compras 
 route.get("/api/compras", comprasController.find);
 route.get("/api/compras/:id", comprasController.findById);
+route.get("/api/compras/user/:idUser", comprasController.findManyByIdUser);
 route.post("/api/compras/compra", comprasController.create);
 route.delete("/api/compras/:id", comprasController.remove);
 route.patch("/api/compras/:id", comprasController.update);

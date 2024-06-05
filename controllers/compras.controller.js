@@ -1,11 +1,24 @@
 import * as comprasService from "../services/compras.service.js"
-
+import * as productosService from "../services/productos.service.js"
 async function create(req, res) {
-    const newCompra = req.body;
+    const carrito = req.body;
+    const products = req.body.productos;
+    let productosDetalle = [];
+    await productosService.findMultipleById(products.map(producto => producto.id)).then((data) => {
+        productosDetalle = data;
+        products.forEach((producto, index) => {
+            products[index] = {
+                ...products[index],
+                ...productosDetalle.find(x => x._id.equals(producto.id))
+            };
+        })
+    });
 
-    await comprasService.create(newCompra)
-        .then(function (newCompra) {
-            res.status(201).json(newCompra);
+    carrito.created_at = new Date();
+
+    await comprasService.create(carrito)
+        .then(function (response) {
+            res.status(201).json(response);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -30,6 +43,17 @@ async function findById(req, res) {
     comprasService.findCompraById(compraID)
         .then(function (compra) {
             res.status(200).json(compra);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
+async function findManyByIdUser(req, res) {
+    const userID = req.params.idUser;
+    comprasService.findManyByIdUser(userID)
+        .then(function (compras) {
+            res.status(200).json(compras);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -74,6 +98,7 @@ export default {
     create,
     find,
     findById,
+    findManyByIdUser,
     remove,
     update
 }

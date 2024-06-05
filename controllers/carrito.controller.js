@@ -9,13 +9,13 @@ async function create(req, res) {
     const usuarioId = req.body.usuarioId;
 
     if (usuarioId) {
-        await carritoService.create(usuarioId)
+        await carritoService.create({ usuarioId: usuarioId, productos: [] })
             .then(function (newCarrito) {
                 res.status(201).json(newCarrito);
                 // req.socketClient.emit('newLocation', { newLocation })
             })
             .catch(function (err) {
-                res.status(500).json({ err });
+                res.status(500).json(err);
             });
 
     } else {
