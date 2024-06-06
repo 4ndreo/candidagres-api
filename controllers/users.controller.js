@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import * as UserService from "../services/users.service.js";
+import bcrypt from 'bcrypt'
 
 async function find(req, res) {
   UserService.find()
@@ -24,15 +25,29 @@ async function findById(req, res) {
 }
 
 async function create(req, res) {
-  const newUser = req.body;
+  const user = req.body;
 
-  await UserService.create(newUser)
-    .then(function (user) {
-      res.status(201).json(user);
-    })
-    .catch(function (err) {
-      res.status(500).json({ err });
-    });
+  const userOld = await UserService.findOneByEmail(user.email)
+
+  if(!userOld){
+    const salt = await bcrypt.genSalt(10)
+    const passwordHash = await bcrypt.hash(user.password, salt)
+    const newUser = {
+      email: user.email,
+      role: 2,
+      password: passwordHash
+    }
+    await UserService.create(newUser)
+      .then(function (user) {
+        res.status(201).json(user);
+      })
+      .catch(function (err) {
+        res.status(500).json({ err });
+      });
+    } else {
+    res.status(500).json('El usuario ya existe.');
+  }
+
 }
 
 async function remove(req, res) {

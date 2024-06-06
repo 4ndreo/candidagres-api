@@ -129,7 +129,8 @@ async function findOne(collection, email) {
 }
 
 async function findOneByEmail(collection, email) {
-  return connectDB((db) => db.collection(collection).findOne(email));
+  
+  return connectDB((db) => db.collection(collection).findOne({email: email}));
 }
 
 async function countInscripcionesByCurso(collection, idCurso) {
