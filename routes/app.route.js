@@ -9,10 +9,15 @@ import carritoController from "../controllers/carrito.controller.js";
 import comprasController from "../controllers/compras.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
 import { isAllBooked, verifyDeletionPatch } from "../middlewares/inscripciones.middlewares.js";
+import multer from 'multer';
+import bodyParser from "express";
 
 const route = express.Router();
+const upload = multer({dest: 'uploads/'});
+const app = express();
 
-route.use(fileUpload());
+//route.use(fileUpload());
+
 
 route.get("/", (req, res) => {
   res.send("Candida Gres - Web");
@@ -65,6 +70,11 @@ route.get("/api/productos/:idProductos", productosController.findById);
 route.post("/api/productos/producto", productosController.create);
 route.delete("/api/productos/:idProductos", productosController.remove);
 route.patch("/api/productos/:idProductos", productosController.update);
+route.post("/api/productos/imagenes",upload.single('imagenProducto'), productosController.uploadImagen);
+
+
+
+
 
 // Carrito
 route.get("/api/carrito", carritoController.find);
@@ -75,6 +85,9 @@ route.post("/api/carrito/carrito", carritoController.create);
 route.delete("/api/carrito/:idCarrito", carritoController.remove);
 route.patch("/api/carrito/:idCarrito", carritoController.update);
 route.patch("/api/carrito/user/:idCarrito", carritoController.updateEliminarProducto);
+
+
+
 
 // Compras 
 route.get("/api/compras", comprasController.find);

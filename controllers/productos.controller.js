@@ -1,4 +1,5 @@
 import * as productosService from "../services/productos.service.js"
+import {saveImage} from "../services/productos.service.js";
 
 
 
@@ -72,11 +73,26 @@ async function update(req, res) {
         });
 }
 
+async function uploadImagen(req, res) {
+
+    console.log(req.file)
+
+    saveImage(req.file).then(function () {
+        res.status(201);
+    })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+    res.send('Termine')
+}
+
+
 
 export default {
     create,
     find,
     findById,
     remove,
-    update
+    update,
+    uploadImagen
 }
