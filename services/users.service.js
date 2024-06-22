@@ -1,5 +1,5 @@
 import * as dataBase from "./base.service/database.handler.js";
-
+import bcrypt from 'bcrypt'
 const collection = "users";
 
 async function find() {
@@ -33,7 +33,8 @@ async function update(id, data) {
 async function login({ email, password }) {
 
   const user = await dataBase.findOne(collection, email)
-  if (user) {
+  if (await user) {
+
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (isPasswordValid) {
       return { ...user, password: undefined }

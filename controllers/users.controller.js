@@ -82,7 +82,8 @@ async function update(req, res) {
 async function login(req, res) {
   const user = req.body;
   UserService.login(user)
-    .then((userData) => {
+  .then((userData) => {
+      console.log('hola?', userData)
       const token = jwt.sign(
         { id: userData._id, email: userData.email, role: userData.role },
         "FARG"
@@ -93,8 +94,8 @@ async function login(req, res) {
         token,
       });
     })
-    .catch(function (err) {
-      res.status(500).json({ err });
+    .catch((err) =>{
+      res.status(500).json({success: false, message: 'Error al iniciar sesión.', err: err});
     });
 }
 
