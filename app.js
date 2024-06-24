@@ -29,6 +29,8 @@ const socketClient = serverSocket.on('connection', (socket) => {
 
 app.use(cors());
 
+app.use("/uploads", express.static('uploads'));
+
 app.all('*', (req, res, next) => {
     if (socketClient) {
         req.socketClient = socketClient

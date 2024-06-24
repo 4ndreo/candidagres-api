@@ -83,7 +83,6 @@ async function login(req, res) {
   const user = req.body;
   UserService.login(user)
   .then((userData) => {
-      console.log('hola?', userData)
       const token = jwt.sign(
         { id: userData._id, email: userData.email, role: userData.role },
         "FARG"

@@ -1,5 +1,5 @@
 import * as productosService from "../services/productos.service.js"
-import {saveImage} from "../services/productos.service.js";
+import { saveImage } from "../services/productos.service.js";
 
 
 
@@ -64,6 +64,9 @@ async function update(req, res) {
     const productoID = req.params.idProductos;
     const data = req.body;
 
+    console.log('data')
+    console.log('data', data)
+
     productosService.update(productoID, data)
         .then(function (producto) {
             res.status(201).json(producto);
@@ -74,16 +77,11 @@ async function update(req, res) {
 }
 
 async function uploadImagen(req, res) {
-
-    console.log(req.file)
-
-    saveImage(req.file).then(function () {
-        res.status(201);
-    })
-        .catch(function (err) {
+    saveImage(req.file).then((data) => {
+        return res.status(201).json(data);
+    }) .catch(function (err) {
             res.status(500).json({ err });
         });
-    res.send('Termine')
 }
 
 

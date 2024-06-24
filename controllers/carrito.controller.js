@@ -56,6 +56,9 @@ async function findByIdUser(req, res) {
                 productosDetalle = data;
                 carrito.productos.forEach((producto, index) => {
                     carrito.productos[index] = { ...carrito.productos[index], ...productosDetalle.find(x => x._id.equals(producto.id)) };
+                    if (carrito.productos[index].deleted) {
+                        carrito.productos.splice(index, 1)
+                    }
                 })
                 res.status(200).json(carrito);
             })
