@@ -1,9 +1,6 @@
 import * as productosService from "../services/productos.service.js"
 import { saveImage } from "../services/productos.service.js";
 
-
-
-
 async function create(req, res) {
     const newProducto = req.body;
 
@@ -49,9 +46,7 @@ async function remove(req, res) {
                 res.status(200).json(producto);
                 // req.socketClient.emit('locationsList', { location })
             } else {
-                res
-                    .status(404)
-                    .json({ message: `El alumno con id ${producto} no existe` });
+                res.status(404).json({ message: `El alumno con id ${producto} no existe` });
             }
         })
         .catch(function (err) {
@@ -59,13 +54,9 @@ async function remove(req, res) {
         });
 }
 
-
 async function update(req, res) {
     const productoID = req.params.idProductos;
     const data = req.body;
-
-    console.log('data')
-    console.log('data', data)
 
     productosService.update(productoID, data)
         .then(function (producto) {
@@ -79,12 +70,10 @@ async function update(req, res) {
 async function uploadImagen(req, res) {
     saveImage(req.file).then((data) => {
         return res.status(201).json(data);
-    }) .catch(function (err) {
-            res.status(500).json({ err });
-        });
+    }).catch(function (err) {
+        res.status(500).json({ err });
+    });
 }
-
-
 
 export default {
     create,
