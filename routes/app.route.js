@@ -11,6 +11,7 @@ import { authorization } from "../middlewares/auth.middlewares.js";
 import { isAllBooked, verifyDeletionPatch } from "../middlewares/inscripciones.middlewares.js";
 import multer from 'multer';
 import bodyParser from "express";
+import mediaController from "../controllers/media.controller.js";
 
 const route = express.Router();
 const upload = multer({dest: 'uploads/'});
@@ -70,7 +71,8 @@ route.get("/api/productos/:idProductos", productosController.findById);
 route.post("/api/productos/producto", productosController.create);
 route.delete("/api/productos/:idProductos", productosController.remove);
 route.patch("/api/productos/:idProductos", productosController.update);
-route.post("/api/productos/imagenes",upload.single('imagenProducto'), productosController.uploadImagen);
+
+route.post("/api/media",upload.single('imagenProducto'), mediaController.uploadImagen);
 
 
 

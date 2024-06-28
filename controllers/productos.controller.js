@@ -1,5 +1,4 @@
 import * as productosService from "../services/productos.service.js"
-import { saveImage } from "../services/productos.service.js";
 
 async function create(req, res) {
     const newProducto = req.body;
@@ -67,19 +66,10 @@ async function update(req, res) {
         });
 }
 
-async function uploadImagen(req, res) {
-    saveImage(req.file).then((data) => {
-        return res.status(201).json(data);
-    }).catch(function (err) {
-        res.status(500).json({ err });
-    });
-}
-
 export default {
     create,
     find,
     findById,
     remove,
     update,
-    uploadImagen
 }

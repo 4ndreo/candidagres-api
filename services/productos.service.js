@@ -1,6 +1,4 @@
 import * as dataBase from "./base.service/database.handler.js";
-import fs from 'node:fs';
-import path from 'node:path';
 
 const collection = "productos"
 
@@ -32,13 +30,6 @@ async function update(id, data) {
     return await dataBase.filter(collection, { deleted: false })
 }
 
-async function saveImage(file) {
-    const ext = path.extname(file.originalname)
-    const newPath = `./uploads/${file.filename + ext}`;
-    fs.renameSync(file.path, newPath);
-    return `${file.filename + ext}`;
-}
-
 export {
     create,
     find,
@@ -46,5 +37,4 @@ export {
     findMultipleById,
     remove,
     update,
-    saveImage
 }
