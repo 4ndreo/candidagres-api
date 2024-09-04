@@ -12,6 +12,7 @@ import { isAllBooked, verifyDeletionPatch } from "../middlewares/inscripciones.m
 import multer from 'multer';
 import bodyParser from "express";
 import mediaController from "../controllers/media.controller.js";
+import mpController from "../controllers/mp.controller.js";
 
 const route = express.Router();
 const upload = multer({dest: 'uploads/'});
@@ -99,6 +100,7 @@ route.post("/api/compras/compra", comprasController.create);
 route.delete("/api/compras/:id", comprasController.remove);
 route.patch("/api/compras/:id", comprasController.update);
 
+route.post("/api/create_preference", mpController.createPreference);
 
 
 

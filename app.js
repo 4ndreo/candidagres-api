@@ -11,7 +11,6 @@ const app = express();
 const server = createServer(app);
 
 
-
 const serverSocket = new SocketIO.Server(server, {
     cors:{
         origin: 'http://localhost:3000',
