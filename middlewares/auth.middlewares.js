@@ -4,7 +4,8 @@ const whitelistedEndPoints = [
   "/api/users/login",
   "/api/users/user",
   "/api/cursos",
-  "/api/create_preference"
+  "/api/create_preference",
+  "/api/feedback"
 ];
 
 const adminEndPoints = [
@@ -27,7 +28,7 @@ const adminEndPoints = [
 function authorization(req, res, next) {
   try {
     // Si url está en la whitelist, acceso a usuarios anónimos.
-    if (whitelistedEndPoints.some((endpoint) => endpoint === req.url)) {
+    if (whitelistedEndPoints.some((endpoint) => req.url.includes(endpoint) /*endpoint === req.url*/)) {
       next();
     } else {
       // Si no está en whitelist, verifico que esté logeado un usuario existente.

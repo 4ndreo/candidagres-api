@@ -100,7 +100,9 @@ route.post("/api/compras/compra", comprasController.create);
 route.delete("/api/compras/:id", comprasController.remove);
 route.patch("/api/compras/:id", comprasController.update);
 
+
 route.post("/api/create_preference", mpController.createPreference);
+route.get("/api/feedback/:id", mpController.feedback);
 
 
 

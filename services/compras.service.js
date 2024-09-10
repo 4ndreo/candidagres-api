@@ -3,8 +3,8 @@ import * as dataBase from "./base.service/database.handler.js";
 const collection = "compras"
 
 async function create(compras) {
-    await dataBase.create(collection, compras);
-    return await dataBase.filter(collection, { deleted: false })
+    let res = await dataBase.create(collection, compras);
+    return await dataBase.findById(collection, res.insertedId)
 }
 
 async function find() {
@@ -13,6 +13,10 @@ async function find() {
 
 async function findById(id) {
     return await dataBase.findById(collection, id)
+}
+
+async function findPendingByCartId(id) {
+    return await dataBase.filter(collection, { carritoId: id, state: "pending" })
 }
 
 async function findManyByIdUser(id) {
@@ -34,6 +38,7 @@ export {
     create,
     find,
     findById,
+    findPendingByCartId,
     findManyByIdUser,
     remove,
     update

@@ -93,6 +93,18 @@ async function update(req, res) {
         });
 }
 
+async function savePurchase(req, res) {
+    const data = req.body;
+    const cart = await carritoService.findCarritoByIdUser(data.idUser);
+    comprasService.update(compraID, data)
+        .then(function (compra) {
+            res.status(201).json(compra);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
 
 export default {
     create,
@@ -100,5 +112,6 @@ export default {
     findById,
     findManyByIdUser,
     remove,
-    update
+    update,
+    savePurchase
 }
