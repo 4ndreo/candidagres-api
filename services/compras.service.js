@@ -31,7 +31,8 @@ async function remove(id) {
 
 async function update(id, data) {
     await dataBase.update(collection, id, data);
-    return await dataBase.filter(collection, { deleted: false })
+    return await dataBase.findById(collection, id)
+    // return await dataBase.filter(collection, { deleted: false })
 }
 
 export {
