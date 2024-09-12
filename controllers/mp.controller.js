@@ -14,6 +14,10 @@ async function createPreference(req, res) {
     try {
         console.log(req.body)
         let pendingPurchase = await comprasService.findPendingByCartId(req.body.carritoId)
+        if (pendingPurchase && pendingPurchase.length > 0 && pendingPurchase !== undefined) {
+            console.log('pending1', pendingPurchase)
+            pendingPurchase = await comprasService.update(pendingPurchase[0]._id, { productos: req.body.items, totalCost: req.body.totalCost, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay })
+        }
         console.log('pending2', pendingPurchase)
         if (!pendingPurchase || pendingPurchase.length === 0 || pendingPurchase === undefined) {
             console.log('creando...')
@@ -22,7 +26,12 @@ async function createPreference(req, res) {
                 usuarioId: req.body.usuarioId,
                 carritoId: req.body.carritoId,
                 productos: req.body.items,
-                state: req.body.state
+                state: "pending",
+                created_at: new Date(),
+                totalCost: req.body.totalCost,
+                totalQuantity: req.body.totalQuantity,
+                totalDelay: req.body.totalDelay,
+                delivered_at: null
             }
             )
             console.log('compra nueva', pendingPurchase)

@@ -48,24 +48,45 @@ async function findById(req, res) {
         });
 }
 async function findByIdUser(req, res) {
+    // let productosDetalle = [];
     const userID = req.params.idUser;
-    carritoService.findCarritoByIdUser(userID)
-        .then(function (carrito) {
-            let productosDetalle = [];
-            productosService.findMultipleById(carrito.productos.map(producto => producto.id)).then((data) => {
-                productosDetalle = data;
-                carrito.productos.forEach((producto, index) => {
-                    carrito.productos[index] = { ...carrito.productos[index], ...productosDetalle.find(x => x._id.equals(producto.id)) };
-                    if (carrito.productos[index].deleted) {
-                        carrito.productos.splice(index, 1)
-                    }
-                })
-                res.status(200).json(carrito);
+
+    try {
+        const cart = await carritoService.findCarritoByIdUser(userID)
+        console.log('carritooooo', cart)
+        if (cart) {
+            const products = await productosService.findMultipleById(cart.productos.map(producto => producto.id))
+            // productosDetalle = data;
+            cart.productos.forEach((producto, index) => {
+                cart.productos[index] = { ...cart.productos[index], ...products.find(x => x._id.equals(producto.id)) };
+                if (cart.productos[index].deleted) {
+                    cart.productos.splice(index, 1)
+                }
             })
-        })
-        .catch(function (err) {
-            res.status(500).json({ err });
-        });
+            res.status(200).json(cart);
+        } else {
+            const newCart = await carritoService.create({ usuarioId: userID, productos: [] })
+            res.status(201).json(newCart);
+        }
+
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+    // .then(function (carrito) {
+    // productosService.findMultipleById(carrito.productos.map(producto => producto.id)).then((data) => {
+    //     productosDetalle = data;
+    //     carrito.productos.forEach((producto, index) => {
+    //         carrito.productos[index] = { ...carrito.productos[index], ...productosDetalle.find(x => x._id.equals(producto.id)) };
+    //         if (carrito.productos[index].deleted) {
+    //             carrito.productos.splice(index, 1)
+    //         }
+    //     })
+    //     res.status(200).json(carrito);
+    // })
+    // })
+    // .catch(function (err) {
+    // res.status(500).json({ err });
+    // });
 }
 async function findByIdUserFinalizado(req, res) {
     const userID = req.params.idUser;
