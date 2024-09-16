@@ -28,8 +28,8 @@ async function remove(id) {
     return await dataBase.filter(collection, { deleted: true })
 }
 
-async function update(carritoId, productos) {
-    await dataBase.updateCarrito(collection, carritoId, productos);
+async function update(carritoId, items) {
+    await dataBase.updateCarrito(collection, carritoId, items);
     return await dataBase.filter(collection, { deleted: false });
 }
 
@@ -37,6 +37,11 @@ async function updateEliminarProducto(id, total, detallesProducto) {
     await dataBase.updateCarritoActualizado(collection, id, { total, productosComprar: detallesProducto });
     return await dataBase.findByIdCarrito(collection, id);
 }
+
+// async function addToCart(carritoId, item) {
+//     await dataBase.update(collection, carritoId, [...item]);
+//     return await dataBase.findByIdCarrito(collection, carritoId);
+// }
 
 export {
     create,
@@ -46,5 +51,6 @@ export {
     findCarritoByIdUserFinalizado,
     remove,
     update,
-    updateEliminarProducto
+    updateEliminarProducto,
+    // addToCart
 }

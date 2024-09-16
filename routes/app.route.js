@@ -88,6 +88,8 @@ route.post("/api/carrito/carrito", carritoController.create);
 route.delete("/api/carrito/:idCarrito", carritoController.remove);
 route.patch("/api/carrito/:idCarrito", carritoController.update);
 route.patch("/api/carrito/user/:idCarrito", carritoController.updateEliminarProducto);
+route.patch("/api/carrito/:idUser/addToCart", carritoController.addToCart);
+route.patch("/api/carrito/:idUser/substractToCart", carritoController.substractToCart);
 
 
 
@@ -103,6 +105,7 @@ route.patch("/api/compras/:id", comprasController.update);
 
 route.post("/api/create_preference", mpController.createPreference);
 route.get("/api/feedback/:id", mpController.feedback);
+route.post("/api/webhook", mpController.receiveWebhook);
 
 
 

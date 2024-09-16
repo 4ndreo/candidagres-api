@@ -12,20 +12,17 @@ const preference = new Preference(client);
 
 async function createPreference(req, res) {
     try {
-        console.log(req.body)
         let pendingPurchase = await comprasService.findPendingByCartId(req.body.carritoId)
+        
         if (pendingPurchase && pendingPurchase.length > 0 && pendingPurchase !== undefined) {
-            console.log('pending1', pendingPurchase)
-            pendingPurchase = await comprasService.update(pendingPurchase[0]._id, { productos: req.body.items, totalCost: req.body.totalCost, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay })
+            pendingPurchase = await comprasService.update(pendingPurchase[0]._id, { items: req.body.items, totalCost: req.body.totalCost, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay })
         }
-        console.log('pending2', pendingPurchase)
-        if (!pendingPurchase || pendingPurchase.length === 0 || pendingPurchase === undefined) {
-            console.log('creando...')
-            pendingPurchase = await comprasService.create({
 
+        if (!pendingPurchase || pendingPurchase.length === 0 || pendingPurchase === undefined) {
+            pendingPurchase = await comprasService.create({
                 usuarioId: req.body.usuarioId,
                 carritoId: req.body.carritoId,
-                productos: req.body.items,
+                items: req.body.items,
                 state: "pending",
                 created_at: new Date(),
                 totalCost: req.body.totalCost,
@@ -34,20 +31,17 @@ async function createPreference(req, res) {
                 delivered_at: null
             }
             )
-            console.log('compra nueva', pendingPurchase)
         }
-
         const body = {
             items: req.body.items,
             back_urls: {
                 success: `http://localhost:2025/api/feedback/${typeof pendingPurchase === 'object' ? pendingPurchase._id : pendingPurchase[0]._id}`,
-                failure: `http://localhost:3000/tienda/carrito/id-${req.body.usuarioId}`,
+                failure: `http://localhost:3000/store/carrito/id-${req.body.usuarioId}`,
                 pending: 'http://localhost:2025/api/'
             },
+            notification_url: `https://fcd0-2800-810-454-152-6de5-daf8-4ffb-179a.ngrok-free.app/api/webhook`,
             auto_return: 'approved',
         }
-
-        console.log(body)
 
         if (pendingPurchase) {
             const result = await preference.create({ body })
@@ -64,25 +58,24 @@ async function createPreference(req, res) {
         }
 
     } catch (error) {
+        return res.json({
+            id: error.id
+        })
     }
 }
 
 async function feedback(req, res) {
     try {
-        console.log('params', req.params)
-        // let pendingPurchase = await comprasService.findPendingByCartId(req.params.id)
-
-        console.log('req.status', req.query.status)
         if (req.query.status === 'approved') {
             const purchaseApproved = await comprasService.update(req.params.id, {
-                state: 'approved'
+                state: 'approved',
+                Payment: req.query.payment_id,
+                Status: req.query.status,
+                MerchantOrder: req.query.merchant_order_id
             })
-            console.log('purchaseApproved', purchaseApproved)
             const deletedCart = await carritoService.remove(purchaseApproved.carritoId)
-            console.log('deletedCart', deletedCart)
             if (purchaseApproved && deletedCart) {
-
-                res.redirect('http://localhost:3000/tienda');
+                res.redirect('http://localhost:3000/store');
             }
 
         }
@@ -109,9 +102,16 @@ async function feedback(req, res) {
     }
 }
 
+function receiveWebhook(req, res) {
+    console.log('webhook received');
+    res.json({
+        message: 'Webhook received'
+    })
+}
 
 
 export default {
     createPreference,
-    feedback
+    feedback,
+    receiveWebhook
 }

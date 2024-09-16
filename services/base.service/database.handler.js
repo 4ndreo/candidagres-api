@@ -20,7 +20,7 @@ async function connectDB(action) {
     console.error(error);
     response = Promise.reject({ message: error.toString() })
   } finally {
-    await client.close();
+    // await client.close();
   }
   return response;
 }
@@ -49,13 +49,13 @@ async function update(collection, id, data) {
   );
 }
 
-async function updateCarrito(collection, id, productos) {
+async function updateCarrito(collection, id, items) {
   return connectDB((db) =>
     db
       .collection(collection)
       .updateOne(
         { _id: new ObjectId(id) },
-        { $set: { productos: productos } }
+        { $set: { items: items } }
       )
   );
 }
