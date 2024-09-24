@@ -104,7 +104,6 @@ route.patch("/api/compras/:id", comprasController.update);
 
 
 route.post("/api/create_preference", mpController.createPreference);
-route.get("/api/feedback/:id", mpController.feedback);
 route.post("/api/webhook", mpController.receiveWebhook);
 
 

@@ -132,7 +132,7 @@ async function addToCart(req, res) {
         return res.status(201).json(newCart);
     }
     const item = cart.items.find(item => item.id === req.body.item.id)
-    cart.items[cart.items.indexOf(item) > -1 ? cart.items.indexOf(item) : cart.items.length] = {id: req.body.item.id, quantity: req.body.item.quantity}
+    cart.items[cart.items.indexOf(item) > -1 ? cart.items.indexOf(item) : cart.items.length] = {id: req.body.item.id, quantity: item.quantity + 1}
     carritoService.update(cart._id, cart.items)
         .then(function (carrito) {
             res.status(201).json(carrito);
@@ -145,11 +145,11 @@ async function addToCart(req, res) {
 async function substractToCart(req, res) {
     const cart = await carritoService.findCarritoByIdUser(req.params.idUser)
     if (!cart) {
-        return res.status(500).json('No existe el carrito');
+        return res.status(404).json('No existe el carrito');
     }
     const item = cart.items.find(item => item.id === req.body.item.id)
     item.quantity === 1 ? cart.items.splice(cart.items.indexOf(item), 1) :
-    cart.items[cart.items.indexOf(item)] = {id: req.body.item.id, quantity: req.body.item.quantity}
+    cart.items[cart.items.indexOf(item)] = {id: req.body.item.id, quantity: item.quantity - 1}
     carritoService.update(cart._id, cart.items)
         .then(function (carrito) {
             res.status(201).json(carrito);

@@ -3,8 +3,7 @@ import AppRoute from './routes/app.route.js'
 import cors from 'cors';
 import { createServer } from 'http';
 import * as SocketIO from 'socket.io'
-import 'dotenv/config'
-
+import dotenv from 'dotenv';
 
 // require('dotenv').config({path: './.env'});
 const app = express();
@@ -39,7 +38,8 @@ app.all('*', (req, res, next) => {
 
 app.use(express.json()); // para que el servidor pueda recibir los datos en formato json
 app.use('/', AppRoute);
-app.get('dotenv');
+
+dotenv.config();
 
 server.listen(2025, () => {
     console.log('Servidor corriendo en http://localhost:2025/')

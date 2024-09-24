@@ -1,61 +1,38 @@
-import { Preference } from 'mercadopago';
-import { MercadoPagoConfig } from 'mercadopago';
+import { Preference, MercadoPagoConfig, Payment } from 'mercadopago';
 import * as comprasService from '../services/compras.service.js';
 import * as carritoService from '../services/carrito.service.js';
 
 
-// Agrega credenciales
-
-const client = new MercadoPagoConfig({ accessToken: "APP_USR-8875919460375661-090318-f1b6a6119c02afce564c4037f19d43b7-1950755273" });
-
-const preference = new Preference(client);
-
 async function createPreference(req, res) {
-    try {
-        let pendingPurchase = await comprasService.findPendingByCartId(req.body.carritoId)
-        
-        if (pendingPurchase && pendingPurchase.length > 0 && pendingPurchase !== undefined) {
-            pendingPurchase = await comprasService.update(pendingPurchase[0]._id, { items: req.body.items, totalCost: req.body.totalCost, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay })
-        }
+    const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
 
-        if (!pendingPurchase || pendingPurchase.length === 0 || pendingPurchase === undefined) {
-            pendingPurchase = await comprasService.create({
-                usuarioId: req.body.usuarioId,
-                carritoId: req.body.carritoId,
-                items: req.body.items,
-                state: "pending",
-                created_at: new Date(),
-                totalCost: req.body.totalCost,
-                totalQuantity: req.body.totalQuantity,
-                totalDelay: req.body.totalDelay,
-                delivered_at: null
-            }
-            )
-        }
+    const preference = new Preference(client);
+    try {
+
         const body = {
             items: req.body.items,
             back_urls: {
-                success: `http://localhost:2025/api/feedback/${typeof pendingPurchase === 'object' ? pendingPurchase._id : pendingPurchase[0]._id}`,
+                success: `http://localhost:3000/store`,
                 failure: `http://localhost:3000/store/carrito/id-${req.body.usuarioId}`,
                 pending: 'http://localhost:2025/api/'
             },
-            notification_url: `https://fcd0-2800-810-454-152-6de5-daf8-4ffb-179a.ngrok-free.app/api/webhook`,
+            notification_url: `https://8lmf1sds-2025.brs.devtunnels.ms/api/webhook`,
             auto_return: 'approved',
         }
 
-        if (pendingPurchase) {
-            const result = await preference.create({ body })
-            return res.json({
-                id: result.id
-            })
-        }
-
-        if (pendingPurchase.items.length === 0) {
+        if (req.body.items.length === 0) {
             return res.json({
                 success: false,
                 message: 'No hay productos en el carrito.'
             })
         }
+        // if (pendingPurchase) {
+        const result = await preference.create({ body })
+        return res.json(
+            result
+        )
+        // }
+
 
     } catch (error) {
         return res.json({
@@ -64,46 +41,33 @@ async function createPreference(req, res) {
     }
 }
 
-async function feedback(req, res) {
-    try {
-        if (req.query.status === 'approved') {
-            const purchaseApproved = await comprasService.update(req.params.id, {
-                state: 'approved',
-                Payment: req.query.payment_id,
-                Status: req.query.status,
-                MerchantOrder: req.query.merchant_order_id
+async function receiveWebhook(req, res) {
+    if (req.query.hasOwnProperty('data.id')) {
+        const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
+        const payment = new Payment(client);
+
+        payment.get({
+            id: req.query['data.id'],
+        }).then(async (resp) => {
+            const purchase = await comprasService.create({
+                usuarioId: req.body.usuarioId,
+                carritoId: req.body.carritoId,
+                items: resp.additional_info.items,
+                created_at: new Date(),
+                totalCost: resp.transaction_amount,
+                totalQuantity: req.body.totalQuantity,
+                totalDelay: req.body.totalDelay,
+                mp_card: resp.card,
+                mp_fee_details: resp.fee_details,
+                mp_id: resp.order.id,
+                mp_payer: resp.payer,
+                delivered_at: null
             })
-            const deletedCart = await carritoService.remove(purchaseApproved.carritoId)
-            if (purchaseApproved && deletedCart) {
-                res.redirect('http://localhost:3000/store');
-            }
-
-        }
-        // res.json({
-        //     Payment: req.query.payment_id,
-        //     Status: req.query.status,
-        //     MerchantOrder: req.query.merchant_order_id
-        // });
-        // const body = {
-        //     items: req.body,
-        //     back_urls: {
-        //         success: 'http://localhost:2025/api/feedback',
-        //         failure: 'http://localhost:2025/api/feedback',
-        //         pending: 'http://localhost:2025/api/'
-        //     },
-        //     auto_return: 'approved',
-        // }
-        // const result = await preference.create({ body })
-        // res.json({
-        //     id: result.id
-        // })
-
-    } catch (error) {
+        }).catch((err) => {
+            console.error(err)
+        })
     }
-}
 
-function receiveWebhook(req, res) {
-    console.log('webhook received');
     res.json({
         message: 'Webhook received'
     })
@@ -112,6 +76,5 @@ function receiveWebhook(req, res) {
 
 export default {
     createPreference,
-    feedback,
     receiveWebhook
 }

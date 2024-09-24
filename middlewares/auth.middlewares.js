@@ -5,7 +5,7 @@ const whitelistedEndPoints = [
   "/api/users/user",
   "/api/cursos",
   "/api/create_preference",
-  "/api/feedback"
+  "/api/webhook",
 ];
 
 const adminEndPoints = [
