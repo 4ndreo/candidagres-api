@@ -6,7 +6,7 @@ let uri = '';
 
 async function connectDB(action) {
   uri = process.env.DB_URI;
-  client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+  client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1, keepAlive: true });
   //const client = new MongoClient("mongodb://127.0.0.1:27017");
 
   const db = await client.db("cgres-app-turnos");
