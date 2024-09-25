@@ -1,15 +1,18 @@
 import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
 import { promise } from "bcrypt/promises.js";
 
-let client = '';
+let client;
 let uri = '';
+let db;
 
 async function connectDB(action) {
   uri = process.env.DB_URI;
-  client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1, keepAlive: true });
-  //const client = new MongoClient("mongodb://127.0.0.1:27017");
+  if (!client) {
+    client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1, keepAlive: true });
+    //const client = new MongoClient("mongodb://127.0.0.1:27017");
+    db = client.db("cgres-app-turnos");
+  }
 
-  const db = await client.db("cgres-app-turnos");
   let response;
   try {
     await client.connect().catch(() => {
@@ -120,17 +123,13 @@ async function filter(collection, filter) {
   return connectDB((db) => db.collection(collection).find(filter).toArray());
 }
 
-async function parseToObjectId(id) {
-  return new ObjectId(id);
-}
-
 async function findOne(collection, email) {
   return connectDB((db) => db.collection(collection).findOne({ email }));
 }
 
 async function findOneByEmail(collection, email) {
-  
-  return connectDB((db) => db.collection(collection).findOne({email: email}));
+
+  return connectDB((db) => db.collection(collection).findOne({ email: email }));
 }
 
 async function countInscripcionesByCurso(collection, idCurso) {
@@ -166,7 +165,6 @@ export {
   findByIdCarrito,
   filter,
   closeDB,
-  parseToObjectId,
   findOne,
   findOneByEmail,
   countInscripcionesByCurso,
