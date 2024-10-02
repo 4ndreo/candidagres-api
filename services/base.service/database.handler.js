@@ -103,7 +103,7 @@ async function findByIdUser(collection, id) {
 }
 
 async function findManyByIdUser(collection, id) {
-  return connectDB((db) => db.collection(collection).find({ usuarioId: id, deleted: false, state: "approved" }).sort({ created_at: -1 }).toArray());
+  return connectDB((db) => db.collection(collection).find({ usuarioId: id, deleted: false }).sort({ created_at: -1 }).toArray());
 }
 
 async function findByIdUserFinalizado(collection, id) {

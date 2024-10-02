@@ -11,6 +11,8 @@ async function createPreference(req, res) {
 
         const body = {
             items: req.body.items,
+            metadata: { usuarioId: req.body.usuarioId, carritoId: req.body.carritoId, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
+            },
             back_urls: {
                 success: `http://localhost:3000/store`,
                 failure: `http://localhost:3000/store/carrito/id-${req.body.usuarioId}`,
@@ -21,23 +23,17 @@ async function createPreference(req, res) {
         }
 
         if (req.body.items.length === 0) {
-            return res.json({
-                success: false,
-                message: 'No hay productos en el carrito.'
-            })
+            throw new Error('No hay productos en el carrito.')
         }
-        // if (pendingPurchase) {
+
         const result = await preference.create({ body })
         return res.json(
             result
         )
-        // }
 
 
     } catch (error) {
-        return res.json({
-            id: error.id
-        })
+        res.status(404).json({ success: false, message: error.message })
     }
 }
 
@@ -50,19 +46,22 @@ async function receiveWebhook(req, res) {
             id: req.query['data.id'],
         }).then(async (resp) => {
             const purchase = await comprasService.create({
-                usuarioId: req.body.usuarioId,
-                carritoId: req.body.carritoId,
+                usuarioId: resp.metadata.usuario_id,
+                carritoId: resp.metadata.carrito_id,
                 items: resp.additional_info.items,
                 created_at: new Date(),
                 totalCost: resp.transaction_amount,
-                totalQuantity: req.body.totalQuantity,
-                totalDelay: req.body.totalDelay,
+                totalQuantity: resp.metadata.total_quantity,
+                totalDelay: resp.metadata.total_delay,
                 mp_card: resp.card,
                 mp_fee_details: resp.fee_details,
                 mp_id: resp.order.id,
                 mp_payer: resp.payer,
                 delivered_at: null
             })
+            if (purchase._id) {
+                await carritoService.remove(purchase.carritoId)
+            }
         }).catch((err) => {
             console.error(err)
         })
