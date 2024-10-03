@@ -93,17 +93,17 @@ async function update(req, res) {
         });
 }
 
-async function savePurchase(req, res) {
-    const data = req.body;
-    const cart = await carritoService.findCarritoByIdUser(data.idUser);
-    comprasService.update(compraID, data)
-        .then(function (compra) {
-            res.status(201).json(compra);
-        })
-        .catch(function (err) {
-            res.status(500).json({ err });
-        });
-}
+// async function savePurchase(req, res) {
+//     const data = req.body;
+//     const cart = await carritoService.findCarritoByIdUser(data.idUser);
+//     comprasService.update(compraID, data)
+//         .then(function (compra) {
+//             res.status(201).json(compra);
+//         })
+//         .catch(function (err) {
+//             res.status(500).json({ err });
+//         });
+// }
 
 
 export default {
@@ -113,5 +113,5 @@ export default {
     findManyByIdUser,
     remove,
     update,
-    savePurchase
+    // savePurchase
 }
