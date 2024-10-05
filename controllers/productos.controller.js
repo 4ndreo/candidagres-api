@@ -14,10 +14,19 @@ async function create(req, res) {
 
 
 async function find(req, res) {
-    productosService.find()
+    productosService.find(req.query)
         .then(function (producto) {
             res.status(200).json(producto);
-            // req.socketClient.emit('locationsList', { turno })
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
+async function findQuery(req, res) {
+    productosService.findQuery(req.query)
+        .then(function (producto) {
+            res.status(200).json(producto);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -69,6 +78,7 @@ async function update(req, res) {
 export default {
     create,
     find,
+    findQuery,
     findById,
     remove,
     update,

@@ -37,6 +37,64 @@ async function find(collection) {
   );
 }
 
+async function findQuery(collection, request) {
+  const sort = (request?.sort ?? 'undefined') !== 'undefined' ? request.sort : '_id'
+  const order = (request?.order ?? 'undefined') !== 'undefined' ? parseInt(request.order) : 1
+  const page = (request?.page ?? 'undefined') !== 'undefined' ? parseInt(request.page) : 0
+  const limit = (request?.limit ?? 'undefined') !== 'undefined' ? parseInt(request.limit) : 10
+  const filter = (request?.sort ?? 'undefined') !== 'undefined' ? JSON.parse(request?.filter) : {}
+  const filterField = filter?.field !== 'undefined' ? filter.field : null
+  const filterValue = filter?.value !== 'undefined' ? filter.value : null
+  
+  return connectDB((db) =>
+    db
+      .collection(collection)
+      .aggregate([
+  
+        // filter the results
+        {
+          $match:
+            filterField && filterValue ?
+              {
+                deleted: { $not: { $eq: true } },
+                [filterField]: { $regex: filterValue, $options: "i" }
+              }
+              :
+              {
+                deleted: { $not: { $eq: true } },
+  
+              }
+        },
+  
+        // sort the results
+        { $sort: { [sort]: order } },
+  
+        // count the results on stage1, and paginate on stage2
+        {
+          $facet: {
+  
+            "stage1": [{ "$group": { _id: null, count: { $sum: 1 } } }],
+  
+            "stage2": [{ "$skip": page }, { "$limit": limit }]
+  
+          }
+        },
+  
+        { $unwind: "$stage1" },
+  
+        //output projection
+        {
+          $project: {
+            count: "$stage1.count",
+            data: "$stage2",
+            pages: { $ceil: { $divide: ["$stage1.count", limit] } }
+          }
+        }
+  
+      ]).toArray()
+  );
+}
+
 async function create(collection, data) {
   return connectDB((db) =>
     // db.collection(collection).insertOne({ usuarioId: usuarioId, productos: [], deleted: false })
@@ -152,6 +210,7 @@ async function closeDB() {
 export {
   connectDB,
   find,
+  findQuery,
   create,
   update,
   updateCarrito,

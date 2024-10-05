@@ -7,8 +7,12 @@ async function create(producto) {
     return await dataBase.findById(collection, newProduct.insertedId)
 }
 
-async function find() {
-    return await dataBase.find(collection)
+async function find(request) {
+    return await dataBase.find(collection, request)
+}
+
+async function findQuery(request) {
+    return await dataBase.findQuery(collection, request)
 }
 
 async function findProductoById(id) {
@@ -33,6 +37,7 @@ async function update(id, data) {
 export {
     create,
     find,
+    findQuery,
     findProductoById,
     findMultipleById,
     remove,

@@ -67,7 +67,8 @@ route.get("/api/inscripcionesByCurso/:idCurso", inscripcionesController.countIns
 
 
 // Productos
-route.get("/api/productos", productosController.find);
+route.get("/api/productsAll", productosController.find);
+route.get("/api/products", productosController.findQuery);
 route.get("/api/productos/:idProductos", productosController.findById);
 route.post("/api/productos/producto", productosController.create);
 route.delete("/api/productos/:idProductos", productosController.remove);
