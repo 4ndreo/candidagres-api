@@ -69,10 +69,10 @@ route.get("/api/inscripcionesByCurso/:idCurso", inscripcionesController.countIns
 // Productos
 route.get("/api/productsAll", productosController.find);
 route.get("/api/products", productosController.findQuery);
-route.get("/api/productos/:idProductos", productosController.findById);
-route.post("/api/productos/producto", productosController.create);
-route.delete("/api/productos/:idProductos", productosController.remove);
-route.patch("/api/productos/:idProductos", productosController.update);
+route.get("/api/products/:idProductos", productosController.findById);
+route.post("/api/products", productosController.create);
+route.delete("/api/products/:idProductos", productosController.remove);
+route.patch("/api/products/:idProductos", productosController.update);
 
 route.post("/api/media",upload.single('imagenProducto'), mediaController.uploadImagen);
 

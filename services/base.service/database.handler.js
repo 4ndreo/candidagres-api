@@ -42,10 +42,12 @@ async function findQuery(collection, request) {
   const order = (request?.order ?? 'undefined') !== 'undefined' ? parseInt(request.order) : 1
   const page = (request?.page ?? 'undefined') !== 'undefined' ? parseInt(request.page) : 0
   const limit = (request?.limit ?? 'undefined') !== 'undefined' ? parseInt(request.limit) : 10
-  const filter = (request?.sort ?? 'undefined') !== 'undefined' ? JSON.parse(request?.filter) : {}
+  const filter = (request?.filter ?? 'undefined') !== 'undefined' ? JSON.parse(request?.filter) : {}
   const filterField = filter?.field !== 'undefined' ? filter.field : null
   const filterValue = filter?.value !== 'undefined' ? filter.value : null
   
+// console.log(filterField, filterValue, filter)
+
   return connectDB((db) =>
     db
       .collection(collection)
