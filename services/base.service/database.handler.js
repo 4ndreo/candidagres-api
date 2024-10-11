@@ -47,10 +47,6 @@ async function findQuery(collection, request) {
   const filterField = filter?.field !== 'undefined' ? filter.field : null
   const filterValue = filter?.value !== 'undefined' ? filter.value : null
 
-  console.log(sort
-    , sortField
-    , sortDirection)
-
   return connectDB((db) =>
     db
       .collection(collection)
