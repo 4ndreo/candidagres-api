@@ -38,21 +38,48 @@ async function find(collection) {
 }
 
 async function findQuery(collection, request) {
-  const sort = (request?.sort ?? 'undefined') !== 'undefined' ? request.sort : '_id'
-  const order = (request?.order ?? 'undefined') !== 'undefined' ? parseInt(request.order) : 1
+  const sort = (request?.sort ?? 'undefined') !== 'undefined' ? JSON.parse(request?.sort) : {}
+  const sortField = (sort?.field ?? 'undefined') !== 'undefined' ? ('$' + sort.field) : null
+  const sortDirection = (sort?.direction ?? 'undefined') !== 'undefined' ? parseInt(sort.direction) : 1
   const page = (request?.page ?? 'undefined') !== 'undefined' ? parseInt(request.page) : 0
   const limit = (request?.limit ?? 'undefined') !== 'undefined' ? parseInt(request.limit) : 10
   const filter = (request?.filter ?? 'undefined') !== 'undefined' ? JSON.parse(request?.filter) : {}
   const filterField = filter?.field !== 'undefined' ? filter.field : null
   const filterValue = filter?.value !== 'undefined' ? filter.value : null
-  
-// console.log(filterField, filterValue, filter)
+
+  console.log(sort
+    , sortField
+    , sortDirection)
 
   return connectDB((db) =>
     db
       .collection(collection)
       .aggregate([
-  
+        // Add a new field for case-insensitive sorting
+        {
+          $addFields: {
+            sortField: {
+              //TODO: Test date sorting
+              // $cond: [
+              //   { $eq: [{ $type: "$lowerName" }, "date"] },
+              //   { $toLong: "$lowerName" },
+              //   {
+              //     $cond: [
+              //       { $isNumber: "$lowerName" },
+              //       "$lowerName",
+              //       { $toLower: { $toString: "$lowerName" } }
+              //     ]
+              //   }
+              // ]
+              $cond: {
+                if: { $isNumber: sortField },
+                then: sortField,
+                else: { $toLower: { $toString: sortField } }
+              }
+            }
+          }
+        },
+
         // filter the results
         {
           $match:
@@ -64,26 +91,26 @@ async function findQuery(collection, request) {
               :
               {
                 deleted: { $not: { $eq: true } },
-  
+
               }
         },
-  
+
         // sort the results
-        { $sort: { [sort]: order } },
-  
+        { $sort: { sortField: sortDirection } },
+
         // count the results on stage1, and paginate on stage2
         {
           $facet: {
-  
+
             "stage1": [{ "$group": { _id: null, count: { $sum: 1 } } }],
-  
+
             "stage2": [{ "$skip": page }, { "$limit": limit }]
-  
+
           }
         },
-  
+
         { $unwind: "$stage1" },
-  
+
         //output projection
         {
           $project: {
@@ -92,7 +119,7 @@ async function findQuery(collection, request) {
             pages: { $ceil: { $divide: ["$stage1.count", limit] } }
           }
         }
-  
+
       ]).toArray()
   );
 }
