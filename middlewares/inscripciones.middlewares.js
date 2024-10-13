@@ -8,7 +8,7 @@ const endpoint = {uri: '/api/inscripciones/', method: 'PATCH'};
 async function verifyDeletionPatch(req, res, next) {
 	const bodyKeys = Object.keys(req.body);
 	const token = req.headers['auth-token'] || '';
-	const user = jwt.verify(token, 'FARG');
+	const user = jwt.verify(token, process.env.JWT_SECRET);
 	const idInscripcion = req.params.idInscripciones;
 	let admin = isAdmin(user);
 	const currentInscripcion = await InscripcionesService.findInscripcionById(
@@ -63,7 +63,7 @@ async function verifyDeletionPatch(req, res, next) {
 
 async function isAllBooked(req, res, next) {
 	const token = req.headers['auth-token'] || '';
-	const user = jwt.verify(token, 'FARG');
+	const user = jwt.verify(token, process.env.JWT_SECRET);
 	const currentTurno = await TurnosService.findTurnoById(
 		req.body.idTurno
 	).then((data) => data);

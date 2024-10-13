@@ -7,7 +7,7 @@ async function find() {
 }
 
 async function findUserById(id) {
-  return await dataBase.findById(collection, id);
+  return await dataBase.findUserById(collection, id);
 }
 
 async function findOneByEmail(email) {
@@ -32,7 +32,7 @@ async function update(id, data) {
 
 async function login({ email, password }) {
 
-  const user = await dataBase.findOne(collection, email)
+  const user = await dataBase.findOneByEmail(collection, email)
   if (await user) {
 
     const isPasswordValid = await bcrypt.compare(password, user.password)

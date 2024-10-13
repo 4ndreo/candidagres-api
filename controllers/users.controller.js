@@ -29,7 +29,7 @@ async function create(req, res) {
 
   const userOld = await UserService.findOneByEmail(user.email)
 
-  if(!userOld){
+  if (!userOld) {
     const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(user.password, salt)
     const newUser = {
@@ -44,7 +44,7 @@ async function create(req, res) {
       .catch(function (err) {
         res.status(500).json({ err });
       });
-    } else {
+  } else {
     res.status(500).json('El usuario ya existe.');
   }
 
@@ -79,22 +79,41 @@ async function update(req, res) {
     });
 }
 
+async function updateProfile(req, res) {
+  const idUser = req.params.id;
+  const data = req.body;
+  const incomingToken = req.headers["auth-token"];
+  const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
+  console.log(data)
+
+  if (idUser !== user.id) {
+    return res.status(401).json({ message: 'No autorizado' });
+  }
+
+  UserService.update(user.id, data)
+    .then(function (user) {
+      res.status(201).json(user);
+    })
+    .catch(function (err) {
+      res.status(500).json({ err });
+    });
+}
+
 async function login(req, res) {
   const user = req.body;
   UserService.login(user)
-  .then((userData) => {
+    .then((userData) => {
       const token = jwt.sign(
-        { id: userData._id, email: userData.email, role: userData.role },
-        "FARG"
-      );
+        { id: userData._id, email: userData.email, role: userData.role }, process.env.JWT_SECRET);
       //res.header('auth-token', token).status(200).json(user);
       res.status(200).json({
         userData,
         token,
       });
     })
-    .catch((err) =>{
-      res.status(500).json({success: false, message: 'Error al iniciar sesión.', err: err});
+    .catch((err) => {
+      res.status(500).json({ success: false, message: 'Error al iniciar sesión.', err: err });
     });
 }
 
@@ -104,12 +123,10 @@ async function auth(req, res) {
   UserService.auth(user)
     .then((userData) => {
       const token = jwt.sign(
-        { id: userData._id, email: userData.email, role: userData.role },
-        "FARG"
-      );
+        { id: userData._id, email: userData.email, role: userData.role }, process.env.JWT_SECRET);
       //res.header('auth-token', token).status(200).json(user);
-      const userVerify1 = jwt.verify(incomingToken, "FARG");
-      const userVerify2 = jwt.verify(token, "FARG");
+      const userVerify1 = jwt.verify(incomingToken, process.env.JWT_SECRET);
+      const userVerify2 = jwt.verify(token, process.env.JWT_SECRET);
       if (
         userVerify1.email === userVerify2.email &&
         userVerify1.role === userVerify2.role
@@ -131,6 +148,7 @@ export default {
   create,
   remove,
   update,
+  updateProfile,
   login,
   auth,
 };

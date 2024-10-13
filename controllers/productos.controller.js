@@ -1,13 +1,16 @@
 import jwt from "jsonwebtoken";
 import * as productosService from "../services/productos.service.js"
+import { ObjectId } from "mongodb";
 
 
 async function create(req, res) {
     const incomingToken = req.headers["auth-token"];
-    const user = jwt.verify(incomingToken, "FARG");
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
     const newProducto = req.body;
 
-    await productosService.create({...newProducto, created_by: user._id})
+    console.log(user.id)
+
+    await productosService.create({ ...newProducto, created_by: new ObjectId(user.id) })
         .then(function (newProducto) {
             res.status(201).json(newProducto);
         })
@@ -28,7 +31,10 @@ async function find(req, res) {
 }
 
 async function findQuery(req, res) {
-    productosService.findQuery(req.query)
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
+    productosService.findQuery(req.query, user.role === 1 ? null : user.id)
         .then(function (producto) {
             res.status(200).json(producto);
         })

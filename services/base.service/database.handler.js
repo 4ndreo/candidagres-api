@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId, ServerApiVersion } from "mongodb";
+import { MongoClient, ObjectID, ObjectId, ServerApiVersion } from "mongodb";
 import { promise } from "bcrypt/promises.js";
 
 let client;
@@ -37,7 +37,7 @@ async function find(collection) {
   );
 }
 
-async function findQuery(collection, request) {
+async function findQuery(collection, request, idUser = null) {
   const sort = (request?.sort ?? 'undefined') !== 'undefined' ? JSON.parse(request?.sort) : {}
   const sortField = (sort?.field ?? 'undefined') !== 'undefined' ? ('$' + sort.field) : null
   const sortDirection = (sort?.direction ?? 'undefined') !== 'undefined' ? parseInt(sort.direction) : 1
@@ -46,6 +46,8 @@ async function findQuery(collection, request) {
   const filter = (request?.filter ?? 'undefined') !== 'undefined' ? JSON.parse(request?.filter) : {}
   const filterField = filter?.field !== 'undefined' ? filter.field : null
   const filterValue = filter?.value !== 'undefined' ? filter.value : null
+
+  console.log('idUser', idUser)
 
   return connectDB((db) =>
     db
@@ -79,20 +81,40 @@ async function findQuery(collection, request) {
         // filter the results
         {
           $match:
+            idUser ?
+              {
+                created_by: { $eq: new ObjectID(idUser) }
+              } : {}
+        },
+        {
+          $match:
             filterField && filterValue ?
               {
-                deleted: { $not: { $eq: true } },
                 [filterField]: { $regex: filterValue, $options: "i" }
               }
-              :
-              {
-                deleted: { $not: { $eq: true } },
+              : {}
+        },
+        {
+          $match:
+          {
+            deleted: { $not: { $eq: true } },
 
-              }
+          }
         },
 
         // sort the results
         { $sort: { sortField: sortDirection } },
+
+
+        {
+          $lookup:
+          {
+            from: 'users',
+            localField: 'created_by',
+            foreignField: '_id',
+            as: 'user'
+          }
+        },
 
         // count the results on stage1, and paginate on stage2
         {
@@ -121,6 +143,7 @@ async function findQuery(collection, request) {
 }
 
 async function create(collection, data) {
+  console.log('data', data)
   return connectDB((db) =>
     // db.collection(collection).insertOne({ usuarioId: usuarioId, productos: [], deleted: false })
     db.collection(collection).insertOne({ ...data, deleted: false })

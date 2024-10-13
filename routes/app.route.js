@@ -15,7 +15,7 @@ import mediaController from "../controllers/media.controller.js";
 import mpController from "../controllers/mp.controller.js";
 
 const route = express.Router();
-const upload = multer({dest: 'uploads/'});
+const upload = multer({ dest: 'uploads/' });
 const app = express();
 
 //route.use(fileUpload());
@@ -36,6 +36,8 @@ route.patch("/api/users/:idUser", userController.update);
 route.post("/api/users/login", userController.login)
 route.post("/api/users/auth", userController.auth)
 
+// Profile
+route.patch("/api/profile/:id", userController.updateProfile);
 
 // Turnos
 route.get("/api/turnos", turnosController.find);
@@ -74,7 +76,7 @@ route.post("/api/products", productosController.create);
 route.delete("/api/products/:idProductos", productosController.remove);
 route.patch("/api/products/:idProductos", productosController.update);
 
-route.post("/api/media",upload.single('imagenProducto'), mediaController.uploadImagen);
+route.post("/api/media", upload.single('imagenProducto'), mediaController.uploadImagen);
 route.delete("/api/media/:name", mediaController.removeImage);
 
 

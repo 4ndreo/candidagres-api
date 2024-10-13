@@ -11,8 +11,8 @@ async function find(request) {
     return await dataBase.find(collection, request)
 }
 
-async function findQuery(request) {
-    return await dataBase.findQuery(collection, request)
+async function findQuery(request, idUser = null) {
+    return await dataBase.findQuery(collection, request, idUser)
 }
 
 async function findProductoById(id) {
