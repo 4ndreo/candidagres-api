@@ -85,8 +85,6 @@ async function updateProfile(req, res) {
   const incomingToken = req.headers["auth-token"];
   const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
-  console.log(data)
-
   if (idUser !== user.id) {
     return res.status(401).json({ message: 'No autorizado' });
   }

@@ -47,8 +47,6 @@ async function findQuery(collection, request, idUser = null) {
   const filterField = filter?.field !== 'undefined' ? filter.field : null
   const filterValue = filter?.value !== 'undefined' ? filter.value : null
 
-  console.log('idUser', idUser)
-
   return connectDB((db) =>
     db
       .collection(collection)
