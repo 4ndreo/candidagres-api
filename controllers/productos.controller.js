@@ -1,9 +1,13 @@
+import jwt from "jsonwebtoken";
 import * as productosService from "../services/productos.service.js"
 
+
 async function create(req, res) {
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, "FARG");
     const newProducto = req.body;
 
-    await productosService.create(newProducto)
+    await productosService.create({...newProducto, created_by: user._id})
         .then(function (newProducto) {
             res.status(201).json(newProducto);
         })

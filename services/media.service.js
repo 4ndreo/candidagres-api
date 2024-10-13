@@ -8,6 +8,14 @@ async function saveImage(file) {
     return `${file.filename + ext}`;
 }
 
+async function remove(fileName) {
+    // const ext = path.extname(file);
+    const imagePath = `./uploads/${fileName}`;
+    fs.unlinkSync(imagePath);
+    return `${fileName}`
+}
+
 export {
-    saveImage
+    saveImage,
+    remove
 }

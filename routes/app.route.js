@@ -75,6 +75,7 @@ route.delete("/api/products/:idProductos", productosController.remove);
 route.patch("/api/products/:idProductos", productosController.update);
 
 route.post("/api/media",upload.single('imagenProducto'), mediaController.uploadImagen);
+route.delete("/api/media/:name", mediaController.removeImage);
 
 
 
