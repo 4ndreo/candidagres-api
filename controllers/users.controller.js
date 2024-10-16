@@ -26,9 +26,13 @@ async function findById(req, res) {
 
 async function create(req, res) {
   const user = req.body;
-
+  if (!user.email || !user.password || user.password.length < 6) {
+    console.log('ent')
+    return res.status(400).json({ err: 'Todos los campos son obligatorios' });
+  }
+  
   const userOld = await UserService.findOneByEmail(user.email)
-
+  
   if (!userOld) {
     const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(user.password, salt)
@@ -44,8 +48,8 @@ async function create(req, res) {
       .catch(function (err) {
         res.status(500).json({ err });
       });
-  } else {
-    res.status(500).json('El usuario ya existe.');
+    } else {
+    res.status(500).json({err: 'El usuario ya existe.'});
   }
 
 }
@@ -102,16 +106,13 @@ async function login(req, res) {
   const user = req.body;
   UserService.login(user)
     .then((userData) => {
-      const token = jwt.sign(
-        { id: userData._id, email: userData.email, role: userData.role }, process.env.JWT_SECRET);
-      //res.header('auth-token', token).status(200).json(user);
-      res.status(200).json({
-        userData,
-        token,
-      });
+      const token = jwt.sign({ id: userData._id, email: userData.email, role: userData.role }, process.env.JWT_SECRET);
+      // res.status(200).json({ userData, token });
     })
     .catch((err) => {
-      res.status(500).json({ success: false, message: 'Error al iniciar sesión.', err: err });
+      console.log(err.message)
+      // return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+      res.status(500).json({err});
     });
 }
 

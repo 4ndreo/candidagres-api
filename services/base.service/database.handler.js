@@ -51,7 +51,6 @@ async function findQuery(collection, request, idUser = null) {
     db
       .collection(collection)
       .aggregate([
-        // Add a new field for case-insensitive sorting
         {
           $addFields: {
             sortField: {
