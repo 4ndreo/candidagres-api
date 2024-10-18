@@ -37,13 +37,14 @@ async function login({ email, password }) {
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (isPasswordValid) {
+      console.log(user)
       return { ...user, password: undefined }
     } else {
 
       throw new Error('Las credenciales son incorrectas.')
     }
   } else {
-    return user
+    throw new Error('Las credenciales son incorrectas.')
   }
 
 }

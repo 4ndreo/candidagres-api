@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import * as UserService from "../services/users.service.js";
 import bcrypt from 'bcrypt'
+import { validateCUIL, validateDNI, validateEmail, validatePassport, validatePassword } from "../utils/validators.js";
 
 async function find(req, res) {
   UserService.find()
@@ -25,32 +26,53 @@ async function findById(req, res) {
 }
 
 async function create(req, res) {
+  let error = null;
+  error = req.body ? error : 'Todos los campos son obligatorios.'
+
   const user = req.body;
-  if (!user.email || !user.password || user.password.length < 6) {
-    console.log('ent')
-    return res.status(400).json({ err: 'Todos los campos son obligatorios' });
+
+  error = validatePassword(user.password) ?? error
+  error = validateEmail(user.email) ?? error
+
+  switch (user.documentType) {
+    case 'DNI':
+      error = validateDNI(user.idDocument) ?? error
+      break;
+    case 'CUIL':
+      error = validateCUIL(user.idDocument) ?? error
+      break;
+    case 'Pasaporte':
+      error = validatePassport(user.idDocument) ?? error
+      break;
+    default:
+      error = 'Debe ingresar un tipo de documento válido.' ?? error
   }
-  
+
+  error = user.lastName?.length > 0 ? error : 'Debe completar el apellido'
+  error = user.firstName?.length > 0 ? error : 'Debe completar el nombre'
+
   const userOld = await UserService.findOneByEmail(user.email)
-  
-  if (!userOld) {
-    const salt = await bcrypt.genSalt(10)
-    const passwordHash = await bcrypt.hash(user.password, salt)
-    const newUser = {
-      email: user.email,
-      role: 2,
-      password: passwordHash
-    }
-    await UserService.create(newUser)
-      .then(function (user) {
-        res.status(201).json(user);
-      })
-      .catch(function (err) {
-        res.status(500).json({ err });
-      });
-    } else {
-    res.status(500).json({err: 'El usuario ya existe.'});
+
+  if (userOld) {
+    error = 'El usuario ya existe.' ?? error
   }
+
+  if (error) {
+    return res.status(400).json({ err: error });
+  }
+
+  const salt = await bcrypt.genSalt(10)
+  const passwordHash = await bcrypt.hash(user.password, salt)
+  const newUser = {
+    ...user, role: 2, password: passwordHash
+  }
+  await UserService.create(newUser)
+    .then(function (user) {
+      res.status(201).json(user);
+    })
+    .catch(function (err) {
+      res.status(500).json({ err });
+    });
 
 }
 
@@ -104,15 +126,21 @@ async function updateProfile(req, res) {
 
 async function login(req, res) {
   const user = req.body;
+  let error = null;
+
+  error = validateEmail(user.email)
+
+  if (error) {
+    return res.status(400).json({ err: error });
+  }
+
   UserService.login(user)
     .then((userData) => {
       const token = jwt.sign({ id: userData._id, email: userData.email, role: userData.role }, process.env.JWT_SECRET);
-      // res.status(200).json({ userData, token });
+      res.status(200).json({ userData, token });
     })
     .catch((err) => {
-      console.log(err.message)
-      // return res.status(400).json({ message: 'Todos los campos son obligatorios' });
-      res.status(500).json({err});
+      res.status(500).json({ err: err.message });
     });
 }
 
