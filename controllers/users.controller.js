@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import * as UserService from "../services/users.service.js";
 import bcrypt from 'bcrypt'
-import { validateCUIL, validateDNI, validateEmail, validatePassport, validatePassword } from "../utils/validators.js";
+import { validateCUIL, validateDNI, validateDate, validateEmail, validatePassport, validatePassword } from "../utils/validators.js";
 
 async function find(req, res) {
   UserService.find()
@@ -26,44 +26,40 @@ async function findById(req, res) {
 }
 
 async function create(req, res) {
-  let error = null;
-  error = req.body ? error : 'Todos los campos son obligatorios.'
-
   const user = req.body;
 
-  error = validatePassword(user.password) ?? error
-  error = validateEmail(user.email) ?? error
+  const newErrors = {};
 
-  switch (user.documentType) {
+  if (user.first_name?.length <= 0 || !user.first_name) newErrors.first_name = 'Debe completar el nombre';
+  if (user.last_name?.length <= 0 || !user.last_name) newErrors.last_name = 'Debe completar el apellido';
+  if (validateDate(user.birth_date)) newErrors.birth_date = validateDate(user.birth_date)
+
+
+  switch (user.document_type) {
     case 'DNI':
-      error = validateDNI(user.idDocument) ?? error
+      if (validateDNI(user.id_document)) newErrors.id_document = validateDNI(user.id_document)
       break;
     case 'CUIL':
-      error = validateCUIL(user.idDocument) ?? error
+      if (validateCUIL(user.id_document)) newErrors.id_document = validateCUIL(user.id_document)
       break;
     case 'Pasaporte':
-      error = validatePassport(user.idDocument) ?? error
+      if (validatePassport(user.id_document)) newErrors.id_document = validatePassport(user.id_document)
       break;
     default:
-      error = 'Debe ingresar un tipo de documento válido.' ?? error
+      newErrors.document_type = 'Debe ingresar un tipo de documento válido.'
   }
-
-  error = user.lastName?.length > 0 ? error : 'Debe completar el apellido'
-  error = user.firstName?.length > 0 ? error : 'Debe completar el nombre'
+  if (validateEmail(user.email)) newErrors.email = validateEmail(user.email);
+  if (validatePassword(user.password)) newErrors.password = validatePassword(user.password);
 
   const userOld = await UserService.findOneByEmail(user.email)
-  const dniOld = await UserService.findOneByIdDocument(user.idDocument)
-  console.log('dniOld', dniOld)
+  const idDocumentOld = await UserService.findOneByIdDocument(user.id_document)
 
-  if (userOld) {
-    error = 'El usuario ya existe.' ?? error
-  }
-  if (dniOld) {
-    error = 'Ya existe un usuario con ese documento.' ?? error
-  }
+  if (userOld) newErrors.email = 'El usuario ya existe.'
+  if (idDocumentOld) newErrors.id_document = 'Ya existe un usuario con ese documento.'
 
-  if (error) {
-    return res.status(400).json({ err: error });
+
+  if (Object.keys(newErrors).length !== 0) {
+    return res.status(400).json({ err: newErrors });
   }
 
   const salt = await bcrypt.genSalt(10)
@@ -131,12 +127,14 @@ async function updateProfile(req, res) {
 
 async function login(req, res) {
   const user = req.body;
-  let error = null;
+  const newErrors = {};
 
-  error = validateEmail(user.email)
 
-  if (error) {
-    return res.status(400).json({ err: error });
+  if (validateEmail(user.email)) newErrors.email = validateEmail(user.email);
+  if (validatePassword(user.password)) newErrors.password = validatePassword(user.password);
+
+  if (Object.keys(newErrors).length !== 0) {
+    return res.status(400).json({ err: newErrors });
   }
 
   UserService.login(user)
@@ -145,7 +143,7 @@ async function login(req, res) {
       res.status(200).json({ userData, token });
     })
     .catch((err) => {
-      res.status(500).json({ err: err.message });
+      res.status(500).json({ err: {password: err.message} });
     });
 }
 

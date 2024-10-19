@@ -23,3 +23,8 @@ export function validateCUIL(cuil) {
     const cuilRegex = /^\d{2}-\d{8}-\d{1}$/;
     return cuilRegex.test(cuil) ? null : 'Debe ingresar un CUIL válido, con el formato XX-XXXXXXXX-X.';
 }
+
+export function validateDate(date) {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    return dateRegex.test(date) ? null : 'La fecha debe tener el formato DD/MM/AAAA.';
+}

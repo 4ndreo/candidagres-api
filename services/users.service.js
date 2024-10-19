@@ -14,8 +14,8 @@ async function findOneByEmail(email) {
   return await dataBase.findOneByEmail(collection, email);
 }
 
-async function findOneByIdDocument(idDocument) {
-  return await dataBase.findOne(collection, 'idDocument', idDocument);
+async function findOneByIdDocument(id_document) {
+  return await dataBase.findOne(collection, 'id_document', id_document);
 }
 
 async function create(user) {
