@@ -52,9 +52,14 @@ async function create(req, res) {
   error = user.firstName?.length > 0 ? error : 'Debe completar el nombre'
 
   const userOld = await UserService.findOneByEmail(user.email)
+  const dniOld = await UserService.findOneByIdDocument(user.idDocument)
+  console.log('dniOld', dniOld)
 
   if (userOld) {
     error = 'El usuario ya existe.' ?? error
+  }
+  if (dniOld) {
+    error = 'Ya existe un usuario con ese documento.' ?? error
   }
 
   if (error) {

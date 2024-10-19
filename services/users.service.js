@@ -14,6 +14,10 @@ async function findOneByEmail(email) {
   return await dataBase.findOneByEmail(collection, email);
 }
 
+async function findOneByIdDocument(idDocument) {
+  return await dataBase.findOne(collection, 'idDocument', idDocument);
+}
+
 async function create(user) {
   let newUser = await dataBase.create(collection, user);
   return await dataBase.findById(collection, newUser.insertedId)
@@ -51,7 +55,7 @@ async function login({ email, password }) {
 
 async function auth(userData) {
 
-  const user = await dataBase.findOne(collection, userData.email)
+  const user = await dataBase.findOne(collection, 'email', userData.email)
   if (user) {
     return { ...user, password: undefined }
   }
@@ -59,4 +63,4 @@ async function auth(userData) {
 
 }
 
-export { find, findUserById, findOneByEmail, create, remove, update, login, auth };
+export { find, findUserById, findOneByEmail,findOneByIdDocument, create, remove, update, login, auth };

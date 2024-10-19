@@ -226,8 +226,8 @@ async function filter(collection, filter) {
   return connectDB((db) => db.collection(collection).find(filter).toArray());
 }
 
-async function findOne(collection, email) {
-  return connectDB((db) => db.collection(collection).findOne({ email }));
+async function findOne(collection, field, value) {
+  return connectDB((db) => db.collection(collection).findOne({ [field]: value }));
 }
 
 async function findOneByEmail(collection, email) {
