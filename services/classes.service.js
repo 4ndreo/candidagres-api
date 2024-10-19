@@ -1,44 +1,37 @@
 import * as dataBase from "./base.service/database.handler.js";
+const collection = "classes"
 
-
-const collection = "cursos"
-
-async function create(curso) {
-
-    await dataBase.create(collection, curso);
+async function create(data) {
+    await dataBase.create(collection, data);
     return await dataBase.filter(collection, { deleted: false })
-
 }
 
 async function find() {
-
     return await dataBase.find(collection)
+}
 
+async function findQuery(request, idUser = null) {
+    return await dataBase.findQuery(collection, request, idUser)
 }
 
 async function findCursoById(id) {
     return await dataBase.findById(collection, id)
 }
 
-
 async function remove(id) {
-
     await dataBase.remove(collection, id);
     return await dataBase.filter(collection, { deleted: false })
-
 }
 
-
 async function update(id, data) {
-
     await dataBase.update(collection, id, data);
     return await dataBase.filter(collection, { deleted: false })
-
 }
 
 export {
     create,
     find,
+    findQuery,
     findCursoById,
     remove,
     update

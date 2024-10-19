@@ -27,13 +27,11 @@ async function findById(req, res) {
 
 async function create(req, res) {
   const user = req.body;
-
   const newErrors = {};
 
-  if (user.first_name?.length <= 0 || !user.first_name) newErrors.first_name = 'Debe completar el nombre';
-  if (user.last_name?.length <= 0 || !user.last_name) newErrors.last_name = 'Debe completar el apellido';
+  if (user.first_name?.length <= 0 || !user.first_name) newErrors.first_name = 'Debe completar el nombre.';
+  if (user.last_name?.length <= 0 || !user.last_name) newErrors.last_name = 'Debe completar el apellido.';
   if (validateDate(user.birth_date)) newErrors.birth_date = validateDate(user.birth_date)
-
 
   switch (user.document_type) {
     case 'DNI':
@@ -48,6 +46,7 @@ async function create(req, res) {
     default:
       newErrors.document_type = 'Debe ingresar un tipo de documento válido.'
   }
+
   if (validateEmail(user.email)) newErrors.email = validateEmail(user.email);
   if (validatePassword(user.password)) newErrors.password = validatePassword(user.password);
 
@@ -56,7 +55,6 @@ async function create(req, res) {
 
   if (userOld) newErrors.email = 'El usuario ya existe.'
   if (idDocumentOld) newErrors.id_document = 'Ya existe un usuario con ese documento.'
-
 
   if (Object.keys(newErrors).length !== 0) {
     return res.status(400).json({ err: newErrors });

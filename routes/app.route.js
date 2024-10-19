@@ -2,7 +2,7 @@ import express from "express";
 import fileUpload from "express-fileupload";
 import userController from "../controllers/users.controller.js";
 import turnosController from "../controllers/turnos.controller.js";
-import cursosController from "../controllers/cursos.controller.js";
+import classesController from "../controllers/classes.controller.js";
 import inscripcionesController from "../controllers/inscripciones.controller.js";
 import productosController from "../controllers/productos.controller.js";
 import carritoController from "../controllers/carrito.controller.js";
@@ -49,11 +49,12 @@ route.patch("/api/turnos/:idTurnos", turnosController.update);
 
 
 // Cursos
-route.get("/api/cursos", cursosController.find);
-route.get("/api/cursos/:idCursos", cursosController.findById);
-route.post("/api/cursos/curso", cursosController.create);
-route.delete("/api/cursos/:idCursos", cursosController.remove);
-route.patch("/api/cursos/:idCursos", cursosController.update);
+route.get("/api/classesAll", productosController.find);
+route.get("/api/classes", classesController.findQuery);
+route.get("/api/classes/:id", classesController.findById);
+route.post("/api/classes", classesController.create);
+route.delete("/api/classes/:id", classesController.remove);
+route.patch("/api/classes/:id", classesController.update);
 
 
 // Inscripciones

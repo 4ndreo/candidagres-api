@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import * as InscripcionesService from '../services/inscripciones.service.js';
 import * as TurnosService from '../services/turnos.service.js';
-import * as CursosService from '../services/cursos.service.js';
+import * as CursosService from '../services/classes.service.js';
 
 const endpoint = {uri: '/api/inscripciones/', method: 'PATCH'};
 
