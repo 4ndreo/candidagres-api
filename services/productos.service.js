@@ -1,9 +1,9 @@
 import * as dataBase from "./base.service/database.handler.js";
 
-const collection = "productos"
+const collection = "products"
 
-async function create(producto) {
-    let newProduct = await dataBase.create(collection, producto);
+async function create(data) {
+    let newProduct = await dataBase.create(collection, data);
     return await dataBase.findById(collection, newProduct.insertedId)
 }
 
@@ -15,7 +15,7 @@ async function findQuery(request, idUser = null) {
     return await dataBase.findQuery(collection, request, idUser)
 }
 
-async function findProductoById(id) {
+async function findById(id) {
     return await dataBase.findById(collection, id)
 }
 
@@ -38,7 +38,7 @@ export {
     create,
     find,
     findQuery,
-    findProductoById,
+    findById,
     findMultipleById,
     remove,
     update,

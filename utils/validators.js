@@ -1,3 +1,5 @@
+import path from 'path';
+
 export function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email) ? null : 'Debe ingresar un email válido.';
@@ -27,4 +29,15 @@ export function validateCUIL(cuil) {
 export function validateDate(date) {
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     return dateRegex.test(date) ? null : 'La fecha debe tener el formato DD/MM/AAAA.';
+}
+
+export function validateImage(file, fileTypes = null) {
+    if (!file) {
+        return 'La imagen es requerida.'
+    }
+    const filetypes = fileTypes ?? /jpeg|jpg|png/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // console.log(String(filetypes).replace(/\//g, '').replace('|', ', '))
+    return (mimetype && extname) ? null : `El archivo debe ser de tipo ${String(filetypes).replace(/\//g, '').replace('|', ', ')}.`
 }
