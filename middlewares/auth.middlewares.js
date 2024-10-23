@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 const whitelistedEndPoints = [
   "/api/users/login",
   "/api/users/user",
-  "/api/cursos",
+  "/api/classesAll",
   "/api/create_preference",
   "/api/webhook",
 ];
