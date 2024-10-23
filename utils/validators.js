@@ -31,6 +31,11 @@ export function validateDate(date) {
     return dateRegex.test(date) ? null : 'La fecha debe tener el formato DD/MM/AAAA.';
 }
 
+export function validateTime(time) {
+    const timeRegex = /^([0-1]\d|2[0-3]):([0-5]\d)$/;
+    return timeRegex.test(time) ? null : 'La hora debe tener el formato hh:mm (24 horas).';
+}
+
 export function validateImage(file, fileTypes = null) {
     if (!file) {
         return 'La imagen es requerida.'

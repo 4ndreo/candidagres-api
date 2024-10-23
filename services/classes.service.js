@@ -14,6 +14,10 @@ async function findQuery(request, idUser = null) {
     return await dataBase.findQuery(collection, request, idUser)
 }
 
+async function findOneWithShifts(id) {
+    return await dataBase.findOneRelated(collection, id, 'shifts', '_id', 'id_class', 'shifts')
+}
+
 async function findCursoById(id) {
     return await dataBase.findById(collection, id)
 }
@@ -32,6 +36,7 @@ export {
     create,
     find,
     findQuery,
+    findOneWithShifts,
     findCursoById,
     remove,
     update

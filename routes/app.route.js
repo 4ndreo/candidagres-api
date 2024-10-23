@@ -1,7 +1,7 @@
 import express from "express";
 import fileUpload from "express-fileupload";
 import userController from "../controllers/users.controller.js";
-import turnosController from "../controllers/turnos.controller.js";
+import shiftsController from "../controllers/shifts.controller.js";
 import classesController from "../controllers/classes.controller.js";
 import inscripcionesController from "../controllers/inscripciones.controller.js";
 import productosController from "../controllers/productos.controller.js";
@@ -40,18 +40,21 @@ route.post("/api/users/auth", userController.auth)
 route.patch("/api/profile/:id", userController.updateProfile);
 
 // Turnos
-route.get("/api/turnos", turnosController.find);
-route.get("/api/turnos/:idTurnos", turnosController.findById);
-route.get("/api/turnos/curso/:idCurso", turnosController.findByCurso);
-route.post("/api/turnos/turno", turnosController.create);
-route.delete("/api/turnos/:idTurnos", turnosController.remove);
-route.patch("/api/turnos/:idTurnos", turnosController.update);
+
+route.get("/api/shiftsAll", shiftsController.find);
+route.get("/api/shifts", shiftsController.findQuery);
+route.get("/api/shifts/:id", shiftsController.findById);
+// route.get("/api/shifts/curso/:idCurso", shiftsController.findByCurso);
+route.post("/api/shifts", shiftsController.create);
+route.delete("/api/shifts/:id", shiftsController.remove);
+route.patch("/api/shifts/:id", shiftsController.update);
 
 
 // Cursos
 route.get("/api/classesAll", productosController.find);
 route.get("/api/classes", classesController.findQuery);
 route.get("/api/classes/:id", classesController.findById);
+route.get("/api/classes/:id/shifts", classesController.findOneWithShifts);
 route.post("/api/classes", classesController.create);
 route.delete("/api/classes/:id", classesController.remove);
 route.patch("/api/classes/:id", classesController.update);

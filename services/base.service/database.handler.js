@@ -139,6 +139,33 @@ async function findQuery(collection, request, idUser = null) {
   );
 }
 
+async function findOneRelated(collection, id, from, localField, foreignField, as) {
+  console.log(id)
+  return connectDB((db) =>
+    db
+      .collection(collection)
+      .aggregate([
+        {
+          $match: { _id: new ObjectId(id), deleted: false }
+        },
+        {
+          $lookup: { from: from, localField: localField, foreignField: foreignField, as: as }
+        }
+      ])
+      // .findOne({ _id: new ObjectId(id) })
+      .toArray()
+  );
+}
+
+async function findRelated(collection, from, localField, foreignField, as) {
+  return connectDB((db) =>
+    db
+      .collection(collection)
+      .aggregate([{ $lookup: { from: from, localField: localField, foreignField: foreignField, as: as } }])
+      .toArray()
+  );
+}
+
 async function create(collection, data) {
   console.log('data', data)
   return connectDB((db) =>
@@ -256,6 +283,8 @@ export {
   connectDB,
   find,
   findQuery,
+  findOneRelated,
+  findRelated,
   create,
   update,
   updateCarrito,

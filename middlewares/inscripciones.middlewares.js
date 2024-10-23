@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import * as InscripcionesService from '../services/inscripciones.service.js';
-import * as TurnosService from '../services/turnos.service.js';
-import * as CursosService from '../services/classes.service.js';
+import * as ShiftsService from '../services/shifts.service.js';
+// import * as ClassesService from '../services/classes.service.js';
 
 const endpoint = {uri: '/api/inscripciones/', method: 'PATCH'};
 
@@ -14,7 +14,7 @@ async function verifyDeletionPatch(req, res, next) {
 	const currentInscripcion = await InscripcionesService.findInscripcionById(
 		idInscripcion
 	).then((data) => data);
-	const currentTurno = await TurnosService.findTurnoById(
+	const currentTurno = await ShiftsService.findTurnoById(
 		currentInscripcion.idTurno
 	).then((data) => data);
 	const totalInscripciones = await InscripcionesService.countInscripcionesByCurso(
@@ -64,7 +64,7 @@ async function verifyDeletionPatch(req, res, next) {
 async function isAllBooked(req, res, next) {
 	const token = req.headers['auth-token'] || '';
 	const user = jwt.verify(token, process.env.JWT_SECRET);
-	const currentTurno = await TurnosService.findTurnoById(
+	const currentTurno = await ShiftsService.findTurnoById(
 		req.body.idTurno
 	).then((data) => data);
 	const totalInscripciones = await InscripcionesService.countInscripcionesByCurso(

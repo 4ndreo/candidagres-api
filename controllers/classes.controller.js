@@ -19,7 +19,7 @@ async function create(req, res) {
         return res.status(400).json({ err: newErrors });
     }
 
-    await classesService.create({...classData, created_by: new ObjectId(user.id)})
+    await classesService.create({ ...classData, created_by: new ObjectId(user.id) })
         .then(function (resp) {
             res.status(201).json(resp);
         })
@@ -31,8 +31,8 @@ async function create(req, res) {
 
 async function find(req, res) {
     classesService.find()
-        .then(function (curso) {
-            res.status(200).json(curso);
+        .then(function (data) {
+            res.status(200).json(data);
             // req.socketClient.emit('locationsList', { turno })
         })
         .catch(function (err) {
@@ -54,11 +54,23 @@ async function findQuery(req, res) {
 }
 
 async function findById(req, res) {
-    const cursoID = req.params.id;
+    const idClass = req.params.id;
 
-    classesService.findCursoById(cursoID)
-        .then(function (curso) {
-            res.status(200).json(curso);
+    classesService.findCursoById(idClass)
+        .then(function (data) {
+            res.status(200).json(data);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
+async function findOneWithShifts(req, res) {
+    const idClass = req.params.id;
+
+    classesService.findOneWithShifts(idClass)
+        .then(function (data) {
+            res.status(200).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -66,17 +78,17 @@ async function findById(req, res) {
 }
 
 async function remove(req, res) {
-    const cursoID = req.params.id;
+    const idClass = req.params.id;
 
-    classesService.remove(cursoID)
-        .then(function (curso) {
-            if (curso) {
-                res.status(200).json(curso);
+    classesService.remove(idClass)
+        .then(function (data) {
+            if (data) {
+                res.status(200).json(data);
                 // req.socketClient.emit('locationsList', { location })
             } else {
                 res
                     .status(404)
-                    .json({ message: `El alumno con id ${curso} no existe` });
+                    .json({ message: `El alumno con id ${data} no existe` });
             }
         })
         .catch(function (err) {
@@ -86,7 +98,7 @@ async function remove(req, res) {
 
 
 async function update(req, res) {
-    const cursoID = req.params.id;
+    const idClass = req.params.id;
     const classData = req.body;
 
     // Format
@@ -99,20 +111,19 @@ async function update(req, res) {
     // Validate
     const newErrors = {};
 
-    if (classData.title?.length <= 0) newErrors.title = 'Debe completar el título.';
-    if (classData.teacher?.length <= 0) newErrors.teacher = 'Debe completar el docente.';
-    if (classData.description?.length <= 0) newErrors.description = 'Debe completar la descripción.';
+    if (typeof classData.title !== 'undefined' && classData.title?.length <= 0) newErrors.title = 'Debe completar el título.';
+    if (typeof classData.teacher !== 'undefined' && classData.teacher?.length <= 0) newErrors.teacher = 'Debe completar el docente.';
+    if (typeof classData.description !== 'undefined' && classData.description?.length <= 0) newErrors.description = 'Debe completar la descripción.';
     if (typeof classData.price !== 'undefined' && (isNaN(classData.price) || classData.price < 0)) newErrors.price = 'Debe ingresar un número mayor o igual a 0.';
-    if (typeof classData.min_age !== 'undefined' && (isNaN(classData.min_age) || classData.min_age < 0)) newErrors.min_age = 'Debe ingresar un número mayor o igual a 0.';
     if (typeof classData.min_age !== 'undefined' && (isNaN(classData.min_age) || classData.min_age < 0)) newErrors.min_age = 'Debe ingresar un número mayor o igual a 0.';
 
     if (Object.keys(newErrors).length !== 0) {
         return res.status(400).json({ err: newErrors });
     }
 
-    classesService.update(cursoID, classData)
-        .then(function (curso) {
-            res.status(201).json(curso);
+    classesService.update(idClass, classData)
+        .then(function (data) {
+            res.status(201).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -125,6 +136,7 @@ export default {
     find,
     findQuery,
     findById,
+    findOneWithShifts,
     remove,
     update
 }
