@@ -16,7 +16,7 @@ async function find(req, res) {
 async function findById(req, res) {
   const userId = req.params.idUser;
 
-  UserService.findUserById(userId)
+  UserService.findById(userId)
     .then(function (user) {
       res.status(200).json(user);
     })

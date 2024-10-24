@@ -1,8 +1,8 @@
 import * as dataBase from "./base.service/database.handler.js";
-const collection = "inscripciones"
+const collection = "enrollments"
 
-async function create(inscripcion) {
-    await dataBase.create(collection, inscripcion);
+async function create(data) {
+    await dataBase.create(collection, data);
     return await dataBase.filter(collection, { deleted: false })
 }
 
@@ -10,19 +10,23 @@ async function find() {
     return await dataBase.find(collection)
 }
 
+async function findQuery(request, idUser = null) {
+    return await dataBase.findQuery(collection, request, idUser)
+}
+
 async function findByUser(idUser) {
-    return await dataBase.filter(collection, {idUser: idUser, deleted: false})
+    return await dataBase.filter(collection, { idUser: idUser, deleted: false })
 }
 
 async function findAllByUserAndTurno(idUser, idTurno) {
-    return await dataBase.filter(collection, {idUser: idUser, idTurno: idTurno})
+    return await dataBase.filter(collection, { idUser: idUser, idTurno: idTurno })
 }
 
 async function findAllByUser(idUser) {
-    return await dataBase.filter(collection, {idUser: idUser})
+    return await dataBase.filter(collection, { idUser: idUser })
 }
 
-async function findInscripcionById(id) {
+async function findById(id) {
     return await dataBase.findById(collection, id)
 }
 
@@ -44,10 +48,11 @@ async function countInscripcionesByCurso(idCurso) {
 export {
     create,
     find,
+    findQuery,
     findByUser,
     findAllByUserAndTurno,
     findAllByUser,
-    findInscripcionById,
+    findById,
     remove,
     update,
     countInscripcionesByCurso,

@@ -6,8 +6,8 @@ async function find() {
   return await dataBase.find(collection);
 }
 
-async function findUserById(id) {
-  return await dataBase.findUserById(collection, id);
+async function findById(id) {
+  return await dataBase.findById(collection, id);
 }
 
 async function findOneByEmail(email) {
@@ -63,4 +63,14 @@ async function auth(userData) {
 
 }
 
-export { find, findUserById, findOneByEmail,findOneByIdDocument, create, remove, update, login, auth };
+export {
+  find,
+  findById,
+  findOneByEmail,
+  findOneByIdDocument,
+  create,
+  remove,
+  update,
+  login,
+  auth
+};

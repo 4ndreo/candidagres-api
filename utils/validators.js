@@ -36,6 +36,11 @@ export function validateTime(time) {
     return timeRegex.test(time) ? null : 'La hora debe tener el formato hh:mm (24 horas).';
 }
 
+export function validateWeekday(weekday) {
+    const daysList = ["D1", "D2", "D3", "D4", "D5"]
+    return daysList.some(elem => elem === weekday) ? null : 'Debe ingresar un día válido.';
+}
+
 export function validateImage(file, fileTypes = null) {
     if (!file) {
         return 'La imagen es requerida.'

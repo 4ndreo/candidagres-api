@@ -1,15 +1,14 @@
 import jwt from "jsonwebtoken";
 import * as shiftsServices from "../services/shifts.service.js"
 import * as classesService from "../services/classes.service.js"
-import { validateTime } from "../utils/validators.js";
+import { validateTime, validateWeekday } from "../utils/validators.js";
 import { ObjectId } from "mongodb";
 
 
 async function create(req, res) {
-    const shiftData = { ...req.body, max_places: Number(req.body.max_places) };
+    const shiftData = { ...req.body, max_places: Number(req.body.max_places), id_class: new ObjectId(req.body.id_class) };
     const classData = await classesService.findCursoById(new ObjectId(req.body.id_class))
     const newErrors = {};
-    const daysList = ["D1", "D2", "D3", "D4", "D5", "D6", "D7"]
 
     if (!classData) newErrors.id_class = 'La clase no existe.';
     if (shiftData.title?.length <= 0 || !shiftData.title) newErrors.title = 'Debe completar el título.';
@@ -18,7 +17,7 @@ async function create(req, res) {
     if (shiftData.description?.length <= 0 || !shiftData.description) newErrors.description = 'Debe completar la descripción.';
     if (isNaN(shiftData.max_places) || !shiftData.max_places || shiftData.max_places < 1) newErrors.max_places = 'Debe ingresar un número mayor o igual a 1.';
     if (!shiftData.days) newErrors.days = 'Debe ingresar los días en los que se dará la clase.';
-    shiftData?.days?.forEach((day) => { if (!daysList.some(elem => elem === day)) newErrors.days = 'Debe ingresar un día válido.'; })
+    shiftData?.days?.forEach((day) => { if (validateWeekday(day)) newErrors.days = 'Debe ingresar un día válido.'; })
 
     if (Object.keys(newErrors).length !== 0) {
         return res.status(400).json({ err: newErrors });
@@ -32,19 +31,6 @@ async function create(req, res) {
             res.status(500).json({ err });
         });
 }
-
-// async function create(req, res) {
-//     const newTurno = req.body;
-
-//     await shiftsServices.create(newTurno)
-//         .then(function (newTurno) {
-//             res.status(201).json(newTurno);
-//             // req.socketClient.emit('newLocation', { newLocation })
-//         })
-//         .catch(function (err) {
-//             res.status(500).json({ err });
-//         });
-// }
 
 
 async function find(req, res) {
@@ -72,10 +58,22 @@ async function findQuery(req, res) {
 }
 
 async function findById(req, res) {
-    const shiftId = req.params.idTurnos;
-    shiftsServices.findTurnoById(shiftId)
+    const shiftId = req.params.id;
+    shiftsServices.findById(shiftId)
         .then(function (shift) {
             res.status(200).json(shift);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
+async function findOneWithEnrollments(req, res) {
+    const idShift = req.params.id;
+
+    shiftsServices.findOneWithEnrollments(idShift)
+        .then(function (data) {
+            res.status(200).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -132,16 +130,14 @@ async function update(req, res) {
     // Validate
     const newErrors = {};
 
-    const daysList = ["D1", "D2", "D3", "D4", "D5", "D6", "D7"]
-
     if (typeof shiftData.id_class !== 'undefined' && !classData) newErrors.id_class = 'La clase no existe.';
     if (typeof shiftData.title !== 'undefined' && shiftData.title?.length <= 0) newErrors.title = 'Debe completar el título.';
-    if (typeof shiftData.min_age !== 'undefined' && shiftData.description?.length <= 0 ) newErrors.description = 'Debe completar la descripción.';
+    if (typeof shiftData.min_age !== 'undefined' && shiftData.description?.length <= 0) newErrors.description = 'Debe completar la descripción.';
     if (typeof shiftData.start_time !== 'undefined' && validateTime(shiftData.start_time)) newErrors.start_time = validateTime(shiftData.start_time);
     if (typeof shiftData.end_time !== 'undefined' && validateTime(shiftData.end_time)) newErrors.end_time = validateTime(shiftData.end_time);
     if (typeof shiftData.min_age !== 'undefined' && (isNaN(shiftData.max_places) || shiftData.max_places < 1)) newErrors.max_places = 'Debe ingresar un número mayor o igual a 1.';
     if (typeof shiftData.min_age !== 'undefined' && !shiftData.days) newErrors.days = 'Debe ingresar los días en los que se dará la clase.';
-    shiftData?.days?.forEach((day) => { if (!daysList.some(elem => elem === day)) newErrors.days = 'Debe ingresar un día válido.'; })
+    shiftData?.days?.forEach((day) => { if (validateWeekday(day)) newErrors.days = 'Debe ingresar un día válido.'; })
 
     if (Object.keys(newErrors).length !== 0) {
         return res.status(400).json({ err: newErrors });
@@ -160,6 +156,7 @@ async function update(req, res) {
 export default {
     create,
     find,
+    findOneWithEnrollments,
     findById,
     findQuery,
     findByCurso,

@@ -2,8 +2,8 @@ import * as dataBase from "./base.service/database.handler.js";
 
 const collection = "shifts"
 
-async function create(turno) {
-    await dataBase.create(collection, turno);
+async function create(data) {
+    await dataBase.create(collection, data);
     return await dataBase.filter(collection, { deleted: false })
 }
 
@@ -15,7 +15,11 @@ async function findQuery(request, idUser = null) {
     return await dataBase.findQuery(collection, request, idUser)
 }
 
-async function findTurnoById(id) {
+async function findOneWithEnrollments(id) {
+    return await dataBase.findOneRelated(collection, id, {source: "shifts", from: 'enrollments', localField: '_id', foreignField: 'id_shift', as: 'enrollments' })
+}
+
+async function findById(id) {
     return await dataBase.findById(collection, id)
 }
 
@@ -37,7 +41,8 @@ export {
     create,
     find,
     findQuery,
-    findTurnoById,
+    findOneWithEnrollments,
+    findById,
     findByCurso,
     remove,
     update

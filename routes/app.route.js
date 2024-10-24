@@ -3,7 +3,7 @@ import fileUpload from "express-fileupload";
 import userController from "../controllers/users.controller.js";
 import shiftsController from "../controllers/shifts.controller.js";
 import classesController from "../controllers/classes.controller.js";
-import inscripcionesController from "../controllers/inscripciones.controller.js";
+import enrollmentsController from "../controllers/enrollments.controller.js";
 import productosController from "../controllers/productos.controller.js";
 import carritoController from "../controllers/carrito.controller.js";
 import comprasController from "../controllers/compras.controller.js";
@@ -39,10 +39,12 @@ route.post("/api/users/auth", userController.auth)
 // Profile
 route.patch("/api/profile/:id", userController.updateProfile);
 
-// Turnos
+// Shifts
 
 route.get("/api/shiftsAll", shiftsController.find);
 route.get("/api/shifts", shiftsController.findQuery);
+route.get("/api/shifts/:id/enrollments", shiftsController.findOneWithEnrollments);
+
 route.get("/api/shifts/:id", shiftsController.findById);
 // route.get("/api/shifts/curso/:idCurso", shiftsController.findByCurso);
 route.post("/api/shifts", shiftsController.create);
@@ -50,7 +52,7 @@ route.delete("/api/shifts/:id", shiftsController.remove);
 route.patch("/api/shifts/:id", shiftsController.update);
 
 
-// Cursos
+// Classes
 route.get("/api/classesAll", productosController.find);
 route.get("/api/classes", classesController.findQuery);
 route.get("/api/classes/:id", classesController.findById);
@@ -60,16 +62,18 @@ route.delete("/api/classes/:id", classesController.remove);
 route.patch("/api/classes/:id", classesController.update);
 
 
-// Inscripciones
-route.get("/api/inscripciones", inscripcionesController.find);
-route.get("/api/inscripciones/:idInscripciones", inscripcionesController.findById);
-route.get("/api/inscripciones/user/:idUser", inscripcionesController.findByUser);
-route.get("/api/inscripcionesAll/user/:idUser", inscripcionesController.findAllByUser);
-route.get("/api/inscripcionesAll/user/:idUser/turno/:idTurno", inscripcionesController.findAllByUserAndTurno);
-route.post("/api/inscripciones/inscripcion", isAllBooked, inscripcionesController.create);
-route.delete("/api/inscripciones/:idInscripciones", inscripcionesController.remove);
-route.patch("/api/inscripciones/:idInscripciones", verifyDeletionPatch, inscripcionesController.update);
-route.get("/api/inscripcionesByCurso/:idCurso", inscripcionesController.countInscripcionesByCurso);
+// Enrollments
+route.get("/api/enrollmentsAll", enrollmentsController.find);
+route.get("/api/enrollments", enrollmentsController.findQuery);
+route.get("/api/enrollments/:idEnrollments", enrollmentsController.findById);
+route.get("/api/enrollments/user/:idUser", enrollmentsController.findByUser);
+route.get("/api/enrollmentsAll/user/:idUser", enrollmentsController.findAllByUser);
+route.get("/api/enrollmentsAll/user/:idUser/turno/:idTurno", enrollmentsController.findAllByUserAndTurno);
+route.post("/api/enrollments", isAllBooked, enrollmentsController.create);
+route.delete("/api/enrollments/:idEnrollments", enrollmentsController.remove);
+route.patch("/api/enrollments/:id", enrollmentsController.update);
+// route.patch("/api/enrollments/:idEnrollments", verifyDeletionPatch, enrollmentsController.update);
+route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollmentsByCurso);
 
 
 // Productos

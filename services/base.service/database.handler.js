@@ -139,20 +139,67 @@ async function findQuery(collection, request, idUser = null) {
   );
 }
 
-async function findOneRelated(collection, id, from, localField, foreignField, as) {
-  console.log(id)
+async function findOneRelated(collection, id, relation, subrelation = null) {
+  const unwindRelationName = `\$${relation.as}`
+  const unwindSubrelationDestination = `\$${subrelation?.as}`
+  const relationCount = `${relation.as}Count`
+  const subrelationCount = `${subrelation?.as}Count`
+
+  const pipeline = [
+    {
+      $match: { _id: new ObjectId(id), deleted: false }
+    },
+    {
+      $lookup: { from: relation.from, localField: relation.localField, foreignField: relation.foreignField, as: relation.as }
+    },
+    {
+      $unwind: {
+        path: unwindRelationName,
+        preserveNullAndEmptyArrays: true
+      }
+    },
+  ]
+
+  if (subrelation) {
+    pipeline.push(
+      {
+        $lookup: { from: subrelation.from, localField: subrelation.localField, foreignField: subrelation.foreignField, as: subrelation.as }
+      },
+      {
+        $addFields: {
+          [subrelationCount]: { $size: unwindSubrelationDestination },
+        }
+      },
+    );
+  }
+  pipeline.push(
+    {
+      $group: {
+        "_id": "$_id",
+        "details": { "$first": "$$ROOT" },
+        [relation.from]: { "$push": `\$${relation.from}` },
+        [relationCount]: { "$sum": 1 }
+      }
+    },
+    {
+      $replaceRoot: {
+        "newRoot": {
+          "$mergeObjects": [
+            "$details",
+            {
+              [relation.from]: `\$${relation.from}`,
+              [relationCount]: `\$${relationCount}`
+            }
+          ]
+        }
+      }
+    },
+  )
+
   return connectDB((db) =>
     db
       .collection(collection)
-      .aggregate([
-        {
-          $match: { _id: new ObjectId(id), deleted: false }
-        },
-        {
-          $lookup: { from: from, localField: localField, foreignField: foreignField, as: as }
-        }
-      ])
-      // .findOne({ _id: new ObjectId(id) })
+      .aggregate(pipeline)
       .toArray()
   );
 }
