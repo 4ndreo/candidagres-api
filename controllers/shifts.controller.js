@@ -73,7 +73,8 @@ async function findOneWithEnrollments(req, res) {
 
     shiftsServices.findOneWithEnrollments(idShift)
         .then(function (data) {
-            res.status(200).json(data);
+            console.log(data[0])
+            res.status(200).json(data[0]);
         })
         .catch(function (err) {
             res.status(500).json({ err });

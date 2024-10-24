@@ -150,7 +150,10 @@ async function findOneRelated(collection, id, relation, subrelation = null) {
       $match: { _id: new ObjectId(id), deleted: false }
     },
     {
-      $lookup: { from: relation.from, localField: relation.localField, foreignField: relation.foreignField, as: relation.as }
+      $lookup: {
+        from: relation.from, localField: relation.localField, foreignField: relation.foreignField, as: relation.as, pipeline: [
+          { $match: { deleted: false } }]
+      }
     },
     {
       $unwind: {
@@ -163,7 +166,10 @@ async function findOneRelated(collection, id, relation, subrelation = null) {
   if (subrelation) {
     pipeline.push(
       {
-        $lookup: { from: subrelation.from, localField: subrelation.localField, foreignField: subrelation.foreignField, as: subrelation.as }
+        $lookup: {
+          from: subrelation.from, localField: subrelation.localField, foreignField: subrelation.foreignField, as: subrelation.as, pipeline: [
+            { $match: { deleted: false } }]
+        }
       },
       {
         $addFields: {
