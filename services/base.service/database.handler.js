@@ -140,6 +140,7 @@ async function findQuery(collection, request, idUser = null) {
 }
 
 async function findOneRelated(collection, id, relation, subrelation = null) {
+
   const unwindRelationName = `\$${relation.as}`
   const unwindSubrelationDestination = `\$${subrelation?.as}`
   const relationCount = `${relation.as}Count`
@@ -151,8 +152,8 @@ async function findOneRelated(collection, id, relation, subrelation = null) {
     },
     {
       $lookup: {
-        from: relation.from, localField: relation.localField, foreignField: relation.foreignField, as: relation.as, pipeline: [
-          { $match: { deleted: false } }]
+        from: relation.from, localField: relation.localField, foreignField: relation.foreignField, as: relation.as
+        , pipeline: [{ $match: { deleted: false } }]
       }
     },
     {
@@ -162,45 +163,57 @@ async function findOneRelated(collection, id, relation, subrelation = null) {
       }
     },
   ]
+  try {
 
-  if (subrelation) {
+    if (subrelation) {
+      pipeline.push(
+        {
+          $lookup: {
+            from: subrelation.from, localField: subrelation.localField, foreignField: subrelation.foreignField, as: subrelation.as
+          }
+        },
+        {
+          $addFields: {
+            [subrelationCount]: {
+              $size:
+              {
+                $filter: {
+                  input: unwindSubrelationDestination,
+                  as: "item",
+                  cond: { $eq: ["$$item.deleted", false] }
+                }
+              }
+            },
+          }
+        },
+      );
+    }
     pipeline.push(
       {
-        $lookup: {
-          from: subrelation.from, localField: subrelation.localField, foreignField: subrelation.foreignField, as: subrelation.as, pipeline: [
-            { $match: { deleted: false } }]
+        $group: {
+          "_id": "$_id",
+          "details": { "$first": "$$ROOT" },
+          [relation.from]: { "$push": `\$${relation.from}` },
+          [relationCount]: { "$sum": 1 }
         }
       },
       {
-        $addFields: {
-          [subrelationCount]: { $size: unwindSubrelationDestination },
+        $replaceRoot: {
+          "newRoot": {
+            "$mergeObjects": [
+              "$details",
+              {
+                [relation.from]: `\$${relation.from}`,
+                [relationCount]: `\$${relationCount}`
+              }
+            ]
+          }
         }
       },
-    );
+    )
+  } catch (error) {
+    console.log('error', error)
   }
-  pipeline.push(
-    {
-      $group: {
-        "_id": "$_id",
-        "details": { "$first": "$$ROOT" },
-        [relation.from]: { "$push": `\$${relation.from}` },
-        [relationCount]: { "$sum": 1 }
-      }
-    },
-    {
-      $replaceRoot: {
-        "newRoot": {
-          "$mergeObjects": [
-            "$details",
-            {
-              [relation.from]: `\$${relation.from}`,
-              [relationCount]: `\$${relationCount}`
-            }
-          ]
-        }
-      }
-    },
-  )
 
   return connectDB((db) =>
     db

@@ -10,6 +10,10 @@ async function find() {
     return await dataBase.find(collection)
 }
 
+async function filter(params) {
+    return await dataBase.filter(collection, params)
+}
+
 async function findQuery(request, idUser = null) {
     return await dataBase.findQuery(collection, request, idUser)
 }
@@ -48,6 +52,7 @@ async function countInscripcionesByCurso(idCurso) {
 export {
     create,
     find,
+    filter,
     findQuery,
     findByUser,
     findAllByUserAndTurno,
