@@ -48,6 +48,5 @@ export function validateImage(file, fileTypes = null) {
     const filetypes = fileTypes ?? /jpeg|jpg|png/;
     const mimetype = filetypes.test(file.mimetype);
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    // console.log(String(filetypes).replace(/\//g, '').replace('|', ', '))
     return (mimetype && extname) ? null : `El archivo debe ser de tipo ${String(filetypes).replace(/\//g, '').replace('|', ', ')}.`
 }

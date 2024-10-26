@@ -22,8 +22,6 @@ async function create(req, res) {
 
     const newProducto = req.body;
 
-    console.log(user.id)
-
     await productosService.create({ ...newProducto, created_by: new ObjectId(user.id) })
         .then(function (newProducto) {
             res.status(201).json(newProducto);
@@ -90,9 +88,6 @@ async function update(req, res) {
     const productoID = req.params.idProductos;
     // const data = req.body;
     const productData = req.body;
-
-    console.log(productData)
-
 
      // Format
      if (typeof productData.title !== 'undefined') productData.title = String(req.body.title);

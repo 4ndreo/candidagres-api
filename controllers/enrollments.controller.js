@@ -4,12 +4,10 @@ import * as shiftsService from "../services/shifts.service.js"
 import { ObjectId } from "mongodb";
 
 async function create(req, res) {
-console.log(req.body.id_shift)
     const incomingToken = req.headers["auth-token"];
     const userData = jwt.verify(incomingToken, process.env.JWT_SECRET);
     const shiftData = await shiftsService.findOneWithEnrollments(new ObjectId(req.body.id_shift))
     const hasEnrollment = await enrollmentsService.filter({ id_shift: new ObjectId(req.body.id_shift), id_user: new ObjectId(userData.id), deleted: true })
-    // console.log(shiftData[0].max_places, shiftData[0].enrollmentsCount, shiftData[0].max_places <= shiftData[0].enrollmentsCount)
 
     if (shiftData[0]?.max_places <= shiftData[0]?.enrollmentsCount) return res.status(403).json({ err: { max_places: 'No hay cupos disponibles para esta comisión.' } });
 
@@ -32,7 +30,6 @@ console.log(req.body.id_shift)
             });
     } else {
 
-
         await enrollmentsService.create(enrollmentData)
             .then(function (resp) {
                 return res.status(201).json(resp);
@@ -42,20 +39,6 @@ console.log(req.body.id_shift)
             });
     }
 }
-
-// async function create(req, res) {
-//     const newInscripcion = req.body;
-
-//     await enrollmentsService.create(newInscripcion)
-//         .then(function (newInscripcion) {
-//             res.status(201).json(newInscripcion);
-//             // req.socketClient.emit('newLocation', { newLocation })
-//         })
-//         .catch(function (err) {
-//             res.status(500).json({ err });
-//         });
-// }
-
 
 async function find(req, res) {
     enrollmentsService.find()
@@ -82,11 +65,11 @@ async function findQuery(req, res) {
 }
 
 async function findById(req, res) {
-    const inscripcionID = req.params.idEnrollments;
+    const enrollmentID = req.params.id;
 
-    enrollmentsService.findById(inscripcionID)
-        .then(function (inscripcion) {
-            res.status(200).json(inscripcion);
+    enrollmentsService.findById(enrollmentID)
+        .then(function (enrollment) {
+            res.status(200).json(enrollment);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -128,17 +111,17 @@ async function findAllByUserAndTurno(req, res) {
 }
 
 async function remove(req, res) {
-    const inscripcionID = req.params.idEnrollments;
+    const enrollmentID = req.params.id;
 
-    enrollmentsService.remove(inscripcionID)
-        .then(function (inscripcion) {
-            if (inscripcion) {
-                res.status(200).json(inscripcion);
+    enrollmentsService.remove(enrollmentID)
+        .then(function (enrollment) {
+            if (enrollment) {
+                res.status(200).json(enrollment);
                 // req.socketClient.emit('locationsList', { location })
             } else {
                 res
                     .status(404)
-                    .json({ message: `La inscripcion con id ${inscripcion} no existe` });
+                    .json({ message: `La inscripción con id ${enrollment} no existe` });
             }
         })
         .catch(function (err) {
@@ -169,10 +152,6 @@ async function update(req, res) {
     if (typeof enrollmentData.id_shift !== 'undefined' && !shiftData) newErrors.id_shift = 'La comisión no existe.';
     if (typeof enrollmentData.id_user !== 'undefined' && !userData) newErrors.id_user = 'El usuario no existe.';
 
-    console.log(enrollment, enrollmentData)
-    console.log(enrollment?.deleted === true && typeof enrollmentData.deleted !== 'undefined' && enrollmentData.deleted === false)
-    console.log(String(enrollment?.id_shift) !== req.body.id_shift)
-    console.log(shiftData[0].max_places <= shiftData[0].enrollmentsCount)
     if ((
         (enrollment?.deleted === true && typeof enrollmentData.deleted !== 'undefined' && enrollmentData.deleted === false) ||
         (String(enrollment?.id_shift) !== req.body.id_shift)

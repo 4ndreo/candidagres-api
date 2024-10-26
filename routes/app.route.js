@@ -65,12 +65,12 @@ route.patch("/api/classes/:id", classesController.update);
 // Enrollments
 route.get("/api/enrollmentsAll", enrollmentsController.find);
 route.get("/api/enrollments", enrollmentsController.findQuery);
-route.get("/api/enrollments/:idEnrollments", enrollmentsController.findById);
+route.get("/api/enrollments/:id", enrollmentsController.findById);
 route.get("/api/enrollments/user/:idUser", enrollmentsController.findByUser);
 route.get("/api/enrollmentsAll/user/:idUser", enrollmentsController.findAllByUser);
 route.get("/api/enrollmentsAll/user/:idUser/turno/:idTurno", enrollmentsController.findAllByUserAndTurno);
 route.post("/api/enrollments", isAllBooked, enrollmentsController.create);
-route.delete("/api/enrollments/:idEnrollments", enrollmentsController.remove);
+route.delete("/api/enrollments/:id", enrollmentsController.remove);
 route.patch("/api/enrollments/:id", enrollmentsController.update);
 // route.patch("/api/enrollments/:idEnrollments", verifyDeletionPatch, enrollmentsController.update);
 route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollmentsByCurso);

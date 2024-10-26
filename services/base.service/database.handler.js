@@ -233,7 +233,6 @@ async function findRelated(collection, from, localField, foreignField, as) {
 }
 
 async function create(collection, data) {
-  console.log('data', data)
   return connectDB((db) =>
     // db.collection(collection).insertOne({ usuarioId: usuarioId, productos: [], deleted: false })
     db.collection(collection).insertOne({ ...data, deleted: false })

@@ -19,7 +19,6 @@ async function uploadImagen(req, res) {
 
 async function removeImage(req, res) {
     const fileName = req.params.name;
-    console.log('entre', fileName)
     remove(fileName).then((data) => {
         return res.status(200).json(data);
     }).catch(function (err) {
