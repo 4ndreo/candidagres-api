@@ -16,7 +16,7 @@ async function filter(params) {
 }
 
 async function findQuery(request, idUser = null) {
-    return await dataBase.findQuery(collection, request, idUser)
+    return await dataBase.findQuery(collection, request, idUser, [{from: 'classes', localField: 'id_class', foreignField: '_id', as: 'class'}])
 }
 
 async function findOneWithEnrollments(id) {

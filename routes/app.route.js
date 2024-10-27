@@ -53,7 +53,7 @@ route.patch("/api/shifts/:id", shiftsController.update);
 
 
 // Classes
-route.get("/api/classesAll", productosController.find);
+route.get("/api/classesAll", classesController.find);
 route.get("/api/classes", classesController.findQuery);
 route.get("/api/classes/:id", classesController.findById);
 route.get("/api/classes/:id/shifts", classesController.findOneWithShifts);
