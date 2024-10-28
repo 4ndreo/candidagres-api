@@ -16,11 +16,11 @@ async function filter(params) {
 }
 
 async function findQuery(request, idUser = null) {
-    return await dataBase.findQuery(collection, request, idUser, [{from: 'classes', localField: 'id_class', foreignField: '_id', as: 'class'}])
+    return await dataBase.findQuery(collection, request, idUser, [{ from: 'classes', localField: 'id_class', foreignField: '_id', as: 'class' }])
 }
 
 async function findOneWithEnrollments(id) {
-    return await dataBase.findOneRelated(collection, id, {source: "shifts", from: 'enrollments', localField: '_id', foreignField: 'id_shift', as: 'enrollments' })
+    return await dataBase.findOneRelated(collection, id, { source: "shifts", from: 'enrollments', localField: '_id', foreignField: 'id_shift', as: 'enrollments' })
 }
 
 async function findById(id) {

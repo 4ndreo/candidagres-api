@@ -11,7 +11,7 @@ async function create(req, res) {
     const newErrors = {};
 
     if (productData.title?.length <= 0 || !productData.title) newErrors.title = 'Debe completar el título.';
-    if (productData.description?.length <= 0 || !productData.description) newErrors.description = 'Debe completar la descripción.';
+    if (productData.description?.length <= 0 || !productData.description || productData.description?.length > 256) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
     if (isNaN(productData.estimated_delay) || !productData.estimated_delay || productData.estimated_delay < 0) newErrors.estimated_delay = 'Debe ingresar un número válido.';
     if (isNaN(productData.price) || !productData.price || productData.price < 0) newErrors.price = 'Debe ingresar un precio válido.';
     if (productData.material?.length <= 0 || !productData.material) newErrors.material = 'Debe completar el material.';
@@ -100,7 +100,7 @@ async function update(req, res) {
      const newErrors = {};
  
      if (typeof productData.title !== 'undefined' && productData.title?.length <= 0) newErrors.title = 'Debe completar el título.';
-     if (typeof productData.description !== 'undefined' && productData.description?.length <= 0) newErrors.description = 'Debe completar la descripción.';
+     if (typeof productData.description !== 'undefined' && (productData.description?.length <= 0 || productData.description?.length > 256)) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
      if (typeof productData.estimated_delay !== 'undefined' && (isNaN(productData.estimated_delay) || productData.estimated_delay < 0)) newErrors.estimated_delay = 'Debe ingresar un número mayor o igual a 0.';
      if (typeof productData.price !== 'undefined' && (isNaN(productData.price) || productData.price < 0)) newErrors.price = 'Debe ingresar un número mayor o igual a 0.';
      if (typeof productData.material !== 'undefined' && productData.material?.length <= 0) newErrors.material = 'Debe completar el material.';
