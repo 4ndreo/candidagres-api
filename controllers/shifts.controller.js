@@ -6,8 +6,8 @@ import { ObjectId } from "mongodb";
 
 
 async function create(req, res) {
-    const shiftData = { ...req.body, max_places: Number(req.body.max_places), id_class: new ObjectId(req.body.id_class) };
-    const classData = await classesService.findCursoById(new ObjectId(req.body.id_class))
+    const shiftData = { ...req.body, max_places: Number(req.body.max_places), id_class: req.body.id_class.length > 0 ? new ObjectId(req.body.id_class) : undefined };
+    const classData = await classesService.findCursoById(shiftData.id_class)
     const newErrors = {};
 
     if (!classData) newErrors.id_class = 'La clase no existe.';
@@ -16,7 +16,7 @@ async function create(req, res) {
     if (validateTime(shiftData.end_time)) newErrors.end_time = validateTime(shiftData.end_time);
     if (shiftData.description?.length <= 0 || !shiftData.description) newErrors.description = 'Debe completar la descripción.';
     if (isNaN(shiftData.max_places) || !shiftData.max_places || shiftData.max_places < 1) newErrors.max_places = 'Debe ingresar un número mayor o igual a 1.';
-    if (!shiftData.days) newErrors.days = 'Debe ingresar los días en los que se dará la clase.';
+    if (!shiftData.days || shiftData.days.length < 1) newErrors.days = 'Debe ingresar los días en los que se dará la clase.';
     shiftData?.days?.forEach((day) => { if (validateWeekday(day)) newErrors.days = 'Debe ingresar un día válido.'; })
 
     if (Object.keys(newErrors).length !== 0) {
@@ -30,6 +30,7 @@ async function create(req, res) {
         .catch(function (err) {
             res.status(500).json({ err });
         });
+
 }
 
 
@@ -136,7 +137,7 @@ async function update(req, res) {
     if (typeof shiftData.start_time !== 'undefined' && validateTime(shiftData.start_time)) newErrors.start_time = validateTime(shiftData.start_time);
     if (typeof shiftData.end_time !== 'undefined' && validateTime(shiftData.end_time)) newErrors.end_time = validateTime(shiftData.end_time);
     if (typeof shiftData.min_age !== 'undefined' && (isNaN(shiftData.max_places) || shiftData.max_places < 1)) newErrors.max_places = 'Debe ingresar un número mayor o igual a 1.';
-    if (typeof shiftData.min_age !== 'undefined' && !shiftData.days) newErrors.days = 'Debe ingresar los días en los que se dará la clase.';
+    if (typeof shiftData.min_age !== 'undefined' && (!shiftData.days || shiftData.days.length < 1)) newErrors.days = 'Debe ingresar los días en los que se dará la clase.';
     shiftData?.days?.forEach((day) => { if (validateWeekday(day)) newErrors.days = 'Debe ingresar un día válido.'; })
 
     if (Object.keys(newErrors).length !== 0) {
