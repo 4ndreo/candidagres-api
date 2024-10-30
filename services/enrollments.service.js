@@ -15,7 +15,7 @@ async function filter(params) {
 }
 
 async function findQuery(request, idUser = null) {
-    return await dataBase.findQuery(collection, request, idUser)
+    return await dataBase.findQuery(collection, request, idUser, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' },{ from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
 }
 
 async function findByUser(idUser) {

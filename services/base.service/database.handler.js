@@ -44,9 +44,13 @@ async function findQuery(collection, request, idUser = null, relations = []) {
     const sortDirection = (sort?.direction ?? 'undefined') !== 'undefined' ? parseInt(sort.direction) : 1
     const page = (request?.page ?? 'undefined') !== 'undefined' ? parseInt(request.page) : 0
     const limit = (request?.limit ?? 'undefined') !== 'undefined' ? parseInt(request.limit) : 10
-    const filter = (request?.filter ?? 'undefined') !== 'undefined' ? JSON.parse(request?.filter) : {}
-    const filterField = filter?.field !== 'undefined' ? filter.field : null
-    const filterValue = filter?.value !== 'undefined' ? filter.value : null
+    const filters = JSON.parse(request?.filter).filter(filter => (filter.field ?? 'undefined') !== 'undefined' && (filter.value ?? 'undefined') !== 'undefined')
+
+    // .length > 0  ? JSON.parse(request?.filter) : []
+    // console.log(request?.filter)
+    // console.log('filters', filters)
+    // const filterField = filter?.field !== 'undefined' ? filter.field : null
+    // const filterValue = filter?.value !== 'undefined' ? filter.value : null
 
     const pipeline = [
       {
@@ -73,6 +77,52 @@ async function findQuery(collection, request, idUser = null, relations = []) {
         }
       },
 
+
+
+    ]
+    relations.forEach((relation) => {
+      const lookupPipeline = [{
+        $lookup:
+        {
+          from: relation.from,
+          localField: relation.localField,
+          foreignField: relation.foreignField,
+          as: relation.as
+        }
+      },
+      {
+        $unwind: {
+          path: `\$${relation.as}`,
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      ]
+
+      // console.log(lookupPipeline)
+      pipeline.push(...lookupPipeline)
+    })
+
+    filters.forEach((filter) => {
+      // console.log(filters)
+
+      const filterPipeline = [{
+        $match:
+          filter.field.includes('id_') ?
+            {
+              [filter.field]: { $eq: new ObjectID(filter.value) }
+            } :
+            {
+              [filter.field]: { $regex: filter.value, $options: "i" }
+            }
+      },
+      ]
+
+      if (filter.field && filter.value) {
+
+        pipeline.push(...filterPipeline)
+      }
+    })
+    pipeline.push(
       // filter the results
       {
         $match:
@@ -81,18 +131,7 @@ async function findQuery(collection, request, idUser = null, relations = []) {
               created_by: { $eq: new ObjectID(idUser) }
             } : {}
       },
-      {
-        $match:
-          filterField && filterValue ?
-            filterField.includes('id_') ?
-              {
-                [filterField]: { $eq: new ObjectID(filterValue) }
-              } :
-              {
-                [filterField]: { $regex: filterValue, $options: "i" }
-              }
-            : {}
-      },
+
       {
         $match:
         {
@@ -110,22 +149,9 @@ async function findQuery(collection, request, idUser = null, relations = []) {
           localField: 'created_by',
           foreignField: '_id',
           as: 'user'
-        }
+        },
       },
-    ]
-    relations.forEach((relation) => {
-      const lookupPipeline = {
-        $lookup:
-        {
-          from: relation.from,
-          localField: relation.localField,
-          foreignField: relation.foreignField,
-          as: relation.as
-        }
-      }
-      pipeline.push(lookupPipeline)
-    })
-
+    )
     pipeline.push(
       // count the results on stage1, and paginate on stage2
       {
@@ -148,7 +174,6 @@ async function findQuery(collection, request, idUser = null, relations = []) {
           pages: { $ceil: { $divide: ["$stage1.count", limit] } }
         }
       })
-
     return connectDB((db) =>
       db
         .collection(collection)

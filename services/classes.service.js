@@ -15,8 +15,8 @@ async function findQuery(request, idUser = null) {
 }
 
 async function findOneWithShifts(id) {
-    return await dataBase.findOneRelated(collection, id, {source: "classes", from: 'shifts', localField: '_id', foreignField: 'id_class', as: 'shifts' }//)
-    , {source: "shifts", from: 'enrollments', localField: 'shifts._id', foreignField: 'id_shift', as: 'shifts.enrollments' }    )
+    return await dataBase.findOneRelated(collection, id, { source: "classes", from: 'shifts', localField: '_id', foreignField: 'id_class', as: 'shifts' }
+        , { source: "shifts", from: 'enrollments', localField: 'shifts._id', foreignField: 'id_shift', as: 'shifts.enrollments' })
 }
 
 async function findCursoById(id) {
