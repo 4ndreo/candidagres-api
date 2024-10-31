@@ -12,7 +12,7 @@ async function find(request) {
 }
 
 async function findQuery(request, idUser = null) {
-    return await dataBase.findQuery(collection, request, idUser)
+    return await dataBase.findQuery(collection, request, idUser, [{ from: 'users', localField: 'created_by', foreignField: '_id', as: 'user' }])
 }
 
 async function findById(id) {

@@ -142,15 +142,15 @@ async function findQuery(collection, request, idUser = null, relations = []) {
 
       // sort the results
       { $sort: { sortField: sortDirection } },
-      {
-        $lookup:
-        {
-          from: 'users',
-          localField: 'created_by',
-          foreignField: '_id',
-          as: 'user'
-        },
-      },
+      // {
+      //   $lookup:
+      //   {
+      //     from: 'users',
+      //     localField: 'created_by',
+      //     foreignField: '_id',
+      //     as: 'user'
+      //   },
+      // },
     )
     pipeline.push(
       // count the results on stage1, and paginate on stage2
