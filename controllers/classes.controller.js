@@ -12,8 +12,9 @@ async function create(req, res) {
     if (classData.title?.length <= 0 || !classData.title) newErrors.title = 'Debe completar el título.';
     if (classData.teacher?.length <= 0 || !classData.teacher) newErrors.teacher = 'Debe completar el docente.';
     if (classData.description?.length <= 0 || classData.description?.length > 256  || !classData.description) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
-    if (isNaN(classData.price) || !classData.price || classData.price < 0) newErrors.price = 'Debe ingresar un precio mayor o igual a 0.';
-    if (isNaN(classData.min_age) || !classData.min_age || classData.min_age < 0) newErrors.min_age = 'Debe ingresar un número mayor o igual a 0.';
+    if (isNaN(classData.price) || classData.price < 0) newErrors.price = 'Debe ingresar un precio mayor o igual a 0.';
+    console.log( !classData.min_age)
+    if (isNaN(classData.min_age) || classData.min_age < 0) newErrors.min_age = 'Debe ingresar un número mayor o igual a 0.';
 
     if (Object.keys(newErrors).length !== 0) {
         return res.status(400).json({ err: newErrors });
@@ -33,7 +34,6 @@ async function find(req, res) {
     classesService.find()
         .then(function (data) {
             res.status(200).json(data);
-            // req.socketClient.emit('locationsList', { turno })
         })
         .catch(function (err) {
             res.status(500).json({ err });

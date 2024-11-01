@@ -46,12 +46,6 @@ async function findQuery(collection, request, idUser = null, relations = []) {
     const limit = (request?.limit ?? 'undefined') !== 'undefined' ? parseInt(request.limit) : 10
     const filters = JSON.parse(request?.filter).filter(filter => (filter.field ?? 'undefined') !== 'undefined' && (filter.value ?? 'undefined') !== 'undefined')
 
-    // .length > 0  ? JSON.parse(request?.filter) : []
-    // console.log(request?.filter)
-    // console.log('filters', filters)
-    // const filterField = filter?.field !== 'undefined' ? filter.field : null
-    // const filterValue = filter?.value !== 'undefined' ? filter.value : null
-
     const pipeline = [
       {
         $addFields: {
@@ -77,8 +71,6 @@ async function findQuery(collection, request, idUser = null, relations = []) {
         }
       },
 
-
-
     ]
     relations.forEach((relation) => {
       const lookupPipeline = [{
@@ -98,13 +90,10 @@ async function findQuery(collection, request, idUser = null, relations = []) {
       },
       ]
 
-      // console.log(lookupPipeline)
       pipeline.push(...lookupPipeline)
     })
 
     filters.forEach((filter) => {
-      // console.log(filters)
-
       const filterPipeline = [{
         $match:
           filter.field.includes('id_') ?
@@ -114,14 +103,13 @@ async function findQuery(collection, request, idUser = null, relations = []) {
             {
               [filter.field]: { $regex: filter.value, $options: "i" }
             }
-      },
-      ]
+      }]
 
       if (filter.field && filter.value) {
-
         pipeline.push(...filterPipeline)
       }
     })
+
     pipeline.push(
       // filter the results
       {
@@ -131,7 +119,6 @@ async function findQuery(collection, request, idUser = null, relations = []) {
               created_by: { $eq: new ObjectID(idUser) }
             } : {}
       },
-
       {
         $match:
         {
@@ -142,16 +129,8 @@ async function findQuery(collection, request, idUser = null, relations = []) {
 
       // sort the results
       { $sort: { sortField: sortDirection } },
-      // {
-      //   $lookup:
-      //   {
-      //     from: 'users',
-      //     localField: 'created_by',
-      //     foreignField: '_id',
-      //     as: 'user'
-      //   },
-      // },
     )
+    
     pipeline.push(
       // count the results on stage1, and paginate on stage2
       {

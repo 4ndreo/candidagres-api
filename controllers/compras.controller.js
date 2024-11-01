@@ -30,7 +30,6 @@ async function find(req, res) {
     comprasService.find()
         .then(function (compra) {
             res.status(200).json(compra);
-            // req.socketClient.emit('locationsList', { turno })
         })
         .catch(function (err) {
             res.status(500).json({ err });

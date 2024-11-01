@@ -29,7 +29,6 @@ async function find(req, res) {
     carritoService.find()
         .then(function (carrito) {
             res.status(200).json(carrito);
-            // req.socketClient.emit('locationsList', { turno })
         })
         .catch(function (err) {
             res.status(500).json({ err });

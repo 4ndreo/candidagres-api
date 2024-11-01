@@ -44,7 +44,6 @@ async function find(req, res) {
     enrollmentsService.find()
         .then(function (inscripcion) {
             res.status(200).json(inscripcion);
-            // req.socketClient.emit('locationsList', { turno })
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -98,17 +97,17 @@ async function findAllByUser(req, res) {
             res.status(500).json({ err });
         });
 }
-async function findAllByUserAndTurno(req, res) {
-    const userID = req.params.idUser;
-    const turnoID = req.params.idTurno;
-    enrollmentsService.findAllByUserAndTurno(userID, turnoID)
-        .then(function (inscripcion) {
-            res.status(200).json(inscripcion);
-        })
-        .catch(function (err) {
-            res.status(500).json({ err });
-        });
-}
+// async function findAllByUserAndTurno(req, res) {
+//     const idUser = req.params.idUser;
+//     const idShift = req.params.id;
+//     enrollmentsService.findAllByUserAndTurno(idUser, idShift)
+//         .then(function (inscripcion) {
+//             res.status(200).json(inscripcion);
+//         })
+//         .catch(function (err) {
+//             res.status(500).json({ err });
+//         });
+// }
 
 async function remove(req, res) {
     const enrollmentID = req.params.id;
@@ -190,7 +189,7 @@ export default {
     findQuery,
     findById,
     findAllByUser,
-    findAllByUserAndTurno,
+    // findAllByUserAndTurno,
     findByUser,
     remove,
     update,
