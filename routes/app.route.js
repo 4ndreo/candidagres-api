@@ -15,7 +15,7 @@ import mediaController from "../controllers/media.controller.js";
 import mpController from "../controllers/mp.controller.js";
 
 const route = express.Router();
-const upload = multer({ dest: 'uploads/' });
+import  upload  from "../config/multerConfig.cjs";
 const app = express();
 
 //route.use(fileUpload());
