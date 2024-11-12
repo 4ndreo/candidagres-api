@@ -15,7 +15,7 @@ import mediaController from "../controllers/media.controller.js";
 import mpController from "../controllers/mp.controller.js";
 
 const route = express.Router();
-import  upload  from "../config/multerConfig.cjs";
+import upload from "../config/multerConfig.cjs";
 const app = express();
 
 //route.use(fileUpload());
@@ -37,7 +37,7 @@ route.post("/api/users/login", userController.login)
 route.post("/api/users/auth", userController.auth)
 
 // Profile
-route.patch("/api/profile/:id", userController.updateProfile);
+route.patch("/api/profile/:id", upload.single('file'), userController.updateProfile);
 
 // Shifts
 
@@ -80,9 +80,9 @@ route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollm
 route.get("/api/productsAll", productosController.find);
 route.get("/api/products", productosController.findQuery);
 route.get("/api/products/:idProductos", productosController.findById);
-route.post("/api/products", productosController.create);
+route.post("/api/products", upload.single('file'), productosController.create);
 route.delete("/api/products/:idProductos", productosController.remove);
-route.patch("/api/products/:idProductos", productosController.update);
+route.patch("/api/products/:idProductos", upload.single('file'), productosController.update);
 
 route.post("/api/media", upload.single('imagenProducto'), mediaController.uploadImagen);
 route.delete("/api/media/:name", mediaController.removeImage);

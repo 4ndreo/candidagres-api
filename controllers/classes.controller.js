@@ -13,7 +13,6 @@ async function create(req, res) {
     if (classData.teacher?.length <= 0 || !classData.teacher) newErrors.teacher = 'Debe completar el docente.';
     if (classData.description?.length <= 0 || classData.description?.length > 256  || !classData.description) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
     if (isNaN(classData.price) || classData.price < 0) newErrors.price = 'Debe ingresar un precio mayor o igual a 0.';
-    console.log( !classData.min_age)
     if (isNaN(classData.min_age) || classData.min_age < 0) newErrors.min_age = 'Debe ingresar un número mayor o igual a 0.';
 
     if (Object.keys(newErrors).length !== 0) {

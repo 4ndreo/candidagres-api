@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import * as productosService from "../services/productos.service.js"
 import { ObjectId } from "mongodb";
+import cloudinary from "../config/cloudinaryConfig.cjs";
+import { validateImage } from "../utils/validators.js";
 
 
 async function create(req, res) {
@@ -15,14 +17,25 @@ async function create(req, res) {
     if (isNaN(productData.estimated_delay) || !productData.estimated_delay || productData.estimated_delay < 0) newErrors.estimated_delay = 'Debe ingresar un número válido.';
     if (isNaN(productData.price) || !productData.price || productData.price < 0) newErrors.price = 'Debe ingresar un precio válido.';
     if (productData.material?.length <= 0 || !productData.material) newErrors.material = 'Debe completar el material.';
-    
+    if (validateImage(req.file)) newErrors.img = validateImage(req.file);
+
+    // Upload image
+    if (req.file !== undefined) {
+        const buffer = req.file.buffer.toString('base64');
+
+        await cloudinary.uploader.upload(`data:${req.file.mimetype};base64,${buffer}`, { folder: 'products' }, (error, result) => {
+            if (error) {
+                newErrors.img = 'Error al subir la imagen. Intentalo nuevamente.'
+            }
+            productData.img = result.display_name;
+        });
+    }
+
     if (Object.keys(newErrors).length !== 0) {
         return res.status(400).json({ err: newErrors });
     }
 
-    const newProducto = req.body;
-
-    await productosService.create({ ...newProducto, created_by: new ObjectId(user.id) })
+    await productosService.create({ ...productData, created_by: new ObjectId(user.id) })
         .then(function (newProducto) {
             res.status(201).json(newProducto);
         })
@@ -89,25 +102,39 @@ async function update(req, res) {
     // const data = req.body;
     const productData = req.body;
 
-     // Format
-     if (typeof productData.title !== 'undefined') productData.title = String(req.body.title);
-     if (typeof productData.description !== 'undefined') productData.description = String(req.body.description);
-     if (typeof productData.estimated_delay !== 'undefined') productData.estimated_delay = Number(req.body.estimated_delay);
-     if (typeof productData.price !== 'undefined') productData.price = Number(req.body.price);
-     if (typeof productData.material !== 'undefined') productData.material = String(req.body.material);
- 
-     // Validate
-     const newErrors = {};
- 
-     if (typeof productData.title !== 'undefined' && productData.title?.length <= 0) newErrors.title = 'Debe completar el título.';
-     if (typeof productData.description !== 'undefined' && (productData.description?.length <= 0 || productData.description?.length > 256)) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
-     if (typeof productData.estimated_delay !== 'undefined' && (isNaN(productData.estimated_delay) || productData.estimated_delay < 0)) newErrors.estimated_delay = 'Debe ingresar un número mayor o igual a 0.';
-     if (typeof productData.price !== 'undefined' && (isNaN(productData.price) || productData.price < 0)) newErrors.price = 'Debe ingresar un número mayor o igual a 0.';
-     if (typeof productData.material !== 'undefined' && productData.material?.length <= 0) newErrors.material = 'Debe completar el material.';
-     
-     if (Object.keys(newErrors).length !== 0) {
-         return res.status(400).json({ err: newErrors });
-     }
+    // Format
+    if (typeof productData.title !== 'undefined') productData.title = String(req.body.title);
+    if (typeof productData.description !== 'undefined') productData.description = String(req.body.description);
+    if (typeof productData.estimated_delay !== 'undefined') productData.estimated_delay = Number(req.body.estimated_delay);
+    if (typeof productData.price !== 'undefined') productData.price = Number(req.body.price);
+    if (typeof productData.material !== 'undefined') productData.material = String(req.body.material);
+
+    // Validate
+    const newErrors = {};
+
+    if (typeof productData.title !== 'undefined' && productData.title?.length <= 0) newErrors.title = 'Debe completar el título.';
+    if (typeof productData.description !== 'undefined' && (productData.description?.length <= 0 || productData.description?.length > 256)) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
+    if (typeof productData.estimated_delay !== 'undefined' && (isNaN(productData.estimated_delay) || productData.estimated_delay < 0)) newErrors.estimated_delay = 'Debe ingresar un número mayor o igual a 0.';
+    if (typeof productData.price !== 'undefined' && (isNaN(productData.price) || productData.price < 0)) newErrors.price = 'Debe ingresar un número mayor o igual a 0.';
+    if (typeof productData.material !== 'undefined' && productData.material?.length <= 0) newErrors.material = 'Debe completar el material.';
+
+    if (typeof req.file !== 'undefined' && validateImage(req.file)) newErrors.img = validateImage(req.file);
+
+    // Upload image
+    if (req.file !== undefined) {
+        const buffer = req.file.buffer.toString('base64');
+
+        await cloudinary.uploader.upload(`data:${req.file.mimetype};base64,${buffer}`, { folder: 'products' }, (error, result) => {
+            if (error) {
+                newErrors.img = 'Error al subir la imagen. Intentalo nuevamente.'
+            }
+            productData.img = result.display_name;
+        });
+    }
+
+    if (Object.keys(newErrors).length !== 0) {
+        return res.status(400).json({ err: newErrors });
+    }
 
     productosService.update(productoID, productData)
         .then(function (producto) {

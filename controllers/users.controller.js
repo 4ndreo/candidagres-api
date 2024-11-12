@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken";
 import * as UserService from "../services/users.service.js";
 import bcrypt from 'bcrypt'
-import { validateCUIL, validateDNI, validateDate, validateEmail, validatePassport, validatePassword } from "../utils/validators.js";
+import { validateCUIL, validateDNI, validateDate, validateEmail, validateImage, validatePassport, validatePassword } from "../utils/validators.js";
+import cloudinary from "../config/cloudinaryConfig.cjs";
+import * as usersService from "../services/users.service.js";
+import { ObjectId } from "mongodb";
+
 
 async function find(req, res) {
   UserService.find()
@@ -109,11 +113,71 @@ async function updateProfile(req, res) {
   const data = req.body;
   const incomingToken = req.headers["auth-token"];
   const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+  const oldUser = await usersService.findById(new ObjectId(user.id))
 
   if (idUser !== user.id) {
     return res.status(401).json({ message: 'No autorizado' });
   }
+  // Format
+  if (typeof data.first_name !== 'undefined') data.first_name = String(req.body.first_name);
+  if (typeof data.last_name !== 'undefined') data.last_name = String(req.body.last_name);
+  if (typeof data.birth_date !== 'undefined') data.birth_date = String(req.body.birth_date);
+  if (typeof data.document_type !== 'undefined') data.document_type = String(req.body.document_type);
+  if (typeof data.id_document !== 'undefined') data.id_document = String(req.body.id_document);
+  if (typeof data.email !== 'undefined') data.email = String(req.body.email);
 
+  // Validate
+
+  const newErrors = {};
+
+  if (typeof data.first_name !== 'undefined' && data.first_name?.length <= 0) newErrors.first_name = 'Debe completar el nombre.';
+  if (typeof data.last_name !== 'undefined' && data.last_name?.length <= 0) newErrors.last_name = 'Debe completar el apellido.';
+  if (typeof data.birth_date !== 'undefined' && validateDate(data.birth_date)) newErrors.birth_date = validateDate(data.birth_date)
+
+  switch (data.document_type ?? oldUser.document_type) {
+    case 'DNI':
+      if (validateDNI(data.id_document ?? oldUser.id_document)) newErrors.id_document = validateDNI(data.id_document ?? oldUser.id_document)
+      break;
+    case 'CUIL':
+      if (validateCUIL(data.id_document ?? oldUser.id_document)) newErrors.id_document = validateCUIL(data.id_document ?? oldUser.id_document)
+      break;
+    case 'Pasaporte':
+      if (validatePassport(data.id_document ?? oldUser.id_document)) newErrors.id_document = validatePassport(data.id_document ?? oldUser.id_document)
+      break;
+    default:
+      if (typeof data.document_type !== 'undefined' && data.document_type?.length <= 0) newErrors.document_type = 'Debe ingresar un tipo de documento válido.'
+  }
+
+  if (typeof data.email !== 'undefined' && validateEmail(data.email)) newErrors.email = validateEmail(data.email);
+  if (typeof req.file !== 'undefined' && validateImage(req.file)) newErrors.img = validateImage(req.file);
+
+  const userOld = await UserService.findOneByEmail(data.email)
+  const idDocumentOld = await UserService.findOneByIdDocument(data.id_document)
+
+  if (userOld) newErrors.email = 'El usuario ya existe.'
+  if (idDocumentOld) newErrors.id_document = 'Ya existe un usuario con ese documento.'
+
+  if (Object.keys(newErrors).length !== 0) {
+    return res.status(400).json({ err: newErrors });
+  }
+
+  // Upload image
+  let imgName = null;
+  if (req.file !== undefined) {
+    const buffer = req.file.buffer.toString('base64');
+
+    await cloudinary.uploader.upload(`data:${req.file.mimetype};base64,${buffer}`, { folder: 'profile' }, (error, result) => {
+      if (error) {
+        newErrors.img = 'Error al subir la imagen. Intentalo nuevamente.'
+      }
+      imgName = result.display_name;
+      data.image = result.display_name;
+    });
+  }
+
+  if (Object.keys(newErrors).length !== 0) {
+    return res.status(400).json({ err: newErrors });
+  }
   UserService.update(user.id, data)
     .then(function (user) {
       res.status(201).json(user);
@@ -141,7 +205,7 @@ async function login(req, res) {
       res.status(200).json({ userData, token });
     })
     .catch((err) => {
-      res.status(500).json({ err: {password: err.message} });
+      res.status(500).json({ err: { password: err.message } });
     });
 }
 
