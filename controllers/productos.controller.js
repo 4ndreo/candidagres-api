@@ -132,6 +132,9 @@ async function update(req, res) {
         });
     }
 
+    // TODO: Remove old image from cloudinary
+
+
     if (Object.keys(newErrors).length !== 0) {
         return res.status(400).json({ err: newErrors });
     }
