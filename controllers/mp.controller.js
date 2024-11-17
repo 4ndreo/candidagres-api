@@ -8,7 +8,7 @@ async function createPreference(req, res) {
 
     const preference = new Preference(client);
     try {
-
+        console.log('notification_url', `${process.env.BACK_URL}/webhook`)
         const body = {
             items: req.body.items,
             metadata: { usuarioId: req.body.usuarioId, carritoId: req.body.carritoId, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
@@ -16,9 +16,9 @@ async function createPreference(req, res) {
             back_urls: {
                 success: `${process.env.FRONT_URL}/store`,
                 failure: `${process.env.FRONT_URL}/store/cart/${req.body.usuarioId}`,
-                pending: 'http://localhost:2025/api/'
+                pending: `${process.env.FRONT_URL}/store/cart/${req.body.usuarioId}?status=pending`
             },
-            notification_url: `https://8lmf1sds-2025.brs.devtunnels.ms/api/webhook`,
+            notification_url: `${process.env.BACK_URL}/webhook`,
             auto_return: 'approved',
         }
 
@@ -38,6 +38,7 @@ async function createPreference(req, res) {
 }
 
 async function receiveWebhook(req, res) {
+    console.log('webhook received')
     if (req.query.hasOwnProperty('data.id')) {
         const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
         const payment = new Payment(client);
