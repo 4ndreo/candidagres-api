@@ -8,7 +8,6 @@ async function createPreference(req, res) {
 
     const preference = new Preference(client);
     try {
-        console.log('notification_url', `${process.env.BACK_URL}/webhook`)
         const body = {
             items: req.body.items,
             metadata: { usuarioId: req.body.usuarioId, carritoId: req.body.carritoId, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
@@ -38,14 +37,14 @@ async function createPreference(req, res) {
 }
 
 async function receiveWebhook(req, res) {
-    console.log('webhook received')
     if (req.query.hasOwnProperty('data.id')) {
         const client = new MercadoPagoConfig({ accessToken: process.env.MP_ACCESS_TOKEN });
         const payment = new Payment(client);
-
+        
         payment.get({
             id: req.query['data.id'],
         }).then(async (resp) => {
+            console.log('webhook received', JSON.stringify(resp))
             const purchase = await comprasService.create({
                 usuarioId: resp.metadata.usuario_id,
                 carritoId: resp.metadata.carrito_id,
