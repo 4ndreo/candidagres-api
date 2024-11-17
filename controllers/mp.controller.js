@@ -14,8 +14,8 @@ async function createPreference(req, res) {
             metadata: { usuarioId: req.body.usuarioId, carritoId: req.body.carritoId, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
             },
             back_urls: {
-                success: `http://localhost:3000/store`,
-                failure: `http://localhost:3000/store/carrito/id-${req.body.usuarioId}`,
+                success: `${process.env.FRONT_URL}/store`,
+                failure: `${process.env.FRONT_URL}/store/cart/${req.body.usuarioId}`,
                 pending: 'http://localhost:2025/api/'
             },
             notification_url: `https://8lmf1sds-2025.brs.devtunnels.ms/api/webhook`,

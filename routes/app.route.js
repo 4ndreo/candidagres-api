@@ -1,5 +1,4 @@
 import express from "express";
-import fileUpload from "express-fileupload";
 import userController from "../controllers/users.controller.js";
 import shiftsController from "../controllers/shifts.controller.js";
 import classesController from "../controllers/classes.controller.js";
@@ -8,10 +7,7 @@ import productosController from "../controllers/productos.controller.js";
 import carritoController from "../controllers/carrito.controller.js";
 import comprasController from "../controllers/compras.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
-import { isAllBooked, verifyDeletionPatch } from "../middlewares/inscripciones.middlewares.js";
-import multer from 'multer';
-import bodyParser from "express";
-import mediaController from "../controllers/media.controller.js";
+import { isAllBooked } from "../middlewares/inscripciones.middlewares.js";
 import mpController from "../controllers/mp.controller.js";
 
 const route = express.Router();
@@ -30,23 +26,22 @@ route.all('/api/*', authorization)
 // Users
 route.get("/api/users", userController.find);
 route.get("/api/users/:idUser", userController.findById);
-route.post("/api/users/user", userController.create);
+route.post("/api/users", userController.create);
 route.delete("/api/users/:idUser", userController.remove);
 route.patch("/api/users/:idUser", userController.update);
 route.post("/api/users/login", userController.login)
 route.post("/api/users/auth", userController.auth)
 
+
 // Profile
 route.patch("/api/profile/:id", upload.single('file'), userController.updateProfile);
 
-// Shifts
 
+// Shifts
 route.get("/api/shiftsAll", shiftsController.find);
 route.get("/api/shifts", shiftsController.findQuery);
 route.get("/api/shifts/:id/enrollments", shiftsController.findOneWithEnrollments);
-
 route.get("/api/shifts/:id", shiftsController.findById);
-// route.get("/api/shifts/curso/:idCurso", shiftsController.findByCurso);
 route.post("/api/shifts", shiftsController.create);
 route.delete("/api/shifts/:id", shiftsController.remove);
 route.patch("/api/shifts/:id", shiftsController.update);
@@ -84,12 +79,6 @@ route.post("/api/products", upload.single('file'), productosController.create);
 route.delete("/api/products/:idProductos", productosController.remove);
 route.patch("/api/products/:idProductos", upload.single('file'), productosController.update);
 
-route.post("/api/media", upload.single('imagenProducto'), mediaController.uploadImagen);
-route.delete("/api/media/:name", mediaController.removeImage);
-
-
-
-
 
 // Carrito
 route.get("/api/carrito", carritoController.find);
@@ -102,8 +91,6 @@ route.patch("/api/carrito/:idCarrito", carritoController.update);
 route.patch("/api/carrito/user/:idCarrito", carritoController.updateEliminarProducto);
 route.patch("/api/carrito/:idUser/addToCart", carritoController.addToCart);
 route.patch("/api/carrito/:idUser/substractToCart", carritoController.substractToCart);
-
-
 
 
 // Compras 
