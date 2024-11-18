@@ -290,9 +290,6 @@ async function changePassword(req, res) {
     return res.status(400).json({ err: { verification_code: err.message } });
   }
 
-
-  console.log('continue')
-
   const salt = await bcrypt.genSalt(10)
   const passwordHash = await bcrypt.hash(data.password, salt)
 

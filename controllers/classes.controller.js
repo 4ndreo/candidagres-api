@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import * as classesService from "../services/classes.service.js"
 import { ObjectId } from "mongodb";
+import { validateInteger } from "../utils/validators.js";
 
 async function create(req, res) {
     const incomingToken = req.headers["auth-token"];
@@ -12,7 +13,9 @@ async function create(req, res) {
     if (classData.title?.length <= 0 || !classData.title) newErrors.title = 'Debe completar el título.';
     if (classData.teacher?.length <= 0 || !classData.teacher) newErrors.teacher = 'Debe completar el docente.';
     if (classData.description?.length <= 0 || classData.description?.length > 256 || !classData.description) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
+    if (isNaN(classData.price) || validateInteger(classData.price)) newErrors.price = validateInteger(classData.price);
     if (isNaN(classData.price) || classData.price < 0) newErrors.price = 'Debe ingresar un precio mayor o igual a 0.';
+    if (isNaN(classData.min_age) || validateInteger(classData.min_age)) newErrors.min_age = validateInteger(classData.min_age);
     if (isNaN(classData.min_age) || classData.min_age < 0) newErrors.min_age = 'Debe ingresar un número mayor o igual a 0.';
 
     if (Object.keys(newErrors).length !== 0) {
@@ -113,7 +116,9 @@ async function update(req, res) {
     if (typeof classData.title !== 'undefined' && classData.title?.length <= 0) newErrors.title = 'Debe completar el título.';
     if (typeof classData.teacher !== 'undefined' && classData.teacher?.length <= 0) newErrors.teacher = 'Debe completar el docente.';
     if (typeof classData.description !== 'undefined' && (classData.description?.length <= 0 || classData.description?.length > 256)) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
+    if (typeof classData.price !== 'undefined' && (isNaN(classData.price) || validateInteger(classData.price))) newErrors.price = validateInteger(classData.price);
     if (typeof classData.price !== 'undefined' && (isNaN(classData.price) || classData.price < 0)) newErrors.price = 'Debe ingresar un número mayor o igual a 0.';
+    if (typeof classData.min_age !== 'undefined' && (isNaN(classData.min_age) || validateInteger(classData.min_age))) newErrors.min_age = validateInteger(classData.min_age);
     if (typeof classData.min_age !== 'undefined' && (isNaN(classData.min_age) || classData.min_age < 0)) newErrors.min_age = 'Debe ingresar un número mayor o igual a 0.';
 
     if (Object.keys(newErrors).length !== 0) {

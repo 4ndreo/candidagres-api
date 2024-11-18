@@ -5,6 +5,11 @@ export function validateEmail(email) {
     return emailRegex.test(email) ? null : 'Debe ingresar un email válido.';
 }
 
+export function validateInteger(integer) {
+    const integerRegex = /^[0-9]*$/;
+    return integerRegex.test(integer) ? null : 'Debe ingresar un número entero.';
+}
+
 export function validatePassword(password) {
     // Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one digit
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&#]{8,}$/;
