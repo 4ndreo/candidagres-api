@@ -147,8 +147,8 @@ async function substractToCart(req, res) {
         return res.status(404).json('No existe el carrito');
     }
     const item = cart.items.find(item => item.id === req.body.item.id)
-    item.quantity === 1 ? cart.items.splice(cart.items.indexOf(item), 1) :
-    cart.items[cart.items.indexOf(item)] = {id: req.body.item.id, quantity: item.quantity - 1}
+    item?.quantity === 1 ? cart.items.splice(cart.items.indexOf(item), 1) :
+    cart.items[cart.items.indexOf(item)] = {id: req.body.item.id, quantity: item?.quantity - 1}
     carritoService.update(cart._id, cart.items)
         .then(function (carrito) {
             res.status(201).json(carrito);
