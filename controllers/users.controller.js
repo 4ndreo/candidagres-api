@@ -1,10 +1,12 @@
 import jwt from "jsonwebtoken";
 import * as UserService from "../services/users.service.js";
 import bcrypt from 'bcrypt'
-import { validateCUIL, validateDNI, validateDate, validateEmail, validateImage, validatePassport, validatePassword } from "../utils/validators.js";
+import { validateCUIL, validateDNI, validateDate, validateEmail, validateImage, validatePassport, validatePassword, validateVerificationCode } from "../utils/validators.js";
 import cloudinary from "../config/cloudinaryConfig.cjs";
 import * as usersService from "../services/users.service.js";
 import { ObjectId } from "mongodb";
+import transporter from "../config/mailConfig.cjs";
+import { createEmailTemplate } from "../config/restorePasswordTemplate.js";
 
 
 async function find(req, res) {
@@ -211,6 +213,99 @@ async function login(req, res) {
     });
 }
 
+
+async function restorePassword(req, res) {
+  const user = req.body;
+  const newErrors = {};
+
+
+  if (validateEmail(user.email)) newErrors.email = validateEmail(user.email);
+
+  if (Object.keys(newErrors).length !== 0) {
+    return res.status(400).json({ err: newErrors });
+  }
+
+  UserService.findOneByEmail(user.email).then((userData) => {
+    if (!userData) {
+      res.status(500).json({ err: { email: "Este correo no pertenece a un usuario." } });
+    } else {
+      const verificationCode = Math.floor(100000 + Math.random() * 900000);
+      const restorePasswordToken = jwt.sign({ verificationCode }, process.env.JWT_SECRET, { expiresIn: '300s' });
+      UserService.update(userData._id, { restore_password_token: restorePasswordToken });
+
+      const mailData = {
+        from: 'hola@candidagres.com',  // TODO: replace with production mail sender
+        to: 'franjandreo@gmail.com',   // TODO: replace with user.email
+        subject: 'Restaurá tu contraseña',
+        html: createEmailTemplate(userData, verificationCode),
+      };
+
+      transporter.sendMail(mailData, function (err, info) {
+        if (err)
+          res.status(500).json({ email: user.email, err: err });
+        else
+          res.status(200).json({ id_user: userData._id, email: user.email, message: 'Email enviado con éxito.' });
+      });
+    }
+
+  })
+}
+
+async function verifyEmailCode(req, res) {
+  const user = req.body;
+  const newErrors = {};
+
+  if (validateVerificationCode(user.verificationCode)) newErrors.verificationCode = validateVerificationCode(user.verificationCode);
+
+  if (Object.keys(newErrors).length !== 0) {
+    return res.status(400).json({ err: newErrors });
+  }
+
+  UserService.verifyCode({ id_user: user.id, verificationCode: user.verificationCode })
+    .then(() => {
+      res.status(200).json({ status: 'ok', message: 'Código verificado con éxito.' });
+    })
+    .catch((err) => {
+      res.status(500).json({ err: { verificationCode: err.message } });
+    });
+}
+
+async function changePassword(req, res) {
+  const data = req.body;
+  const newErrors = {};
+  if (validatePassword(data.password)) newErrors.password = validatePassword(data.password);
+  if (validatePassword(data.confirm_password)) newErrors.confirm_password = validatePassword(data.confirm_password);
+
+  if (data.password !== data.confirm_password) newErrors.confirm_password = 'Las contraseñas no coinciden.'
+
+  if (Object.keys(newErrors).length !== 0) {
+    return res.status(400).json({ err: newErrors });
+  }
+
+  try {
+    await UserService.verifyCode({ id_user: data.id, verificationCode: data.verificationCode })
+
+  } catch (err) {
+
+    return res.status(400).json({ err: { verification_code: err.message } });
+  }
+
+
+  console.log('continue')
+
+  const salt = await bcrypt.genSalt(10)
+  const passwordHash = await bcrypt.hash(data.password, salt)
+
+  UserService.update(data.id, { password: passwordHash, restore_password_token: null })
+    .then((userData) => {
+      res.status(200).json({ ...userData, password: undefined });
+    })
+    .catch((err) => {
+      res.status(500).json({ err: { password: err.message } });
+    });
+}
+
+
 async function auth(req, res) {
   const incomingToken = req.headers["auth-token"];
   const user = req.body;
@@ -244,5 +339,8 @@ export default {
   update,
   updateProfile,
   login,
+  restorePassword,
+  verifyEmailCode,
+  changePassword,
   auth,
 };

@@ -1,6 +1,7 @@
 import * as dataBase from "./base.service/database.handler.js";
 import bcrypt from 'bcrypt'
 const collection = "users";
+import jwt from "jsonwebtoken";
 
 async function find() {
   return await dataBase.find(collection);
@@ -52,6 +53,26 @@ async function login({ email, password }) {
 
 }
 
+async function verifyCode({ id_user, verificationCode }) {
+
+  const user = await dataBase.findById(collection, id_user)
+  if (user) {
+    try {
+      const currentVerificationCode = jwt.verify(user.restore_password_token, process.env.JWT_SECRET);
+      if (currentVerificationCode.verificationCode === Number(verificationCode)) {
+        return { ...user, password: undefined }
+      }
+    } catch (error) {
+      if (error.expiredAt) throw new Error('El código ha expirado.')
+      else throw new Error('El código es incorrecto.')
+    }
+
+  } else {
+    throw new Error('El usuario no está registrado.')
+  }
+
+}
+
 async function auth(userData) {
 
   const user = await dataBase.findOne(collection, 'email', userData.email)
@@ -71,5 +92,6 @@ export {
   remove,
   update,
   login,
+  verifyCode,
   auth
 };

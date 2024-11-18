@@ -6,6 +6,9 @@ const whitelistedEndPoints = [
   "/api/classesAll",
   "/api/create_preference",
   "/api/webhook",
+  "/api/auth/restorePassword",
+  "/api/auth/verifyEmailCode",
+  "/api/auth/changePassword",
 ];
 
 const sellerEndPoints = [

@@ -35,6 +35,9 @@ route.post("/api/users/auth", userController.auth)
 
 // Profile
 route.patch("/api/profile/:id", upload.single('file'), userController.updateProfile);
+route.post("/api/auth/restorePassword", userController.restorePassword);
+route.post("/api/auth/verifyEmailCode", userController.verifyEmailCode);
+route.post("/api/auth/changePassword", userController.changePassword);
 
 
 // Shifts

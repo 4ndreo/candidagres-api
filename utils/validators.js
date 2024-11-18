@@ -50,3 +50,8 @@ export function validateImage(file, fileTypes = null) {
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     return (mimetype && extname) ? null : `El archivo debe ser de tipo ${String(filetypes).replace(/\//g, '').replace('|', ', ')}.`
 }
+
+export function validateVerificationCode(verificationCode) {
+    const verificationCodeRegex = /^\d{6}$/;
+    return verificationCodeRegex.test(verificationCode) ? null : 'El código debe tener únicamente 6 números.';
+}
