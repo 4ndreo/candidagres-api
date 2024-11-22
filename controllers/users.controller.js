@@ -164,7 +164,6 @@ async function updateProfile(req, res) {
   }
 
   // Upload image
-  let imgName = null;
   if (req.file !== undefined) {
     const buffer = req.file.buffer.toString('base64');
 
@@ -172,12 +171,19 @@ async function updateProfile(req, res) {
       if (error) {
         newErrors.img = 'Error al subir la imagen. Intentalo nuevamente.'
       }
-      imgName = result.display_name;
       data.image = result.display_name;
     });
   }
 
-  // TODO: Remove old image from cloudinary
+  // Delete previous image
+  if (!newErrors.img) {
+    await cloudinary.uploader.destroy('profile/' + oldUser.image, (error, result) => {
+      if (error) {
+        console.log('error deleting previous image', error)
+      }
+      console.log('previous image deleted')
+    });
+  }
 
   if (Object.keys(newErrors).length !== 0) {
     return res.status(400).json({ err: newErrors });

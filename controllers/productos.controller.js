@@ -101,7 +101,7 @@ async function remove(req, res) {
 
 async function update(req, res) {
     const productoID = req.params.idProductos;
-    // const data = req.body;
+    const oldProduct = await productosService.findById(new ObjectId(productoID))
     const productData = req.body;
 
     // Format
@@ -136,7 +136,15 @@ async function update(req, res) {
         });
     }
 
-    // TODO: Remove old image from cloudinary
+    // Delete previous image
+    if (!newErrors.img) {
+        await cloudinary.uploader.destroy('products/' + oldProduct.img, (error, result) => {
+            if (error) {
+                console.log('error deleting previous image', error)
+            }
+            console.log('previous image deleted')
+        });
+    }
 
 
     if (Object.keys(newErrors).length !== 0) {
