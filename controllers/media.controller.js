@@ -5,7 +5,6 @@ import { validateImage } from "../utils/validators.js";
 
 async function uploadImagen(req, res) {
 
-    // TODO: remove previous image from cloudinary
     const newErrors = {};
 
     if (validateImage(req.file)) newErrors.img = validateImage(req.file);
@@ -23,17 +22,9 @@ async function uploadImagen(req, res) {
 
         return res.status(201).json({ result });
     });
-
-    // saveImage(req.file).then((data) => {
-    //     return res.status(201).json(data);
-    // }).catch(function (err) {
-    //     res.status(500).json({ err });
-    // });
 }
 
 async function removeImage(req, res) {
-
-    // TODO: Remove image from cloudinary
 
     const fileName = req.params.name;
     remove(fileName).then((data) => {

@@ -50,7 +50,7 @@ async function findQuery(collection, request, idUser = null, relations = []) {
       {
         $addFields: {
           sortField: {
-            //TODO: Test date sorting
+            // For future reference: Test date sorting
             // $cond: [
             //   { $eq: [{ $type: "$lowerName" }, "date"] },
             //   { $toLong: "$lowerName" },
