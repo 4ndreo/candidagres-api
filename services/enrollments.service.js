@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import * as dataBase from "./base.service/database.handler.js";
 const collection = "enrollments"
 
@@ -15,7 +16,7 @@ async function filter(params) {
 }
 
 async function findQuery(request, idUser = null) {
-    return await dataBase.findQuery(collection, request, idUser, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' },{ from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
+    return await dataBase.findQuery(collection, request, idUser, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' }, { from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
 }
 
 async function findByUser(idUser) {
@@ -37,12 +38,11 @@ async function findById(id) {
 async function remove(id) {
     await dataBase.remove(collection, id);
     return await dataBase.filter(collection, { deleted: false })
-
 }
 
 async function update(id, data) {
     await dataBase.update(collection, id, data);
-    return await dataBase.filter(collection, { deleted: false })
+    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
 }
 
 async function countInscripcionesByCurso(idCurso) {

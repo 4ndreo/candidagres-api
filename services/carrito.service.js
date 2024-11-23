@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import * as dataBase from "./base.service/database.handler.js";
 
 const collection = "carrito"
@@ -30,7 +31,7 @@ async function remove(id) {
 
 async function update(carritoId, items) {
     await dataBase.updateCarrito(collection, carritoId, items);
-    return await dataBase.filter(collection, { deleted: false });
+    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false });
 }
 
 async function updateEliminarProducto(id, total, detallesProducto) {

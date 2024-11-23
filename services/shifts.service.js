@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import * as dataBase from "./base.service/database.handler.js";
 
 const collection = "shifts"
@@ -38,7 +39,7 @@ async function remove(id) {
 
 async function update(id, data) {
     await dataBase.update(collection, id, data);
-    return await dataBase.filter(collection, { deleted: false })
+    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
 }
 
 export {

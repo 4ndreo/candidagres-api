@@ -53,6 +53,7 @@ route.patch("/api/shifts/:id", shiftsController.update);
 // Classes
 route.get("/api/classesAll", classesController.find);
 route.get("/api/classes", classesController.findQuery);
+route.get("/api/adminClasses", classesController.findOwn);
 route.get("/api/classes/:id", classesController.findById);
 route.get("/api/classes/:id/shifts", classesController.findOneWithShifts);
 route.post("/api/classes", classesController.create);
@@ -77,6 +78,7 @@ route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollm
 // Productos
 route.get("/api/productsAll", productosController.find);
 route.get("/api/products", productosController.findQuery);
+route.get("/api/adminProducts", productosController.findOwn);
 route.get("/api/products/:idProductos", productosController.findById);
 route.post("/api/products", upload.single('file'), productosController.create);
 route.delete("/api/products/:idProductos", productosController.remove);

@@ -46,6 +46,19 @@ async function findQuery(req, res) {
     const incomingToken = req.headers["auth-token"];
     const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
+    classesService.findQuery(req.query)
+        .then(function (data) {
+            res.status(200).json(data);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
+async function findOwn(req, res) {
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
     classesService.findQuery(req.query, user.role === 1 ? null : user.id)
         .then(function (data) {
             res.status(200).json(data);
@@ -139,6 +152,7 @@ export default {
     create,
     find,
     findQuery,
+    findOwn,
     findById,
     findOneWithShifts,
     remove,

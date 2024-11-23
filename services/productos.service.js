@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import * as dataBase from "./base.service/database.handler.js";
 
 const collection = "products"
@@ -25,13 +26,13 @@ async function findMultipleById(ids) {
 
 async function remove(id) {
     await dataBase.remove(collection, id);
-    return await dataBase.filter(collection, { deleted: false })
+    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
 }
 
 
 async function update(id, data) {
     await dataBase.update(collection, id, data);
-    return await dataBase.filter(collection, { deleted: false })
+    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
 }
 
 export {

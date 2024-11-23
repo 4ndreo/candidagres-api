@@ -2,6 +2,7 @@ import * as dataBase from "./base.service/database.handler.js";
 import bcrypt from 'bcrypt'
 const collection = "users";
 import jwt from "jsonwebtoken";
+import { ObjectId } from "mongodb";
 
 async function find() {
   return await dataBase.find(collection);
@@ -32,7 +33,7 @@ async function remove(id) {
 
 async function update(id, data) {
   await dataBase.update(collection, id, data);
-  return await dataBase.filter(collection, { deleted: false })
+  return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
 }
 
 async function login({ email, password }) {
@@ -42,7 +43,7 @@ async function login({ email, password }) {
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (isPasswordValid) {
-      return { ...user, password: undefined }
+      return { ...user, password: undefined, restore_password_token: undefined }
     } else {
 
       throw new Error('Las credenciales son incorrectas.')
@@ -60,7 +61,7 @@ async function verifyCode({ id_user, verificationCode }) {
     try {
       const currentVerificationCode = jwt.verify(user.restore_password_token, process.env.JWT_SECRET);
       if (currentVerificationCode.verificationCode === Number(verificationCode)) {
-        return { ...user, password: undefined }
+        return { ...user, password: undefined, restore_password_token: undefined }
       }
     } catch (error) {
       if (error.expiredAt) throw new Error('El código ha expirado.')
@@ -77,7 +78,7 @@ async function auth(userData) {
 
   const user = await dataBase.findOne(collection, 'email', userData.email)
   if (user) {
-    return { ...user, password: undefined }
+    return { ...user, password: undefined, restore_password_token: undefined }
   }
 
 

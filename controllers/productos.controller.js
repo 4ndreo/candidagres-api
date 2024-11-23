@@ -61,6 +61,19 @@ async function findQuery(req, res) {
     const incomingToken = req.headers["auth-token"];
     const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
+    productosService.findQuery(req.query)
+        .then(function (producto) {
+            res.status(200).json(producto);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
+async function findOwn(req, res) {
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
     productosService.findQuery(req.query, user.role === 1 ? null : user.id)
         .then(function (producto) {
             res.status(200).json(producto);
@@ -100,9 +113,16 @@ async function remove(req, res) {
 }
 
 async function update(req, res) {
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
     const productoID = req.params.idProductos;
     const oldProduct = await productosService.findById(new ObjectId(productoID))
     const productData = req.body;
+
+    if(user.id !== oldProduct.created_by.toString()) {
+        return res.status(403).json({ err: 'No tienes permisos para modificar este producto.' });
+    }
 
     // Format
     if (typeof productData.title !== 'undefined') productData.title = String(req.body.title);
@@ -164,6 +184,7 @@ export default {
     create,
     find,
     findQuery,
+    findOwn,
     findById,
     remove,
     update,

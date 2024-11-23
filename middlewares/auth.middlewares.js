@@ -11,17 +11,17 @@ const whitelistedEndPoints = [
   "/api/auth/changePassword",
 ];
 
-const sellerEndPoints = [
-  // { uri: "/api/user", method: "GET" }, // FIXME: Arreglar que un usuario solo pueda ver la info de SU PROPIO USUARIO (TOKEN)
-  { uri: "/api/products", method: "GET" },
-  { uri: "/api/products", method: "POST" },
-  { uri: "/api/products", method: "PATCH" },
-  { uri: "/api/products", method: "DELETE" },
-  // { uri: "/api/inscripciones/", method: "DELETE" }, // FIXME: Arreglar que un usuario solo pueda eliminar una inscripción PARA SU PROPIO USUARIO (TOKEN)
-  // { uri: "/api/inscripcion", method: "POST" }, // FIXME: Arreglar que un usuario solo pueda subir una inscripción PARA SU PROPIO USUARIO (TOKEN)
-  // { uri: "/api/inscripciones/", method: "PATCH" },
-  // { uri: "/api/locationRequests/", method: "PATCH", approved: true },
-];
+// const sellerEndPoints = [
+//   // { uri: "/api/user", method: "GET" }, // FIXME: Arreglar que un usuario solo pueda ver la info de SU PROPIO USUARIO (TOKEN)
+//   { uri: "/api/products", method: "GET" },
+//   { uri: "/api/products", method: "POST" },
+//   { uri: "/api/products", method: "PATCH" },
+//   { uri: "/api/products", method: "DELETE" },
+//   // { uri: "/api/inscripciones/", method: "DELETE" }, // FIXME: Arreglar que un usuario solo pueda eliminar una inscripción PARA SU PROPIO USUARIO (TOKEN)
+//   // { uri: "/api/inscripcion", method: "POST" }, // FIXME: Arreglar que un usuario solo pueda subir una inscripción PARA SU PROPIO USUARIO (TOKEN)
+//   // { uri: "/api/inscripciones/", method: "PATCH" },
+//   // { uri: "/api/locationRequests/", method: "PATCH", approved: true },
+// ];
 
 const adminEndPoints = [
   // { uri: "/api/user", method: "GET" }, // FIXME: Arreglar que un usuario solo pueda ver la info de SU PROPIO USUARIO (TOKEN)
@@ -51,17 +51,17 @@ function authorization(req, res, next) {
       const user = jwt.verify(token, process.env.JWT_SECRET);
 
       // Verifico si url está en la lista de vendedor.
-      if (sellerEndPoints.some((endpoint) => req.url.includes(endpoint.uri) && endpoint.method === req.method)) {
-        // Verifico que el usuario sea vendedor o administrador.
-        let seller = isSeller(user);
-        if (seller) {
-          return next();
-        } else {
-          return res.status(401).json({
-            mensaje: "Usuario no vendedor",
-          });
-        }
-      }
+      // if (sellerEndPoints.some((endpoint) => req.url.includes(endpoint.uri) && endpoint.method === req.method)) {
+      //   // Verifico que el usuario sea vendedor o administrador.
+      //   let seller = isSeller(user);
+      //   if (seller) {
+      //     return next();
+      //   } else {
+      //     return res.status(401).json({
+      //       mensaje: "Usuario no vendedor",
+      //     });
+      //   }
+      // }
 
       // Verifico si url está en la lista de administrador.
       if (adminEndPoints.some((endpoint) => req.url.includes(endpoint.uri) && endpoint.method === req.method)) {

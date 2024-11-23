@@ -301,7 +301,7 @@ async function changePassword(req, res) {
 
   UserService.update(data.id, { password: passwordHash, restore_password_token: null })
     .then((userData) => {
-      res.status(200).json({ ...userData, password: undefined });
+      res.status(200).json({ ...userData, password: undefined, restore_password_token: undefined });
     })
     .catch((err) => {
       res.status(500).json({ err: { password: err.message } });
