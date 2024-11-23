@@ -160,9 +160,9 @@ async function update(req, res) {
     if (!newErrors.img) {
         await cloudinary.uploader.destroy('products/' + oldProduct.img, (error, result) => {
             if (error) {
-                console.log('error deleting previous image', error)
+                console.error('error deleting previous image', error)
             }
-            console.log('previous image deleted')
+            console.error('previous image deleted')
         });
     }
 
