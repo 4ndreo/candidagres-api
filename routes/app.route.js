@@ -7,7 +7,6 @@ import productosController from "../controllers/productos.controller.js";
 import carritoController from "../controllers/carrito.controller.js";
 import comprasController from "../controllers/compras.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
-import { isAllBooked } from "../middlewares/inscripciones.middlewares.js";
 import mpController from "../controllers/mp.controller.js";
 
 const route = express.Router();
@@ -66,12 +65,9 @@ route.get("/api/enrollmentsAll", enrollmentsController.find);
 route.get("/api/enrollments", enrollmentsController.findQuery);
 route.get("/api/enrollments/:id", enrollmentsController.findById);
 route.get("/api/enrollments/user/:idUser", enrollmentsController.findByUser);
-// route.get("/api/enrollmentsAll/user/:idUser", enrollmentsController.findAllByUser);
-// route.get("/api/enrollmentsAll/user/:idUser/turno/:idTurno", enrollmentsController.findAllByUserAndTurno);
-route.post("/api/enrollments", isAllBooked, enrollmentsController.create);
+route.post("/api/enrollments", enrollmentsController.create);
 route.delete("/api/enrollments/:id", enrollmentsController.remove);
 route.patch("/api/enrollments/:id", enrollmentsController.update);
-// route.patch("/api/enrollments/:idEnrollments", verifyDeletionPatch, enrollmentsController.update);
 route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollmentsByCurso);
 
 
