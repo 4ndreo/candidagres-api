@@ -75,7 +75,7 @@ route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollm
 route.get("/api/productsAll", productosController.find);
 route.get("/api/products", productosController.findQuery);
 route.get("/api/adminProducts", productosController.findOwn);
-route.get("/api/products/:idProductos", productosController.findById);
+route.get("/api/products/:id", productosController.findById);
 route.post("/api/products", upload.single('file'), productosController.create);
 route.delete("/api/products/:idProductos", productosController.remove);
 route.patch("/api/products/:idProductos", upload.single('file'), productosController.update);

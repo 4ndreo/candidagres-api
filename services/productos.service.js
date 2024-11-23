@@ -20,6 +20,10 @@ async function findById(id) {
     return await dataBase.findById(collection, id)
 }
 
+async function findByIdRelated(id) {
+    return await dataBase.findOneRelated(collection, id, { source: "products", from: 'users', localField: 'created_by', foreignField: '_id', as: 'user' })
+}
+
 async function findMultipleById(ids) {
     return await dataBase.findMultipleById(collection, ids)
 }
@@ -40,6 +44,7 @@ export {
     find,
     findQuery,
     findById,
+    findByIdRelated,
     findMultipleById,
     remove,
     update,

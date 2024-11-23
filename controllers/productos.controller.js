@@ -84,11 +84,11 @@ async function findOwn(req, res) {
 }
 
 async function findById(req, res) {
-    const productoID = req.params.idProductos;
+    const idProduct = req.params.id;
 
-    productosService.findById(productoID)
-        .then(function (producto) {
-            res.status(200).json(producto);
+    productosService.findByIdRelated(idProduct)
+        .then(function (data) {
+            res.status(200).json(data[0]);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -120,7 +120,7 @@ async function update(req, res) {
     const oldProduct = await productosService.findById(new ObjectId(productoID))
     const productData = req.body;
 
-    if(user.id !== oldProduct.created_by.toString()) {
+    if (user.id !== oldProduct.created_by.toString()) {
         return res.status(403).json({ err: 'No tienes permisos para modificar este producto.' });
     }
 
