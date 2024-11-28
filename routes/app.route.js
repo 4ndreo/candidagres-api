@@ -4,39 +4,42 @@ import shiftsController from "../controllers/shifts.controller.js";
 import classesController from "../controllers/classes.controller.js";
 import enrollmentsController from "../controllers/enrollments.controller.js";
 import productosController from "../controllers/productos.controller.js";
-import carritoController from "../controllers/carrito.controller.js";
+import cartController from "../controllers/cart.controller.js";
 import comprasController from "../controllers/compras.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
 import mpController from "../controllers/mp.controller.js";
 
 const route = express.Router();
 import upload from "../config/multerConfig.cjs";
+import authController from "../controllers/auth.controller.js";
 const app = express();
 
 //route.use(fileUpload());
 
 
 route.get("/", (req, res) => {
-  res.send("Candida Gres - Web");
+  res.send("Candida Gres - Api");
 });
 
 route.all('/api/*', authorization)
 
 // Users
-route.get("/api/users", userController.find);
-route.get("/api/users/:idUser", userController.findById);
-route.post("/api/users", userController.create);
-route.delete("/api/users/:idUser", userController.remove);
-route.patch("/api/users/:idUser", userController.update);
-route.post("/api/users/login", userController.login)
-route.post("/api/users/auth", userController.auth)
+route.get("/api/usersAll", userController.find); // Documented, needs admin validation
+route.get("/api/users", userController.findQuery); // Documented, needs admin validation
+route.get("/api/users/:id", userController.findById); // Documented, needs admin validation
+route.post("/api/users", userController.create); // Documented, needs admin validation
+route.delete("/api/users/:id", userController.remove); // Documented, needs admin validation
+route.patch("/api/users/:id", userController.update); // Documented, needs admin validation
+// route.post("/api/users/auth", userController.auth)
 
 
-// Profile
-route.patch("/api/profile/:id", upload.single('file'), userController.updateProfile);
-route.post("/api/auth/restorePassword", userController.restorePassword);
-route.post("/api/auth/verifyEmailCode", userController.verifyEmailCode);
-route.post("/api/auth/changePassword", userController.changePassword);
+// Auth
+route.post("/api/auth/login", authController.login)
+route.post("/api/auth/register", authController.register) // Documented
+route.post("/api/auth/restorePassword", authController.restorePassword);
+route.post("/api/auth/verifyEmailCode", authController.verifyEmailCode);
+route.post("/api/auth/changePassword", authController.changePassword);
+route.patch("/api/profile/:id", upload.single('file'), authController.updateProfile); // Documented
 
 
 // Shifts
@@ -82,16 +85,16 @@ route.patch("/api/products/:idProductos", upload.single('file'), productosContro
 
 
 // Carrito
-route.get("/api/carrito", carritoController.find);
-route.get("/api/carrito/:idCarrito", carritoController.findById);
-route.get("/api/carrito/user/:idUser", carritoController.findByIdUser);
-route.get("/api/carrito/user/finalizado/:idUser", carritoController.findByIdUserFinalizado);
-route.post("/api/carrito/carrito", carritoController.create);
-route.delete("/api/carrito/:idCarrito", carritoController.remove);
-route.patch("/api/carrito/:idCarrito", carritoController.update);
-route.patch("/api/carrito/user/:idCarrito", carritoController.updateEliminarProducto);
-route.patch("/api/carrito/:idUser/addToCart", carritoController.addToCart);
-route.patch("/api/carrito/:idUser/substractToCart", carritoController.substractToCart);
+route.get("/api/carrito", cartController.find);
+route.get("/api/carrito/:id", cartController.findById);
+route.get("/api/carrito/user/:id", cartController.findByIdUser);
+// route.get("/api/carrito/user/finalizado/:idUser", cartController.findByIdUserFinalizado);
+route.post("/api/carrito/carrito", cartController.create);
+route.delete("/api/carrito/:idCarrito", cartController.remove);
+route.patch("/api/carrito/:idCarrito", cartController.update);
+// route.patch("/api/carrito/user/:idCarrito", cartController.updateEliminarProducto);
+route.patch("/api/carrito/:idUser/addToCart", cartController.addToCart);
+route.patch("/api/carrito/:idUser/substractToCart", cartController.substractToCart);
 
 
 // Compras 

@@ -94,7 +94,7 @@ async function update(req, res) {
 
 // async function savePurchase(req, res) {
 //     const data = req.body;
-//     const cart = await carritoService.findCarritoByIdUser(data.idUser);
+//     const cart = await carritoService.findByIdUser(data.idUser);
 //     comprasService.update(compraID, data)
 //         .then(function (compra) {
 //             res.status(201).json(compra);

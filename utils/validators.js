@@ -46,6 +46,11 @@ export function validateWeekday(weekday) {
     return daysList.some(elem => elem === weekday) ? null : 'Debe ingresar un día válido.';
 }
 
+export function validateRole(role) {
+    const rolesList = [1, 2]
+    return rolesList.some(elem => elem === role) ? null : 'Debe elegir "Administrador" o "Usuario Final".';
+}
+
 export function validateImage(file, fileTypes = null) {
     if (!file) {
         return 'La imagen es requerida.'

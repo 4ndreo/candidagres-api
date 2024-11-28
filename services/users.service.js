@@ -8,6 +8,10 @@ async function find() {
   return await dataBase.find(collection);
 }
 
+async function findQuery(request, idUser = null) {
+  return await dataBase.findQuery(collection, request, idUser)
+}
+
 async function findById(id) {
   return await dataBase.findById(collection, id);
 }
@@ -54,45 +58,46 @@ async function login({ email, password }) {
 
 }
 
-async function verifyCode({ id_user, verificationCode }) {
+// async function verifyCode({ id_user, verificationCode }) {
 
-  const user = await dataBase.findById(collection, id_user)
-  if (user) {
-    try {
-      const currentVerificationCode = jwt.verify(user.restore_password_token, process.env.JWT_SECRET);
-      if (currentVerificationCode.verificationCode === Number(verificationCode)) {
-        return { ...user, password: undefined, restore_password_token: undefined }
-      }
-    } catch (error) {
-      if (error.expiredAt) throw new Error('El código ha expirado.')
-      else throw new Error('El código es incorrecto.')
-    }
+//   const user = await dataBase.findById(collection, id_user)
+//   if (user) {
+//     try {
+//       const currentVerificationCode = jwt.verify(user.restore_password_token, process.env.JWT_SECRET);
+//       if (currentVerificationCode.verificationCode === Number(verificationCode)) {
+//         return { ...user, password: undefined, restore_password_token: undefined }
+//       }
+//     } catch (error) {
+//       if (error.expiredAt) throw new Error('El código ha expirado.')
+//       else throw new Error('El código es incorrecto.')
+//     }
 
-  } else {
-    throw new Error('El usuario no está registrado.')
-  }
+//   } else {
+//     throw new Error('El usuario no está registrado.')
+//   }
 
-}
+// }
 
-async function auth(userData) {
+// async function auth(userData) {
 
-  const user = await dataBase.findOne(collection, 'email', userData.email)
-  if (user) {
-    return { ...user, password: undefined, restore_password_token: undefined }
-  }
+//   const user = await dataBase.findOne(collection, 'email', userData.email)
+//   if (user) {
+//     return { ...user, password: undefined, restore_password_token: undefined }
+//   }
 
 
-}
+// }
 
 export {
   find,
+  findQuery,
   findById,
   findOneByEmail,
   findOneByIdDocument,
   create,
   remove,
   update,
-  login,
-  verifyCode,
-  auth
+  // login,
+  // verifyCode,
+  // auth
 };

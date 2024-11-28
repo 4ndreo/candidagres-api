@@ -1,28 +1,28 @@
 import { ObjectId } from "mongodb";
 import * as dataBase from "./base.service/database.handler.js";
 
-const collection = "carrito"
+const collection = "cart"
 
-async function create(usuarioId) {
-    let newCarrito = await dataBase.create(collection, usuarioId);
-    return await dataBase.findById(collection, newCarrito.insertedId)
+async function create(userId) {
+    let newCart = await dataBase.create(collection, userId);
+    return await dataBase.findById(collection, newCart.insertedId)
 }
 
 async function find() {
     return await dataBase.find(collection)
 }
 
-async function findCarritoById(id) {
+async function findById(id) {
     return await dataBase.findById(collection, id)
 }
 
-async function findCarritoByIdUser(id) {
+async function findByIdUser(id) {
     return await dataBase.findByIdUser(collection, id)
 }
 
-async function findCarritoByIdUserFinalizado(id) {
-    return await dataBase.findByIdUserFinalizado(collection, id)
-}
+// async function findByIdUserFinalizado(id) {
+//     return await dataBase.findByIdUserFinalizado(collection, id)
+// }
 
 async function remove(id) {
     await dataBase.remove(collection, id);
@@ -34,10 +34,10 @@ async function update(carritoId, items) {
     return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false });
 }
 
-async function updateEliminarProducto(id, total, detallesProducto) {
-    await dataBase.updateCarritoActualizado(collection, id, { total, productosComprar: detallesProducto });
-    return await dataBase.findByIdCarrito(collection, id);
-}
+// async function updateEliminarProducto(id, total, detallesProducto) {
+//     await dataBase.updateCarritoActualizado(collection, id, { total, productosComprar: detallesProducto });
+//     return await dataBase.findByIdCarrito(collection, id);
+// }
 
 // async function addToCart(carritoId, item) {
 //     await dataBase.update(collection, carritoId, [...item]);
@@ -47,11 +47,11 @@ async function updateEliminarProducto(id, total, detallesProducto) {
 export {
     create,
     find,
-    findCarritoById,
-    findCarritoByIdUser,
-    findCarritoByIdUserFinalizado,
+    findById,
+    findByIdUser,
+    // findByIdUserFinalizado,
     remove,
     update,
-    updateEliminarProducto,
+    // updateEliminarProducto,
     // addToCart
 }

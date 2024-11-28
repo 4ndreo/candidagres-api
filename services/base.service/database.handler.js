@@ -259,7 +259,7 @@ async function findRelated(collection, from, localField, foreignField, as) {
 
 async function create(collection, data) {
   return connectDB((db) =>
-    // db.collection(collection).insertOne({ usuarioId: usuarioId, productos: [], deleted: false })
+    // db.collection(collection).insertOne({ id_user: id_user, productos: [], deleted: false })
     db.collection(collection).insertOne({ ...data, deleted: false })
   );
 }
@@ -318,17 +318,17 @@ async function findMultipleById(collection, ids) {
 
 async function findByIdUser(collection, id) {
   return connectDB((db) =>
-    db.collection(collection).findOne({ usuarioId: id, deleted: false })
+    db.collection(collection).findOne({ id_user: id, deleted: false })
   );
 }
 
 async function findManyByIdUser(collection, id) {
-  return connectDB((db) => db.collection(collection).find({ usuarioId: id, deleted: false }).sort({ created_at: -1 }).toArray());
+  return connectDB((db) => db.collection(collection).find({ id_user: id, deleted: false }).sort({ created_at: -1 }).toArray());
 }
 
 async function findByIdUserFinalizado(collection, id) {
   return connectDB(async (db) => {
-    const cursor = await db.collection(collection).find({ usuarioId: id, deleted: true });
+    const cursor = await db.collection(collection).find({ id_user: id, deleted: true });
     const results = await cursor.toArray();
     return results;
   });

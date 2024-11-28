@@ -1,6 +1,6 @@
 import { Preference, MercadoPagoConfig, Payment } from 'mercadopago';
 import * as comprasService from '../services/compras.service.js';
-import * as carritoService from '../services/carrito.service.js';
+import * as carritoService from '../services/cart.service.js';
 
 
 async function createPreference(req, res) {
@@ -10,12 +10,12 @@ async function createPreference(req, res) {
     try {
         const body = {
             items: req.body.items,
-            metadata: { usuarioId: req.body.usuarioId, carritoId: req.body.carritoId, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
+            metadata: { id_user: req.body.id_user, carritoId: req.body.carritoId, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
             },
             back_urls: {
                 success: `${process.env.FRONT_URL}/store`,
-                failure: `${process.env.FRONT_URL}/store/cart/${req.body.usuarioId}`,
-                pending: `${process.env.FRONT_URL}/store/cart/${req.body.usuarioId}?status=pending`
+                failure: `${process.env.FRONT_URL}/store/cart/${req.body.id_user}`,
+                pending: `${process.env.FRONT_URL}/store/cart/${req.body.id_user}?status=pending`
             },
             notification_url: `${process.env.BACK_URL}/webhook`,
             auto_return: 'approved',
@@ -24,6 +24,8 @@ async function createPreference(req, res) {
         if (req.body.items.length === 0) {
             throw new Error('No hay productos en el carrito.')
         }
+
+        console.log('createPreference', JSON.stringify(body))
 
         const result = await preference.create({ body })
         return res.json(
@@ -46,7 +48,7 @@ async function receiveWebhook(req, res) {
         }).then(async (resp) => {
             console.log('webhook received', JSON.stringify(resp))
             const purchase = await comprasService.create({
-                usuarioId: resp.metadata.usuario_id,
+                id_user: resp.metadata.id_user,
                 carritoId: resp.metadata.carrito_id,
                 items: resp.additional_info.items,
                 created_at: new Date(),
