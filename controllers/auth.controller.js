@@ -174,7 +174,16 @@ async function updateProfile(req, res) {
 async function login(req, res) {
   const user = req.body;
   const newErrors = {};
+  const allowedFields = [
+    "email",
+    "password",
+  ];
 
+  Object.keys(user).forEach((field) => {
+    if (!allowedFields.includes(field)) {
+      delete user[field];
+    }
+  })
 
   if (validateEmail(user.email)) newErrors.email = validateEmail(user.email);
   if (validatePassword(user.password)) newErrors.password = validatePassword(user.password);
@@ -197,7 +206,15 @@ async function login(req, res) {
 async function restorePassword(req, res) {
   const user = req.body;
   const newErrors = {};
+  const allowedFields = [
+    "email",
+  ];
 
+  Object.keys(user).forEach((field) => {
+    if (!allowedFields.includes(field)) {
+      delete user[field];
+    }
+  })
 
   if (validateEmail(user.email)) newErrors.email = validateEmail(user.email);
 
@@ -234,6 +251,16 @@ async function restorePassword(req, res) {
 async function verifyEmailCode(req, res) {
   const user = req.body;
   const newErrors = {};
+  const allowedFields = [
+    "id",
+    "verificationCode",
+  ];
+
+  Object.keys(user).forEach((field) => {
+    if (!allowedFields.includes(field)) {
+      delete user[field];
+    }
+  })
 
   if (validateVerificationCode(user.verificationCode)) newErrors.verificationCode = validateVerificationCode(user.verificationCode);
 
@@ -275,6 +302,7 @@ async function changePassword(req, res) {
 
   usersService.update(data.id, { password: passwordHash, restore_password_token: null })
     .then((userData) => {
+      console.log(userData)
       res.status(200).json({ ...userData, password: undefined, restore_password_token: undefined });
     })
     .catch((err) => {

@@ -3,7 +3,7 @@ import userController from "../controllers/users.controller.js";
 import shiftsController from "../controllers/shifts.controller.js";
 import classesController from "../controllers/classes.controller.js";
 import enrollmentsController from "../controllers/enrollments.controller.js";
-import productosController from "../controllers/productos.controller.js";
+import productsController from "../controllers/products.controller.js";
 import cartController from "../controllers/cart.controller.js";
 import comprasController from "../controllers/compras.controller.js";
 import { authorization } from "../middlewares/auth.middlewares.js";
@@ -23,6 +23,16 @@ route.get("/", (req, res) => {
 
 route.all('/api/*', authorization)
 
+// Auth
+route.post("/api/auth/login", authController.login)
+route.post("/api/auth/register", authController.register) // Documented
+route.post("/api/auth/restorePassword", authController.restorePassword); // Documented
+route.post("/api/auth/verifyEmailCode", authController.verifyEmailCode); // Documented
+route.post("/api/auth/changePassword", authController.changePassword); // Documented
+route.patch("/api/profile/:id", upload.single('file'), authController.updateProfile); // Documented
+// route.post("/api/users/auth", userController.auth)
+
+
 // Users
 route.get("/api/usersAll", userController.find); // Documented, needs admin validation
 route.get("/api/users", userController.findQuery); // Documented, needs admin validation
@@ -30,26 +40,16 @@ route.get("/api/users/:id", userController.findById); // Documented, needs admin
 route.post("/api/users", userController.create); // Documented, needs admin validation
 route.delete("/api/users/:id", userController.remove); // Documented, needs admin validation
 route.patch("/api/users/:id", userController.update); // Documented, needs admin validation
-// route.post("/api/users/auth", userController.auth)
 
 
-// Auth
-route.post("/api/auth/login", authController.login)
-route.post("/api/auth/register", authController.register) // Documented
-route.post("/api/auth/restorePassword", authController.restorePassword);
-route.post("/api/auth/verifyEmailCode", authController.verifyEmailCode);
-route.post("/api/auth/changePassword", authController.changePassword);
-route.patch("/api/profile/:id", upload.single('file'), authController.updateProfile); // Documented
-
-
-// Shifts
-route.get("/api/shiftsAll", shiftsController.find);
-route.get("/api/shifts", shiftsController.findQuery);
-route.get("/api/shifts/:id/enrollments", shiftsController.findOneWithEnrollments);
-route.get("/api/shifts/:id", shiftsController.findById);
-route.post("/api/shifts", shiftsController.create);
-route.delete("/api/shifts/:id", shiftsController.remove);
-route.patch("/api/shifts/:id", shiftsController.update);
+// Products
+route.get("/api/productsAll", productsController.find); // Documented, needs admin validation
+route.get("/api/products", productsController.findQuery); // Documented, needs admin validation
+route.get("/api/adminProducts", productsController.findOwn); // Documented, needs admin validation
+route.get("/api/products/:id", productsController.findById); // Documented, needs admin validation
+route.post("/api/products", upload.single('file'), productsController.create); // Documented, needs admin validation
+route.patch("/api/products/:id", upload.single('file'), productsController.update); // Documented, needs admin validation
+route.delete("/api/products/:id", productsController.remove); // Documented, needs admin validation
 
 
 // Classes
@@ -63,6 +63,16 @@ route.delete("/api/classes/:id", classesController.remove);
 route.patch("/api/classes/:id", classesController.update);
 
 
+// Shifts
+route.get("/api/shiftsAll", shiftsController.find);
+route.get("/api/shifts", shiftsController.findQuery);
+route.get("/api/shifts/:id/enrollments", shiftsController.findOneWithEnrollments);
+route.get("/api/shifts/:id", shiftsController.findById);
+route.post("/api/shifts", shiftsController.create);
+route.delete("/api/shifts/:id", shiftsController.remove);
+route.patch("/api/shifts/:id", shiftsController.update);
+
+
 // Enrollments
 route.get("/api/enrollmentsAll", enrollmentsController.find);
 route.get("/api/enrollments", enrollmentsController.findQuery);
@@ -73,15 +83,6 @@ route.delete("/api/enrollments/:id", enrollmentsController.remove);
 route.patch("/api/enrollments/:id", enrollmentsController.update);
 route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollmentsByCurso);
 
-
-// Productos
-route.get("/api/productsAll", productosController.find);
-route.get("/api/products", productosController.findQuery);
-route.get("/api/adminProducts", productosController.findOwn);
-route.get("/api/products/:id", productosController.findById);
-route.post("/api/products", upload.single('file'), productosController.create);
-route.delete("/api/products/:idProductos", productosController.remove);
-route.patch("/api/products/:idProductos", upload.single('file'), productosController.update);
 
 
 // Carrito

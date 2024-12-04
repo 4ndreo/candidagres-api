@@ -37,7 +37,7 @@ async function remove(id) {
 
 async function update(id, data) {
   await dataBase.update(collection, id, data);
-  return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
+  return await dataBase.findById(collection, ObjectId(id))
 }
 
 async function login({ email, password }) {

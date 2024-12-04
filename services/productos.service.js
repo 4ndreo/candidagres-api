@@ -21,6 +21,10 @@ async function findById(id) {
 }
 
 async function findByIdRelated(id) {
+    const exists = await dataBase.findById(collection, id)
+    if (!exists) {
+        throw new Error(JSON.stringify({ status: 404, err: 'El producto no existe' }))
+    }
     return await dataBase.findOneRelated(collection, id, { source: "products", from: 'users', localField: 'created_by', foreignField: '_id', as: 'user' })
 }
 

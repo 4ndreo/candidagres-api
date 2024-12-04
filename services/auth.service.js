@@ -24,19 +24,22 @@ async function login({ email, password }) {
 
 async function verifyCode({ id_user, verificationCode }) {
   const user = await dataBase.findById(collection, id_user)
-  if (user) {
+  if (user.restore_password_token) {
     try {
       const currentVerificationCode = jwt.verify(user.restore_password_token, process.env.JWT_SECRET);
       if (currentVerificationCode.verificationCode === Number(verificationCode)) {
         return { ...user, password: undefined, restore_password_token: undefined }
+      } else {
+        throw new Error('El código es incorrecto.')
       }
     } catch (error) {
+      console.log(error)
       if (error.expiredAt) throw new Error('El código ha expirado.')
-      else throw new Error('El código es incorrecto.')
+      throw new Error('El código es incorrecto.')
     }
 
   } else {
-    throw new Error('El usuario no está registrado.')
+    throw new Error('El usuario no solicitó un cambio de contraseña.')
   }
 
 }

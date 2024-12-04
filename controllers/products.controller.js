@@ -12,6 +12,21 @@ async function create(req, res) {
     const productData = { ...req.body, price: Number(req.body.price), estimated_delay: Number(req.body.estimated_delay) };
     const newErrors = {};
 
+    const allowedFields = [
+        "title",
+        "description",
+        "estimated_delay",
+        "price",
+        "material",
+        "file",
+    ];
+
+    Object.keys(productData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete productData[field];
+        }
+    })
+
     if (productData.title?.length <= 0 || !productData.title) newErrors.title = 'Debe completar el título.';
     if (productData.description?.length <= 0 || !productData.description || productData.description?.length > 256) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
     if (isNaN(productData.estimated_delay) || !productData.estimated_delay || validateInteger(productData.estimated_delay)) newErrors.estimated_delay = validateInteger(productData.estimated_delay);
@@ -46,7 +61,6 @@ async function create(req, res) {
         });
 }
 
-
 async function find(req, res) {
     productosService.find(req.query)
         .then(function (producto) {
@@ -58,9 +72,6 @@ async function find(req, res) {
 }
 
 async function findQuery(req, res) {
-    const incomingToken = req.headers["auth-token"];
-    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
-
     productosService.findQuery(req.query)
         .then(function (producto) {
             res.status(200).json(producto);
@@ -91,17 +102,17 @@ async function findById(req, res) {
             res.status(200).json(data[0]);
         })
         .catch(function (err) {
-            res.status(500).json({ err });
+            res.status(JSON.parse(err?.message)?.status ?? 500).json({ err: JSON.parse(err?.message)?.err ?? 'Ha habido un error' });
         });
 }
 
 async function remove(req, res) {
-    const productoID = req.params.idProductos;
+    const productoID = req.params.id;
 
     productosService.remove(productoID)
         .then(function (producto) {
             if (producto) {
-                res.status(200).json(producto);
+                res.status(200).json({ message: `El producto con id ${productoID} se ha eliminado` });
                 // req.socketClient.emit('locationsList', { location })
             } else {
                 res.status(404).json({ message: `El alumno con id ${producto} no existe` });
@@ -116,9 +127,24 @@ async function update(req, res) {
     const incomingToken = req.headers["auth-token"];
     const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
-    const productoID = req.params.idProductos;
+    const productoID = req.params.id;
     const oldProduct = await productosService.findById(new ObjectId(productoID))
     const productData = req.body;
+
+    const allowedFields = [
+        "title",
+        "description",
+        "estimated_delay",
+        "price",
+        "material",
+        "file",
+    ];
+
+    Object.keys(productData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete productData[field];
+        }
+    })
 
     if (user.id !== oldProduct.created_by.toString()) {
         return res.status(403).json({ err: 'No tienes permisos para modificar este producto.' });
