@@ -44,7 +44,7 @@ async function findQuery(collection, request, idUser = null, relations = []) {
     const sortDirection = (sort?.direction ?? 'undefined') !== 'undefined' ? parseInt(sort.direction) : 1
     const page = (request?.page ?? 'undefined') !== 'undefined' ? parseInt(request.page) : 0
     const limit = (request?.limit ?? 'undefined') !== 'undefined' ? parseInt(request.limit) : 10
-    const filters = JSON.parse(request?.filter).filter(filter => (filter.field ?? 'undefined') !== 'undefined' && (filter.value ?? 'undefined') !== 'undefined')
+    const filters = (request?.filter ?? 'undefined') !== 'undefined' ? JSON.parse(request?.filter).filter(filter => (filter.field ?? 'undefined') !== 'undefined' && (filter.value ?? 'undefined') !== 'undefined') : null
 
     const pipeline = [
       {
@@ -93,7 +93,7 @@ async function findQuery(collection, request, idUser = null, relations = []) {
       pipeline.push(...lookupPipeline)
     })
 
-    filters.forEach((filter) => {
+    filters?.forEach((filter) => {
       const filterPipeline = [{
         $match:
           filter.field.includes('id_') ?
@@ -130,7 +130,7 @@ async function findQuery(collection, request, idUser = null, relations = []) {
       // sort the results
       { $sort: { sortField: sortDirection } },
     )
-    
+
     pipeline.push(
       // count the results on stage1, and paginate on stage2
       {
