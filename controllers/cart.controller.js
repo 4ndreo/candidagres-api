@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import * as cartService from "../services/cart.service.js"
-import * as productosService from "../services/productos.service.js"
+import * as productsService from "../services/products.service.js"
 
 async function create(req, res) {
     const id_user = req.body.id_user;
@@ -48,7 +48,7 @@ async function findByIdUser(req, res) {
     try {
         const cart = await cartService.findByIdUser(userId)
         if (cart) {
-            const products = await productosService.findMultipleById(cart.items.map(product => product.id))
+            const products = await productsService.findMultipleById(cart.items.map(product => product.id))
             cart.items.forEach((product, index) => {
                 cart.items[index] = { ...cart.items[index], ...products.find(x => x._id.equals(product.id)) };
                 if (cart.items[index].deleted) {

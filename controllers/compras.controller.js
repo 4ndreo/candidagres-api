@@ -1,10 +1,10 @@
 import * as comprasService from "../services/compras.service.js"
-import * as productosService from "../services/productos.service.js"
+import * as productsService from "../services/products.service.js"
 async function create(req, res) {
     const carrito = req.body;
     const products = req.body.productos;
     let productosDetalle = [];
-    await productosService.findMultipleById(products.map(producto => producto.id)).then((data) => {
+    await productsService.findMultipleById(products.map(producto => producto.id)).then((data) => {
         productosDetalle = data;
         products.forEach((producto, index) => {
             products[index] = {

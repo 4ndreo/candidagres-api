@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import * as productosService from "../services/productos.service.js"
+import * as productsService from "../services/products.service.js"
 import { ObjectId } from "mongodb";
 import cloudinary from "../config/cloudinaryConfig.cjs";
 import { validateImage, validateInteger } from "../utils/validators.js";
@@ -52,7 +52,7 @@ async function create(req, res) {
         return res.status(400).json({ err: newErrors });
     }
 
-    await productosService.create({ ...productData, created_by: new ObjectId(user.id) })
+    await productsService.create({ ...productData, created_by: new ObjectId(user.id) })
         .then(function (newProducto) {
             res.status(201).json(newProducto);
         })
@@ -62,7 +62,7 @@ async function create(req, res) {
 }
 
 async function find(req, res) {
-    productosService.find(req.query)
+    productsService.find(req.query)
         .then(function (producto) {
             res.status(200).json(producto);
         })
@@ -72,7 +72,7 @@ async function find(req, res) {
 }
 
 async function findQuery(req, res) {
-    productosService.findQuery(req.query)
+    productsService.findQuery(req.query)
         .then(function (producto) {
             res.status(200).json(producto);
         })
@@ -85,7 +85,7 @@ async function findOwn(req, res) {
     const incomingToken = req.headers["auth-token"];
     const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
-    productosService.findQuery(req.query, user.role === 1 ? null : user.id)
+    productsService.findQuery(req.query, user.role === 1 ? null : user.id)
         .then(function (producto) {
             res.status(200).json(producto);
         })
@@ -97,7 +97,7 @@ async function findOwn(req, res) {
 async function findById(req, res) {
     const idProduct = req.params.id;
 
-    productosService.findByIdRelated(idProduct)
+    productsService.findByIdRelated(idProduct)
         .then(function (data) {
             res.status(200).json(data[0]);
         })
@@ -109,7 +109,7 @@ async function findById(req, res) {
 async function remove(req, res) {
     const productoID = req.params.id;
 
-    productosService.remove(productoID)
+    productsService.remove(productoID)
         .then(function (producto) {
             if (producto) {
                 res.status(200).json({ message: `El producto con id ${productoID} se ha eliminado` });
@@ -128,7 +128,7 @@ async function update(req, res) {
     const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
     const productoID = req.params.id;
-    const oldProduct = await productosService.findById(new ObjectId(productoID))
+    const oldProduct = await productsService.findById(new ObjectId(productoID))
     const productData = req.body;
 
     const allowedFields = [
@@ -197,7 +197,7 @@ async function update(req, res) {
         return res.status(400).json({ err: newErrors });
     }
 
-    productosService.update(productoID, productData)
+    productsService.update(productoID, productData)
         .then(function (producto) {
             res.status(201).json(producto);
         })
