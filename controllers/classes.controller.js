@@ -10,6 +10,20 @@ async function create(req, res) {
     const classData = { ...req.body, price: Number(req.body.price), min_age: Number(req.body.min_age) };
     const newErrors = {};
 
+    const allowedFields = [
+        "title",
+        "teacher",
+        "description",
+        "price",
+        "min_age",
+    ];
+
+    Object.keys(classData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete classData[field];
+        }
+    })
+
     if (classData.title?.length <= 0 || !classData.title) newErrors.title = 'Debe completar el título.';
     if (classData.teacher?.length <= 0 || !classData.teacher) newErrors.teacher = 'Debe completar el docente.';
     if (classData.description?.length <= 0 || classData.description?.length > 256 || !classData.description) newErrors.description = 'La descripción debe tener entre 1 y 255 caracteres.';
@@ -43,9 +57,6 @@ async function find(req, res) {
 }
 
 async function findQuery(req, res) {
-    const incomingToken = req.headers["auth-token"];
-    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
-
     classesService.findQuery(req.query)
         .then(function (data) {
             res.status(200).json(data);
@@ -98,12 +109,9 @@ async function remove(req, res) {
     classesService.remove(idClass)
         .then(function (data) {
             if (data) {
-                res.status(200).json(data);
-                // req.socketClient.emit('locationsList', { location })
+                res.status(200).json({ message: `La clase con id ${idClass} se ha eliminado` });
             } else {
-                res
-                    .status(404)
-                    .json({ message: `El alumno con id ${data} no existe` });
+                res.status(404).json({ message: `La clase con id ${idClass} no existe` });
             }
         })
         .catch(function (err) {
@@ -115,6 +123,20 @@ async function remove(req, res) {
 async function update(req, res) {
     const idClass = req.params.id;
     const classData = req.body;
+
+    const allowedFields = [
+        "title",
+        "teacher",
+        "description",
+        "price",
+        "min_age",
+    ];
+
+    Object.keys(classData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete classData[field];
+        }
+    })
 
     // Format
     if (typeof classData.title !== 'undefined') classData.title = String(req.body.title);

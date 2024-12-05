@@ -53,35 +53,34 @@ route.delete("/api/products/:id", productsController.remove); // Documented, nee
 
 
 // Classes
-route.get("/api/classesAll", classesController.find);
-route.get("/api/classes", classesController.findQuery);
-route.get("/api/adminClasses", classesController.findOwn);
-route.get("/api/classes/:id", classesController.findById);
-route.get("/api/classes/:id/shifts", classesController.findOneWithShifts);
-route.post("/api/classes", classesController.create);
-route.delete("/api/classes/:id", classesController.remove);
-route.patch("/api/classes/:id", classesController.update);
+route.get("/api/classesAll", classesController.find); // Documented, needs admin validation
+route.get("/api/classes", classesController.findQuery); // Documented, needs admin validation
+route.get("/api/adminClasses", classesController.findOwn); // Documented, needs admin validation
+route.get("/api/classes/:id", classesController.findById); // Documented, needs admin validation
+route.get("/api/classes/:id/shifts", classesController.findOneWithShifts); // Documented, needs admin validation
+route.post("/api/classes", classesController.create); // Documented, needs admin validation
+route.patch("/api/classes/:id", classesController.update); // Documented, needs admin validation
+route.delete("/api/classes/:id", classesController.remove); // Documented, needs admin validation
 
 
 // Shifts
-route.get("/api/shiftsAll", shiftsController.find);
-route.get("/api/shifts", shiftsController.findQuery);
-route.get("/api/shifts/:id/enrollments", shiftsController.findOneWithEnrollments);
-route.get("/api/shifts/:id", shiftsController.findById);
-route.post("/api/shifts", shiftsController.create);
-route.delete("/api/shifts/:id", shiftsController.remove);
-route.patch("/api/shifts/:id", shiftsController.update);
+route.get("/api/shiftsAll", shiftsController.find); // Documented, needs admin validation
+route.get("/api/shifts", shiftsController.findQuery); // Documented, needs admin validation
+route.get("/api/shifts/:id", shiftsController.findById); // Documented, needs admin validation
+route.get("/api/shifts/:id/enrollments", shiftsController.findOneWithEnrollments); // Documented, needs admin validation
+route.post("/api/shifts", shiftsController.create); // Documented, needs admin validation
+route.patch("/api/shifts/:id", shiftsController.update); // Documented, needs admin validation
+route.delete("/api/shifts/:id", shiftsController.remove); // Documented, needs admin validation
 
 
 // Enrollments
-route.get("/api/enrollmentsAll", enrollmentsController.find);
-route.get("/api/enrollments", enrollmentsController.findQuery);
-route.get("/api/enrollments/:id", enrollmentsController.findById);
-route.get("/api/enrollments/user/:idUser", enrollmentsController.findByUser);
-route.post("/api/enrollments", enrollmentsController.create);
-route.delete("/api/enrollments/:id", enrollmentsController.remove);
-route.patch("/api/enrollments/:id", enrollmentsController.update);
-route.get("/api/enrollmentsByCurso/:idCurso", enrollmentsController.countEnrollmentsByCurso);
+route.get("/api/enrollmentsAll", enrollmentsController.find); // Documented, needs admin validation
+route.get("/api/enrollments", enrollmentsController.findQuery); // Documented, needs admin validation
+route.get("/api/enrollments/:id", enrollmentsController.findById); // Documented, needs admin validation
+route.get("/api/enrollments/user/:id", enrollmentsController.findByUser); // Documented, needs admin validation
+route.post("/api/enrollments", enrollmentsController.create); // Documented, needs admin validation
+// route.patch("/api/enrollments/:id", enrollmentsController.update);
+route.delete("/api/enrollments/:id", enrollmentsController.remove); // Documented, needs admin validation
 
 
 

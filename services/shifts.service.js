@@ -4,8 +4,8 @@ import * as dataBase from "./base.service/database.handler.js";
 const collection = "shifts"
 
 async function create(data) {
-    await dataBase.create(collection, data);
-    return await dataBase.filter(collection, { deleted: false })
+    const newShift = await dataBase.create(collection, data);
+    return await dataBase.findById(collection, newShift.insertedId)
 }
 
 async function find() {
@@ -39,7 +39,7 @@ async function remove(id) {
 
 async function update(id, data) {
     await dataBase.update(collection, id, data);
-    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
+    return await dataBase.findById(collection, id)
 }
 
 export {

@@ -3,6 +3,8 @@ import * as dataBase from "./base.service/database.handler.js";
 const collection = "enrollments"
 
 async function create(data) {
+    const newEnrollment = await dataBase.create(collection, data);
+    return await dataBase.findById(collection, newEnrollment.insertedId)
     await dataBase.create(collection, data);
     return await dataBase.filter(collection, { deleted: false })
 }
@@ -20,16 +22,16 @@ async function findQuery(request, idUser = null) {
 }
 
 async function findByUser(idUser) {
-    return await dataBase.filter(collection, { idUser: idUser, deleted: false })
+    return await dataBase.findQuery(collection, { filter: `[{"field":"id_user","value":"${idUser}"}]` }, null, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' }, { from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
 }
 
-async function findAllByUserAndTurno(idUser, idTurno) {
-    return await dataBase.filter(collection, { idUser: idUser, idTurno: idTurno })
-}
+// async function findAllByUserAndTurno(idUser, idTurno) {
+//     return await dataBase.filter(collection, { idUser: idUser, idTurno: idTurno })
+// }
 
-async function findAllByUser(idUser) {
-    return await dataBase.filter(collection, { idUser: idUser })
-}
+// async function findAllByUser(idUser) {
+//     return await dataBase.filter(collection, { idUser: idUser })
+// }
 
 async function findById(id) {
     return await dataBase.findById(collection, id)
@@ -42,23 +44,20 @@ async function remove(id) {
 
 async function update(id, data) {
     await dataBase.update(collection, id, data);
-    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false })
+    return await dataBase.findById(collection, id)
 }
 
-async function countInscripcionesByCurso(idCurso) {
-    return await dataBase.countInscripcionesByCurso(collection, idCurso)
-}
+
 
 export {
-    create,
     find,
     filter,
     findQuery,
     findByUser,
-    findAllByUserAndTurno,
-    findAllByUser,
     findById,
+    // findAllByUserAndTurno,
+    // findAllByUser,
+    create,
     remove,
     update,
-    countInscripcionesByCurso,
 }

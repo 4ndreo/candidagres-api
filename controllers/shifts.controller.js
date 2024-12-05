@@ -10,6 +10,22 @@ async function create(req, res) {
     const classData = await classesService.findCursoById(shiftData.id_class)
     const newErrors = {};
 
+    const allowedFields = [
+        "title",
+        "description",
+        "id_class",
+        "start_time",
+        "end_time",
+        "max_places",
+        "days",
+    ];
+
+    Object.keys(shiftData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete shiftData[field];
+        }
+    })
+
     if (!classData) newErrors.id_class = 'La clase no existe.';
     if (shiftData.title?.length <= 0 || !shiftData.title) newErrors.title = 'Debe completar el título.';
     if (validateTime(shiftData.start_time)) newErrors.start_time = validateTime(shiftData.start_time);
@@ -98,14 +114,11 @@ async function remove(req, res) {
     const shiftId = req.params.id;
 
     shiftsServices.remove(shiftId)
-        .then(function (shift) {
-            if (shift) {
-                res.status(200).json(shift);
-                // req.socketClient.emit('locationsList', { location })
+        .then(function (data) {
+            if (data) {
+                res.status(200).json({ message: `La comisión con id ${shiftId} se ha eliminado` });
             } else {
-                res
-                    .status(404)
-                    .json({ message: `El alumno con id ${shift} no existe` });
+                res.status(404).json({ message: `La comisión con id ${shiftId} no existe` });
             }
         })
         .catch(function (err) {
@@ -119,6 +132,22 @@ async function update(req, res) {
     const idShift = req.params.id;
     const shiftData = req.body;
     const classData = await classesService.findCursoById(new ObjectId(req.body.id_class))
+
+    const allowedFields = [
+        "title",
+        "description",
+        "id_class",
+        "start_time",
+        "end_time",
+        "max_places",
+        "days",
+    ];
+
+    Object.keys(shiftData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete shiftData[field];
+        }
+    })
 
     // Format
     if (typeof shiftData.title !== 'undefined') shiftData.title = String(req.body.title);

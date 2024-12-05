@@ -115,7 +115,7 @@ async function remove(req, res) {
                 res.status(200).json({ message: `El producto con id ${productoID} se ha eliminado` });
                 // req.socketClient.emit('locationsList', { location })
             } else {
-                res.status(404).json({ message: `El alumno con id ${producto} no existe` });
+                res.status(404).json({ message: `El producto con id ${productoID} no existe` });
             }
         })
         .catch(function (err) {
