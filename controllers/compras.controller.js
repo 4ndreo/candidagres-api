@@ -70,7 +70,7 @@ async function remove(req, res) {
             } else {
                 res
                     .status(404)
-                    .json({ message: `El alumno con id ${compra} no existe` });
+                    .json({ message: `La compra con id ${compra} no existe` });
             }
         })
         .catch(function (err) {

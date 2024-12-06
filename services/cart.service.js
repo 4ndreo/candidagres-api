@@ -29,9 +29,9 @@ async function remove(id) {
     return await dataBase.filter(collection, { deleted: true })
 }
 
-async function update(carritoId, items) {
-    await dataBase.updateCarrito(collection, carritoId, items);
-    return await dataBase.filter(collection, { _id: ObjectId(id), deleted: false });
+async function update(id, data) {
+    await dataBase.update(collection, id, data);
+    return await dataBase.findById(collection, id)
 }
 
 // async function updateEliminarProducto(id, total, detallesProducto) {

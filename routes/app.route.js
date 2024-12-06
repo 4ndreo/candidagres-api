@@ -79,22 +79,21 @@ route.get("/api/enrollments", enrollmentsController.findQuery); // Documented, n
 route.get("/api/enrollments/:id", enrollmentsController.findById); // Documented, needs admin validation
 route.get("/api/enrollments/user/:id", enrollmentsController.findByUser); // Documented, needs admin validation
 route.post("/api/enrollments", enrollmentsController.create); // Documented, needs admin validation
-// route.patch("/api/enrollments/:id", enrollmentsController.update);
 route.delete("/api/enrollments/:id", enrollmentsController.remove); // Documented, needs admin validation
-
+// route.patch("/api/enrollments/:id", enrollmentsController.update); // Removed because is not in use
 
 
 // Carrito
-route.get("/api/carrito", cartController.find);
-route.get("/api/carrito/:id", cartController.findById);
-route.get("/api/carrito/user/:id", cartController.findByIdUser);
-// route.get("/api/carrito/user/finalizado/:idUser", cartController.findByIdUserFinalizado);
-route.post("/api/carrito/carrito", cartController.create);
-route.delete("/api/carrito/:idCarrito", cartController.remove);
-route.patch("/api/carrito/:idCarrito", cartController.update);
-// route.patch("/api/carrito/user/:idCarrito", cartController.updateEliminarProducto);
-route.patch("/api/carrito/:idUser/addToCart", cartController.addToCart);
-route.patch("/api/carrito/:idUser/substractToCart", cartController.substractToCart);
+route.get("/api/carts", cartController.find); // Documented, needs admin validation
+route.get("/api/carts/:id", cartController.findById); // Documented, needs admin validation
+route.get("/api/carts/user/:id", cartController.findByUser); // Documented, needs admin validation
+// route.get("/api/cart/user/finalizado/:idUser", cartController.findByIdUserFinalizado);
+route.post("/api/carts", cartController.create); // Documented, needs admin validation
+route.patch("/api/carts/:id", cartController.update); // Documented, needs admin validation
+route.patch("/api/carts/:id/addToCart", cartController.addToCart); // Documented, needs admin validation
+route.patch("/api/carts/:id/substractToCart", cartController.substractToCart); // Documented, needs admin validation
+route.delete("/api/carts/:id", cartController.remove); // Documented, needs admin validation
+// route.patch("/api/cart/user/:idCarrito", cartController.updateEliminarProducto);
 
 
 // Compras 

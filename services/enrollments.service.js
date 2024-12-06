@@ -5,8 +5,6 @@ const collection = "enrollments"
 async function create(data) {
     const newEnrollment = await dataBase.create(collection, data);
     return await dataBase.findById(collection, newEnrollment.insertedId)
-    await dataBase.create(collection, data);
-    return await dataBase.filter(collection, { deleted: false })
 }
 
 async function find() {

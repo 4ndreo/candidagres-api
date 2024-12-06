@@ -1,12 +1,23 @@
+import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 import * as cartService from "../services/cart.service.js"
 import * as productsService from "../services/products.service.js"
 
 async function create(req, res) {
-    const id_user = req.body.id_user;
+    const userData = req.body;
+    const allowedFields = [
+        "id_user",
+    ];
 
-    if (id_user) {
-        await cartService.create({ id_user: id_user, productos: [] })
+    Object.keys(userData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete userData[field];
+        }
+    })
+
+    console.log('userData', userData.id_user)
+    if (userData.id_user) {
+        await cartService.create({ id_user: userData.id_user, items: [] })
             .then(function (data) {
                 res.status(201).json(data);
             })
@@ -42,11 +53,13 @@ async function findById(req, res) {
             res.status(500).json({ err });
         });
 }
-async function findByIdUser(req, res) {
+async function findByUser(req, res) {
     const userId = req.params.id;
-
+    const incomingToken = req.headers["auth-token"];
+    const userData = jwt.verify(incomingToken, process.env.JWT_SECRET);
+    if (userData.id !== userId) return res.status(403).json({ message: 'No tiene permisos para ver este recurso' });
     try {
-        const cart = await cartService.findByIdUser(userId)
+        const cart = await cartService.findByIdUser(userData.id)
         if (cart) {
             const products = await productsService.findMultipleById(cart.items.map(product => product.id))
             cart.items.forEach((product, index) => {
@@ -57,7 +70,7 @@ async function findByIdUser(req, res) {
             })
             res.status(200).json(cart);
         } else {
-            const newCart = await cartService.create({ id_user: userId, items: [] })
+            const newCart = await cartService.create({ id_user: userData.id, items: [] })
             res.status(201).json(newCart);
         }
 
@@ -78,18 +91,15 @@ async function findByIdUser(req, res) {
 // }
 
 async function remove(req, res) {
-    const carritoID = req.params.idCarrito;
+    const cartId = req.params.id;
 
-    cartService.remove(carritoID)
-        .then(function (carrito) {
-            if (carrito) {
-                res.status(200).json(carrito);
-                // req.socketClient.emit('locationsList', { location })
-            } else {
-                res
-                    .status(404)
-                    .json({ message: `El alumno con id ${carrito} no existe` });
-            }
+    cartService.remove(cartId)
+    .then(function (data) {
+        if (data) {
+            res.status(200).json({ message: `La compra con id ${cartId} se ha eliminado` });
+        } else {
+            res.status(404).json({ message: `La compra con id ${cartId} no existe` });
+        }
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -98,11 +108,22 @@ async function remove(req, res) {
 
 
 async function update(req, res) {
-    const carritoId = req.params.idCarrito;
-    const productos = req.body.productos;
-    cartService.update(carritoId, productos)
-        .then(function (carrito) {
-            res.status(201).json(carrito);
+    const id = req.params.id;
+    const cartData = req.body;
+
+    const allowedFields = [
+        "items",
+    ];
+
+    Object.keys(cartData).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete cartData[field];
+        }
+    })
+
+    cartService.update(id, cartData)
+        .then(function (data) {
+            res.status(201).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -121,14 +142,15 @@ async function update(req, res) {
 // }
 
 async function addToCart(req, res) {
-    const cart = await cartService.findByIdUser(req.params.idUser)
+    const cart = await cartService.findByIdUser(req.params.id)
     if (!cart) {
-        const newCart = await cartService.create({ id_user: req.params.idUser, items: [{ id: req.body.item.id, quantity: 1 }] })
+        const newCart = await cartService.create({ id_user: req.params.id, items: [{ id: req.body.item.id, quantity: 1 }] })
         return res.status(201).json(newCart);
     }
     const item = cart.items.find(item => item.id === req.body.item.id)
     cart.items[cart.items.indexOf(item) > -1 ? cart.items.indexOf(item) : cart.items.length] = { id: req.body.item.id, quantity: item?.quantity ? item.quantity + 1 : 1 }
-    cartService.update(cart._id, cart.items)
+    console.log(cart.items)
+    cartService.update(cart._id, { items: cart.items })
         .then(function (carrito) {
             res.status(201).json(carrito);
         })
@@ -138,14 +160,14 @@ async function addToCart(req, res) {
 }
 
 async function substractToCart(req, res) {
-    const cart = await cartService.findByIdUser(req.params.idUser)
+    const cart = await cartService.findByIdUser(req.params.id)
     if (!cart) {
         return res.status(404).json('No existe el carrito');
     }
     const item = cart.items.find(item => item.id === req.body.item.id)
     item?.quantity === 1 ? cart.items.splice(cart.items.indexOf(item), 1) :
         cart.items[cart.items.indexOf(item)] = { id: req.body.item.id, quantity: item?.quantity - 1 }
-    cartService.update(cart._id, cart.items)
+    cartService.update(cart._id, { items: cart.items })
         .then(function (carrito) {
             res.status(201).json(carrito);
         })
@@ -161,11 +183,11 @@ export default {
     create,
     find,
     findById,
-    findByIdUser,
-    // findByIdUserFinalizado,
-    remove,
+    findByUser,
     update,
-    // updateEliminarProducto,
     addToCart,
     substractToCart,
+    remove,
+    // findByIdUserFinalizado,
+    // updateEliminarProducto,
 }
