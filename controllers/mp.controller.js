@@ -1,6 +1,6 @@
 import { Preference, MercadoPagoConfig, Payment } from 'mercadopago';
-import * as comprasService from '../services/purchases.service.js';
-import * as carritoService from '../services/cart.service.js';
+import * as purchasesService from '../services/purchases.service.js';
+import * as cartsService from '../services/cart.service.js';
 
 
 async function createPreference(req, res) {
@@ -48,9 +48,9 @@ async function receiveWebhook(req, res) {
         payment.get({
             id: req.query['data.id'],
         }).then(async (resp) => {
-            const purchase = await comprasService.filter({ mp_id: resp.order.id })
+            const purchase = await purchasesService.filter({ mp_id: resp.order.id })
             if (purchase && resp.order.id !== purchase.mp_id) {
-                const purchase = await comprasService.create({
+                const purchase = await purchasesService.create({
                     id_user: resp.metadata.id_user,
                     id_cart: resp.metadata.id_cart,
                     items: resp.additional_info.items,
@@ -65,7 +65,7 @@ async function receiveWebhook(req, res) {
                     delivered_at: null
                 })
                 if (purchase._id) {
-                    await carritoService.remove(purchase.id_cart)
+                    await cartsService.remove(purchase.id_cart)
                 }
             }
         }).catch((err) => {
