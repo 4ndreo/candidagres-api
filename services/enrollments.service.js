@@ -23,14 +23,6 @@ async function findByUser(idUser) {
     return await dataBase.findQuery(collection, { filter: `[{"field":"id_user","value":"${idUser}"}]` }, null, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' }, { from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
 }
 
-// async function findAllByUserAndTurno(idUser, idTurno) {
-//     return await dataBase.filter(collection, { idUser: idUser, idTurno: idTurno })
-// }
-
-// async function findAllByUser(idUser) {
-//     return await dataBase.filter(collection, { idUser: idUser })
-// }
-
 async function findById(id) {
     return await dataBase.findById(collection, id)
 }
@@ -53,8 +45,6 @@ export {
     findQuery,
     findByUser,
     findById,
-    // findAllByUserAndTurno,
-    // findAllByUser,
     create,
     remove,
     update,

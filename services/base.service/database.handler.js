@@ -352,18 +352,18 @@ async function findOneByEmail(collection, email) {
   return connectDB((db) => db.collection(collection).findOne({ email: email }));
 }
 
-async function countInscripcionesByCurso(collection, idCurso) {
-  return connectDB((db) => db
-    .collection(collection)
-    .aggregate([
-      {
-        $match: { idCurso: idCurso, deleted: false }
-      },
-      {
-        $group: { _id: "$idTurno", totalQuantity: { $sum: 1 } }
-      }
-    ]).toArray());
-}
+// async function countInscripcionesByCurso(collection, idCurso) {
+//   return connectDB((db) => db
+//     .collection(collection)
+//     .aggregate([
+//       {
+//         $match: { idCurso: idCurso, deleted: false }
+//       },
+//       {
+//         $group: { _id: "$idTurno", totalQuantity: { $sum: 1 } }
+//       }
+//     ]).toArray());
+// }
 
 async function closeDB() {
   client.close();
@@ -390,5 +390,5 @@ export {
   closeDB,
   findOne,
   findOneByEmail,
-  countInscripcionesByCurso,
+  // countInscripcionesByCurso,
 };

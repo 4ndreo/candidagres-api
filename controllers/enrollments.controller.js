@@ -98,27 +98,6 @@ async function findByUser(req, res) {
         });
 }
 
-// async function findAllByUser(req, res) {
-//     const userID = req.params.idUser;
-//     enrollmentsService.findAllByUser(userID)
-//         .then(function (inscripcion) {
-//             res.status(200).json(inscripcion);
-//         })
-//         .catch(function (err) {
-//             res.status(500).json({ err });
-//         });
-// }
-// async function findAllByUserAndTurno(req, res) {
-//     const idUser = req.params.idUser;
-//     const idShift = req.params.id;
-//     enrollmentsService.findAllByUserAndTurno(idUser, idShift)
-//         .then(function (inscripcion) {
-//             res.status(200).json(inscripcion);
-//         })
-//         .catch(function (err) {
-//             res.status(500).json({ err });
-//         });
-// }
 
 async function remove(req, res) {
     const enrollmentID = req.params.id;
@@ -195,8 +174,6 @@ export default {
     findQuery,
     findById,
     findByUser,
-    // findAllByUser,
-    // findAllByUserAndTurno,
     create,
     // update,
     remove,
