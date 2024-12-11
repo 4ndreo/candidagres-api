@@ -1,5 +1,5 @@
 import { Preference, MercadoPagoConfig, Payment } from 'mercadopago';
-import * as comprasService from '../services/compras.service.js';
+import * as comprasService from '../services/purchases.service.js';
 import * as carritoService from '../services/cart.service.js';
 
 
@@ -10,7 +10,8 @@ async function createPreference(req, res) {
     try {
         const body = {
             items: req.body.items,
-            metadata: { id_user: req.body.id_user, carritoId: req.body.carritoId, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
+            metadata: {
+                id_user: req.body.id_user, id_cart: req.body.id_cart, totalQuantity: req.body.totalQuantity, totalDelay: req.body.totalDelay
             },
             back_urls: {
                 success: `${process.env.FRONT_URL}/store`,
@@ -28,7 +29,8 @@ async function createPreference(req, res) {
         // console.log('createPreference', JSON.stringify(body))
 
         const result = await preference.create({ body })
-        return res.json(
+        // console.log('result', JSON.stringify(result))
+        return res.status(201).json(
             result
         )
 
@@ -46,23 +48,25 @@ async function receiveWebhook(req, res) {
         payment.get({
             id: req.query['data.id'],
         }).then(async (resp) => {
-            console.log('webhook received', JSON.stringify(resp))
-            const purchase = await comprasService.create({
-                id_user: resp.metadata.id_user,
-                carritoId: resp.metadata.carrito_id,
-                items: resp.additional_info.items,
-                created_at: new Date(),
-                totalCost: resp.transaction_amount,
-                totalQuantity: resp.metadata.total_quantity,
-                totalDelay: resp.metadata.total_delay,
-                mp_card: resp.card,
-                mp_fee_details: resp.fee_details,
-                mp_id: resp.order.id,
-                mp_payer: resp.payer,
-                delivered_at: null
-            })
-            if (purchase._id) {
-                await carritoService.remove(purchase.carritoId)
+            const purchase = await comprasService.filter({ mp_id: resp.order.id })
+            if (purchase && resp.order.id !== purchase.mp_id) {
+                const purchase = await comprasService.create({
+                    id_user: resp.metadata.id_user,
+                    id_cart: resp.metadata.id_cart,
+                    items: resp.additional_info.items,
+                    created_at: new Date(),
+                    totalCost: resp.transaction_amount,
+                    totalQuantity: resp.metadata.total_quantity,
+                    totalDelay: resp.metadata.total_delay,
+                    mp_card: resp.card,
+                    mp_fee_details: resp.fee_details,
+                    mp_id: resp.order.id,
+                    mp_payer: resp.payer,
+                    delivered_at: null
+                })
+                if (purchase._id) {
+                    await carritoService.remove(purchase.id_cart)
+                }
             }
         }).catch((err) => {
             console.error(err)
