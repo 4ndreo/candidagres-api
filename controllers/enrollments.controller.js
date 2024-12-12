@@ -7,7 +7,7 @@ async function create(req, res) {
     const incomingToken = req.headers["auth-token"];
     const userData = jwt.verify(incomingToken, process.env.JWT_SECRET);
     const shiftData = await shiftsService.findOneWithEnrollments(new ObjectId(req.body.id_shift))
-    const hasEnrollment = await enrollmentsService.filter({ id_shift: new ObjectId(req.body.id_shift), id_user: new ObjectId(userData.id), deleted: false })
+    const hasEnrollment = await enrollmentsService.filter({ id_shift: new ObjectId(req.body.id_shift), id_user: new ObjectId(userData.id) })
 
     if (shiftData[0]?.max_places <= shiftData[0]?.enrollments.length) return res.status(400).json({ err: { max_places: 'No hay cupos disponibles para esta comisión.' } });
 
