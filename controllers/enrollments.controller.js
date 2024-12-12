@@ -7,9 +7,9 @@ async function create(req, res) {
     const incomingToken = req.headers["auth-token"];
     const userData = jwt.verify(incomingToken, process.env.JWT_SECRET);
     const shiftData = await shiftsService.findOneWithEnrollments(new ObjectId(req.body.id_shift))
-    const hasEnrollment = await enrollmentsService.filter({ id_shift: new ObjectId(req.body.id_shift), id_user: new ObjectId(userData.id)/*, deleted: true*/ })
+    const hasEnrollment = await enrollmentsService.filter({ id_shift: new ObjectId(req.body.id_shift), id_user: new ObjectId(userData.id), deleted: false })
 
-    if (shiftData[0]?.max_places <= shiftData[0]?.enrollmentsCount) return res.status(403).json({ err: { max_places: 'No hay cupos disponibles para esta comisión.' } });
+    if (shiftData[0]?.max_places <= shiftData[0]?.enrollments.length) return res.status(400).json({ err: { max_places: 'No hay cupos disponibles para esta comisión.' } });
 
     const enrollmentData = { ...req.body, id_user: new ObjectId(userData.id), id_shift: new ObjectId(req.body.id_shift) };
     const newErrors = {};
@@ -74,6 +74,21 @@ async function findQuery(req, res) {
         });
 }
 
+async function findOwn(req, res) {
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
+    req.query.filter = `[{"field":"id_user","value":"${user.id}"}]`
+
+    enrollmentsService.findOwn(req.query)
+        .then(function (data) {
+            res.status(200).json(data);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
 async function findById(req, res) {
     const enrollmentID = req.params.id;
 
@@ -100,14 +115,18 @@ async function findByUser(req, res) {
 
 
 async function remove(req, res) {
-    const enrollmentID = req.params.id;
+    const incomingToken = req.headers["auth-token"];
+    const userData = jwt.verify(incomingToken, process.env.JWT_SECRET);
+    const enrollmentId = req.params.id;
+    const enrollment = await enrollmentsService.findById(new ObjectId(enrollmentId))
+    if(!enrollment.id_user.equals(userData.id) && userData.role !== 1) return res.status(403).json({ err: 'No tienes permisos para eliminar esta inscripción.' });
 
-    enrollmentsService.remove(enrollmentID)
+    enrollmentsService.remove(enrollmentId)
         .then(function (data) {
             if (data) {
-                res.status(200).json({ message: `La inscripción con id ${enrollmentID} se ha eliminado` });
+                res.status(200).json({ message: `La inscripción con id ${enrollmentId} se ha eliminado` });
             } else {
-                res.status(404).json({ message: `La inscripción con id ${enrollmentID} no existe` });
+                res.status(404).json({ message: `La inscripción con id ${enrollmentId} no existe` });
             }
         })
         .catch(function (err) {
@@ -172,6 +191,7 @@ async function remove(req, res) {
 export default {
     find,
     findQuery,
+    findOwn,
     findById,
     findByUser,
     create,

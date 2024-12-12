@@ -75,10 +75,11 @@ route.delete("/api/shifts/:id", admin, shiftsController.remove);
 // Enrollments
 route.get("/api/enrollmentsAll", enrollmentsController.find);
 route.get("/api/enrollments", admin, enrollmentsController.findQuery);
+route.get("/api/enrollments/own", enrollmentsController.findOwn); // TODO: Document
 route.get("/api/enrollments/:id", enrollmentsController.findById);
 route.get("/api/enrollments/user/:id", admin, enrollmentsController.findByUser);
-route.post("/api/enrollments", admin, enrollmentsController.create);
-route.delete("/api/enrollments/:id", admin, enrollmentsController.remove);
+route.post("/api/enrollments", enrollmentsController.create);
+route.delete("/api/enrollments/:id", enrollmentsController.remove);
 // route.patch("/api/enrollments/:id", enrollmentsController.update); // Removed because is not in use
 
 

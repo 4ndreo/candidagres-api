@@ -19,6 +19,10 @@ async function findQuery(request, idUser = null) {
     return await dataBase.findQuery(collection, request, idUser, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' }, { from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
 }
 
+async function findOwn(request, idUser = null) {
+    return await dataBase.findQuery(collection, request, idUser, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' }, { from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
+}
+
 async function findByUser(idUser) {
     return await dataBase.findQuery(collection, { filter: `[{"field":"id_user","value":"${idUser}"}]` }, null, [{ from: 'shifts', localField: 'id_shift', foreignField: '_id', as: 'shift' }, { source: "shift", from: 'classes', localField: 'shift.id_class', foreignField: '_id', as: 'shift.class' }, { from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
 }
@@ -43,6 +47,7 @@ export {
     find,
     filter,
     findQuery,
+    findOwn,
     findByUser,
     findById,
     create,
