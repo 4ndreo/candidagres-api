@@ -13,8 +13,6 @@ import * as purchasesService from "../services/purchases.service.js"
 //             };
 //         })
 //     });
-//     console.log('products', products);
-//     console.log('carrito', carrito);
 
 //     carrito.created_at = new Date();
 

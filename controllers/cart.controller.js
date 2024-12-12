@@ -15,7 +15,6 @@ async function create(req, res) {
         }
     })
 
-    console.log('userData', userData.id_user)
     if (userData.id_user) {
         await cartService.create({ id_user: userData.id_user, items: [] })
             .then(function (data) {
@@ -149,7 +148,6 @@ async function addToCart(req, res) {
     }
     const item = cart.items.find(item => item.id === req.body.item.id)
     cart.items[cart.items.indexOf(item) > -1 ? cart.items.indexOf(item) : cart.items.length] = { id: req.body.item.id, quantity: item?.quantity ? item.quantity + 1 : 1 }
-    console.log(cart.items)
     cartService.update(cart._id, { items: cart.items })
         .then(function (carrito) {
             res.status(201).json(carrito);

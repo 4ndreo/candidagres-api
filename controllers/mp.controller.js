@@ -26,15 +26,10 @@ async function createPreference(req, res) {
             throw new Error('No hay productos en el carrito.')
         }
 
-        // console.log('createPreference', JSON.stringify(body))
-
         const result = await preference.create({ body })
-        // console.log('result', JSON.stringify(result))
         return res.status(201).json(
             result
         )
-
-
     } catch (error) {
         res.status(404).json({ success: false, message: error.message })
     }

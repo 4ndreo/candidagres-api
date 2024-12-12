@@ -160,7 +160,7 @@ async function findQuery(collection, request, idUser = null, relations = []) {
         .toArray()
     );
   } catch (e) {
-    console.log(e)
+    console.error(e)
   }
 }
 
@@ -237,7 +237,7 @@ async function findOneRelated(collection, id, relation, subrelation = null) {
       },
     )
   } catch (error) {
-    console.log('error', error)
+    console.error('error', error)
   }
 
   return connectDB((db) =>

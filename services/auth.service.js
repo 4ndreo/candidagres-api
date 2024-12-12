@@ -33,7 +33,7 @@ async function verifyCode({ id_user, verificationCode }) {
         throw new Error('El código es incorrecto.')
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
       if (error.expiredAt) throw new Error('El código ha expirado.')
       throw new Error('El código es incorrecto.')
     }

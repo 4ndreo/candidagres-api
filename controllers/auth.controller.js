@@ -154,7 +154,7 @@ async function updateProfile(req, res) {
   if (!newErrors.img) {
     await cloudinary.uploader.destroy('profile/' + oldUser.image, (error, result) => {
       if (error) {
-        console.log('error deleting previous image', error)
+        console.error('error deleting previous image', error)
       }
     });
   }
@@ -302,7 +302,6 @@ async function changePassword(req, res) {
 
   usersService.update(data.id, { password: passwordHash, restore_password_token: null })
     .then((userData) => {
-      console.log(userData)
       res.status(200).json({ ...userData, password: undefined, restore_password_token: undefined });
     })
     .catch((err) => {
