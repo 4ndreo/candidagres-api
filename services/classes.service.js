@@ -25,6 +25,13 @@ async function findCursoById(id) {
 }
 
 async function remove(id) {
+    const classRelated = await dataBase.findOneRelated(collection, id, { source: "classes", from: 'shifts', localField: '_id', foreignField: 'id_class', as: 'shifts' }, { source: "shifts", from: 'enrollments', localField: 'shifts._id', foreignField: 'id_shift', as: 'shifts.enrollments' })
+    classRelated[0].shifts.forEach(async shift => {
+        shift.enrollments.forEach(async enrollment => {
+            await dataBase.remove('enrollments', enrollment._id);
+        })
+        await dataBase.remove('shifts', shift._id);
+    });
     await dataBase.remove(collection, id);
     return await dataBase.filter(collection, { deleted: false })
 }
