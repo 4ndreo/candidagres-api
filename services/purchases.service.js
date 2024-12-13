@@ -1,3 +1,4 @@
+import { ObjectID } from "mongodb";
 import * as dataBase from "./base.service/database.handler.js";
 
 const collection = "purchases"
@@ -28,7 +29,7 @@ async function findPendingByCartId(id) {
 }
 
 async function findManyByIdUser(id) {
-    return await dataBase.findManyByIdUser(collection, id)
+    return await dataBase.findManyByIdUser(collection, new ObjectID(id))
 }
 
 async function remove(id) {

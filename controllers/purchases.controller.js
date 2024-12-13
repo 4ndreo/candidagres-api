@@ -1,5 +1,5 @@
 import * as purchasesService from "../services/purchases.service.js"
-
+import { validateDate } from "../utils/validators.js";
 // async function create(req, res) {
 //     const carrito = req.body;
 //     const products = req.body.productos;
@@ -69,6 +69,38 @@ async function findManyByIdUser(req, res) {
         });
 }
 
+async function setDelivered(req, res) {
+    const purchaseId = req.params.id;
+    const data = req.body;
+    const newErrors = {};
+
+
+    const allowedFields = [
+        "delivered_at",
+    ];
+
+    Object.keys(data).forEach((field) => {
+        if (!allowedFields.includes(field)) {
+            delete data[field];
+        }
+    })
+
+    if (validateDate(data.delivered_at)) newErrors.delivered_at = validateDate(data.delivered_at)
+
+    if (Object.keys(newErrors).length !== 0) {
+        return res.status(400).json({ err: newErrors });
+    }
+
+    purchasesService.update(purchaseId, data)
+        .then(function (response) {
+            res.status(201).json(response);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+        //TODO: Send email confiming delivery to final user
+}
+
 // async function remove(req, res) {
 //     const purchaseId = req.params.id;
 
@@ -111,6 +143,7 @@ export default {
     findQuery,
     findById,
     findManyByIdUser,
+    setDelivered,
     // remove, // Commented because is not in use, purchases shouldn't be deleted
     // update, // Commented because is not in use, purchases shouldn't be updated
 }
