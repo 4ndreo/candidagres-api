@@ -167,7 +167,6 @@ async function findQuery(collection, request, idUser = null, relations = []) {
         }
       })
 
-    // console.log('pipeline', JSON.stringify(pipeline, null, 2))
     return connectDB((db) =>
       db
         .collection(collection)
