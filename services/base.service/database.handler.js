@@ -1,5 +1,4 @@
 import { MongoClient, ObjectID, ObjectId, ServerApiVersion } from "mongodb";
-import { promise } from "bcrypt/promises.js";
 
 let client;
 let uri = '';
@@ -94,17 +93,31 @@ async function findQuery(collection, request, idUser = null, relations = []) {
     })
 
     filters?.forEach((filter) => {
-      const filterPipeline = [{
-        $match:
-          filter.field.includes('id_') ?
+      let filterPipeline = []
+      if (filter.field.includes('_at') || filter.field.includes('date')) {
+        filterPipeline = [{
+          $match:
+          {
+            created_at:
             {
-              [filter.field]: { $eq: new ObjectID(filter.value) }
-            } :
-            {
-              [filter.field]: { $regex: filter.value, $options: "i" }
+              $gte: new Date(filter.value.date_from),
+              $lt: new Date(new Date(filter.value.date_to).setDate(new Date(filter.value.date_to).getDate() + 1))
             }
-      }]
+          }
+        }]
+      } else {
+        filterPipeline = [{
+          $match:
+            filter.field.includes('id_') ?
+              {
+                [filter.field]: { $eq: new ObjectID(filter.value) }
+              } :
+              {
+                [filter.field]: { $regex: filter.value, $options: "i" }
+              }
+        }]
 
+      }
       if (filter.field && filter.value) {
         pipeline.push(...filterPipeline)
       }
@@ -153,6 +166,8 @@ async function findQuery(collection, request, idUser = null, relations = []) {
           pages: { $ceil: { $divide: ["$stage1.count", limit] } }
         }
       })
+
+    // console.log('pipeline', JSON.stringify(pipeline, null, 2))
     return connectDB((db) =>
       db
         .collection(collection)

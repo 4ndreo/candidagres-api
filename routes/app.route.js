@@ -95,7 +95,8 @@ route.delete("/api/carts/:id", admin, cartController.remove);
 
 
 // Purchases 
-route.get("/api/purchases", admin, purchasesController.find);
+route.get("/api/purchasesAll", admin, purchasesController.find);
+route.get("/api/purchases", admin, purchasesController.findQuery);
 route.get("/api/purchases/:id", admin, purchasesController.findById);
 route.get("/api/purchases/user/:id", purchasesController.findManyByIdUser);
 // route.post("/api/purchases", purchasesController.create); // Removed because is not in use

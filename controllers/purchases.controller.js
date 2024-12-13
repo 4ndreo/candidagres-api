@@ -36,6 +36,16 @@ async function find(req, res) {
         });
 }
 
+async function findQuery(req, res) {
+    purchasesService.findQuery(req.query)
+        .then(function (producto) {
+            res.status(200).json(producto);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
 async function findById(req, res) {
     const purchaseId = req.params.id;
 
@@ -98,6 +108,7 @@ async function findManyByIdUser(req, res) {
 export default {
     // create, // Commented because is not in use
     find,
+    findQuery,
     findById,
     findManyByIdUser,
     // remove, // Commented because is not in use, purchases shouldn't be deleted

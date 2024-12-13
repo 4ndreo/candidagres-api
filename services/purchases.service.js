@@ -11,6 +11,10 @@ async function find() {
     return await dataBase.find(collection)
 }
 
+async function findQuery(request, idUser = null) {
+    return await dataBase.findQuery(collection, request, idUser, [{ from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
+}
+
 async function filter(filter) {
     return await dataBase.filter(collection, filter)
 }
@@ -42,6 +46,7 @@ async function update(id, data) {
 export {
     create,
     find,
+    findQuery,
     filter,
     findById,
     findPendingByCartId,

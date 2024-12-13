@@ -1,6 +1,7 @@
 import { Preference, MercadoPagoConfig, Payment } from 'mercadopago';
 import * as purchasesService from '../services/purchases.service.js';
 import * as cartsService from '../services/cart.service.js';
+import { ObjectId } from 'mongodb';
 
 
 async function createPreference(req, res) {
@@ -46,8 +47,8 @@ async function receiveWebhook(req, res) {
             const purchase = await purchasesService.filter({ mp_id: resp.order.id })
             if (purchase && resp.order.id !== purchase.mp_id) {
                 const purchase = await purchasesService.create({
-                    id_user: resp.metadata.id_user,
-                    id_cart: resp.metadata.id_cart,
+                    id_user: new ObjectId(resp.metadata.id_user),
+                    id_cart: new ObjectId(resp.metadata.id_cart),
                     items: resp.additional_info.items,
                     created_at: new Date(),
                     totalCost: resp.transaction_amount,
