@@ -149,18 +149,36 @@ async function findQuery(collection, request, idUser = null, relations = []) {
       {
         $facet: {
 
-          "stage1": [{ "$group": { _id: null, count: { $sum: 1 } } }],
+          "stage1": [{ "$group": { _id: null, count: { $sum: 1 }, totalAmount: { $sum: `$shift.class.price` }} }],
 
           "stage2": [{ "$skip": page }, { "$limit": limit }]
 
         }
       },
+      // {
+      //   $facet: {
+      //     "stage1": [
+      //       {
+      //         "$group": {
+      //           _id: null,
+      //           count: { $sum: 1 },
+      //           totalAmount: { $sum: `$shift.class.price` }
+      //         }
+      //       }
+      //     ],
+      //     "stage2": [
+      //       { "$skip": page },
+      //       { "$limit": limit }
+      //     ]
+      //   }
+      // },
 
       { $unwind: "$stage1" },
 
       //output projection
       {
         $project: {
+          totalAmount: "$stage1.totalAmount", // Used to get the total sum of the prices of the classes across all the enrollments
           count: "$stage1.count",
           data: "$stage2",
           pages: { $ceil: { $divide: ["$stage1.count", limit] } }
