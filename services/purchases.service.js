@@ -24,10 +24,6 @@ async function findById(id) {
     return await dataBase.findById(collection, id)
 }
 
-async function findPendingByCartId(id) {
-    return await dataBase.filter(collection, { carritoId: id, state: "pending" })
-}
-
 async function findManyByIdUser(id) {
     return await dataBase.findManyByIdUser(collection, new ObjectID(id))
 }
@@ -50,7 +46,6 @@ export {
     findQuery,
     filter,
     findById,
-    findPendingByCartId,
     findManyByIdUser,
     remove,
     update

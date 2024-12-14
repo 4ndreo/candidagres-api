@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken";
-import { ObjectId } from "mongodb";
 import * as cartService from "../services/cart.service.js"
 import * as productsService from "../services/products.service.js"
 
@@ -56,7 +55,7 @@ async function findByUser(req, res) {
     const userId = req.params.id;
     const incomingToken = req.headers["auth-token"];
     const userData = jwt.verify(incomingToken, process.env.JWT_SECRET);
-    if (userData.id !== userId) return res.status(403).json({ message: 'No tiene permisos para ver este recurso' });
+    if (userData.id !== userId) return res.status(403).json({ message: 'No tenés permisos para ver este recurso' });
     try {
         const cart = await cartService.findByIdUser(userData.id)
         if (cart) {
@@ -77,17 +76,6 @@ async function findByUser(req, res) {
         res.status(500).json({ error });
     }
 }
-
-// async function findByIdUserFinalizado(req, res) {
-//     const userID = req.params.idUser;
-//     cartService.findByIdUserFinalizado(userID)
-//         .then(function (carrito) {
-//             res.status(200).json(carrito);
-//         })
-//         .catch(function (err) {
-//             res.status(500).json({ err });
-//         });
-// }
 
 async function remove(req, res) {
     const cartId = req.params.id;
@@ -128,17 +116,6 @@ async function update(req, res) {
             res.status(500).json({ err });
         });
 }
-// async function updateEliminarProducto(req, res) {
-//     const carritoID = req.params.idCarrito;
-//     const { total, productosComprar } = req.body;
-//     cartService.updateEliminarProducto(carritoID, total, productosComprar)
-//         .then(function (carrito) {
-//             res.status(201).json(carrito);
-//         })
-//         .catch(function (err) {
-//             res.status(500).json({ err });
-//         });
-// }
 
 async function addToCart(req, res) {
     const cart = await cartService.findByIdUser(req.params.id)
@@ -149,8 +126,8 @@ async function addToCart(req, res) {
     const item = cart.items.find(item => item.id === req.body.item.id)
     cart.items[cart.items.indexOf(item) > -1 ? cart.items.indexOf(item) : cart.items.length] = { id: req.body.item.id, quantity: item?.quantity ? item.quantity + 1 : 1 }
     cartService.update(cart._id, { items: cart.items })
-        .then(function (carrito) {
-            res.status(201).json(carrito);
+        .then(function (data) {
+            res.status(201).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -166,8 +143,8 @@ async function substractToCart(req, res) {
     item?.quantity === 1 ? cart.items.splice(cart.items.indexOf(item), 1) :
         cart.items[cart.items.indexOf(item)] = { id: req.body.item.id, quantity: item?.quantity - 1 }
     cartService.update(cart._id, { items: cart.items })
-        .then(function (carrito) {
-            res.status(201).json(carrito);
+        .then(function (data) {
+            res.status(201).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -186,6 +163,4 @@ export default {
     addToCart,
     substractToCart,
     remove,
-    // findByIdUserFinalizado,
-    // updateEliminarProducto,
 }

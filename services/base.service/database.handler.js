@@ -291,7 +291,6 @@ async function findRelated(collection, from, localField, foreignField, as) {
 
 async function create(collection, data) {
   return connectDB((db) =>
-    // db.collection(collection).insertOne({ id_user: id_user, productos: [], deleted: false })
     db.collection(collection).insertOne({ ...data, deleted: false })
   );
 }
@@ -301,27 +300,6 @@ async function update(collection, id, data) {
     db
       .collection(collection)
       .updateOne({ _id: new ObjectId(id) }, { $set: data })
-  );
-}
-
-async function updateCarrito(collection, id, items) {
-  return connectDB((db) =>
-    db
-      .collection(collection)
-      .updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { items: items } }
-      )
-  );
-}
-async function updateCarritoActualizado(collection, id, { total, productosComprar }) {
-  return connectDB((db) =>
-    db
-      .collection(collection)
-      .updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { total, productosComprar } }
-      )
   );
 }
 
@@ -365,11 +343,6 @@ async function findByIdUserFinalizado(collection, id) {
     return results;
   });
 }
-async function findByIdCarrito(collection, id) {
-  return connectDB((db) =>
-    db.collection(collection).findOne({ _id: new ObjectId(id), deleted: false })
-  );
-}
 
 async function filter(collection, filter) {
   return connectDB((db) => db.collection(collection).find(filter).toArray());
@@ -396,18 +369,14 @@ export {
   findRelated,
   create,
   update,
-  updateCarrito,
-  updateCarritoActualizado,
   remove,
   findById,
   findMultipleById,
   findByIdUser,
   findManyByIdUser,
   findByIdUserFinalizado,
-  findByIdCarrito,
   filter,
   closeDB,
   findOne,
   findOneByEmail,
-  // countInscripcionesByCurso,
 };

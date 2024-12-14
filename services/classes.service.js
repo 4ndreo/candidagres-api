@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import * as dataBase from "./base.service/database.handler.js";
 const collection = "classes"
 

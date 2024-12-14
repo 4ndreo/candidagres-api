@@ -53,8 +53,8 @@ async function create(req, res) {
     }
 
     await productsService.create({ ...productData, created_by: new ObjectId(user.id) })
-        .then(function (newProducto) {
-            res.status(201).json(newProducto);
+        .then(function (data) {
+            res.status(201).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -63,8 +63,8 @@ async function create(req, res) {
 
 async function find(req, res) {
     productsService.find(req.query)
-        .then(function (producto) {
-            res.status(200).json(producto);
+        .then(function (data) {
+            res.status(200).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -73,8 +73,8 @@ async function find(req, res) {
 
 async function findQuery(req, res) {
     productsService.findQuery(req.query)
-        .then(function (producto) {
-            res.status(200).json(producto);
+        .then(function (data) {
+            res.status(200).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -86,8 +86,8 @@ async function findOwn(req, res) {
     const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
     productsService.findQuery(req.query, user.role === 1 ? null : user.id)
-        .then(function (producto) {
-            res.status(200).json(producto);
+        .then(function (data) {
+            res.status(200).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -107,15 +107,15 @@ async function findById(req, res) {
 }
 
 async function remove(req, res) {
-    const productoID = req.params.id;
+    const productId = req.params.id;
 
-    productsService.remove(productoID)
-        .then(function (producto) {
-            if (producto) {
-                res.status(200).json({ message: `El producto con id ${productoID} se ha eliminado` });
+    productsService.remove(productId)
+        .then(function (data) {
+            if (data) {
+                res.status(200).json({ message: `El producto con id ${productId} se ha eliminado` });
                 // req.socketClient.emit('locationsList', { location })
             } else {
-                res.status(404).json({ message: `El producto con id ${productoID} no existe` });
+                res.status(404).json({ message: `El producto con id ${productId} no existe` });
             }
         })
         .catch(function (err) {
@@ -127,8 +127,8 @@ async function update(req, res) {
     const incomingToken = req.headers["auth-token"];
     const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
 
-    const productoID = req.params.id;
-    const oldProduct = await productsService.findById(new ObjectId(productoID))
+    const productId = req.params.id;
+    const oldProduct = await productsService.findById(new ObjectId(productId))
     const productData = req.body;
 
     const allowedFields = [
@@ -146,8 +146,8 @@ async function update(req, res) {
         }
     })
 
-    if (user.id !== oldProduct.created_by.toString()) {
-        return res.status(403).json({ err: 'No tienes permisos para modificar este producto.' });
+    if (user.id !== oldProduct.created_by.toString() && user.role !== 1) {
+        return res.status(403).json({ err: 'No tenés permisos para modificar este producto.' });
     }
 
     // Format
@@ -197,9 +197,9 @@ async function update(req, res) {
         return res.status(400).json({ err: newErrors });
     }
 
-    productsService.update(productoID, productData)
-        .then(function (producto) {
-            res.status(201).json(producto);
+    productsService.update(productId, productData)
+        .then(function (data) {
+            res.status(201).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });

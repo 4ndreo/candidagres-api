@@ -99,7 +99,7 @@ route.get("/api/purchasesAll", admin, purchasesController.find);
 route.get("/api/purchases", admin, purchasesController.findQuery);
 route.get("/api/purchases/:id", admin, purchasesController.findById);
 route.get("/api/purchases/user/:id", purchasesController.findManyByIdUser);
-route.patch("/api/purchases/:id/deliver", admin, purchasesController.setDelivered); // Commented because is not in use, purchases shouldn't be updated
+route.patch("/api/purchases/:id/deliver", admin, purchasesController.setDelivered);
 // route.post("/api/purchases", purchasesController.create); // Removed because is not in use
 // route.patch("/api/purchases/:id", purchasesController.update); // Commented because is not in use, purchases shouldn't be updated
 // route.delete("/api/purchases/:id", purchasesController.remove); // Commented because is not in use, purchases shouldn't be deleted

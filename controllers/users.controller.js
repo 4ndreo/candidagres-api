@@ -2,12 +2,8 @@ import jwt from "jsonwebtoken";
 import * as UserService from "../services/users.service.js";
 import bcrypt from 'bcrypt'
 import { validateCUIL, validateDNI, validateDate, validateEmail, validateImage, validatePassport, validatePassword, validateRole, validateVerificationCode } from "../utils/validators.js";
-import cloudinary from "../config/cloudinaryConfig.cjs";
 import * as usersService from "../services/users.service.js";
 import { ObjectId } from "mongodb";
-import transporter from "../config/mailConfig.cjs";
-import { createEmailTemplate } from "../config/restorePasswordTemplate.js";
-
 
 async function find(req, res) {
   UserService.find()

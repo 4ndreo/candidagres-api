@@ -33,8 +33,8 @@ async function create(req, res) {
     }
     if (hasEnrollment.length > 0) {
         enrollmentsService.update(hasEnrollment[0]._id, { deleted: false })
-            .then(function (inscripcion) {
-                return res.status(201).json(inscripcion);
+            .then(function (data) {
+                return res.status(201).json(data);
             })
             .catch(function (err) {
                 return res.status(500).json({ err });
@@ -53,8 +53,8 @@ async function create(req, res) {
 
 async function find(req, res) {
     enrollmentsService.find()
-        .then(function (inscripcion) {
-            res.status(200).json(inscripcion);
+        .then(function (data) {
+            res.status(200).json(data);
         })
         .catch(function (err) {
             res.status(500).json({ err });
@@ -119,7 +119,7 @@ async function remove(req, res) {
     const userData = jwt.verify(incomingToken, process.env.JWT_SECRET);
     const enrollmentId = req.params.id;
     const enrollment = await enrollmentsService.findById(new ObjectId(enrollmentId))
-    if(!enrollment.id_user.equals(userData.id) && userData.role !== 1) return res.status(403).json({ err: 'No tienes permisos para eliminar esta inscripción.' });
+    if(!enrollment.id_user.equals(userData.id) && userData.role !== 1) return res.status(403).json({ err: 'No tenés permisos para realizar esta acción' });
 
     enrollmentsService.remove(enrollmentId)
         .then(function (data) {

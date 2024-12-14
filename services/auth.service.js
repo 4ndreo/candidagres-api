@@ -2,7 +2,6 @@ import * as dataBase from "./base.service/database.handler.js";
 import bcrypt from 'bcrypt'
 const collection = "users";
 import jwt from "jsonwebtoken";
-import { ObjectId } from "mongodb";
 
 async function login({ email, password }) {
 
