@@ -1,5 +1,5 @@
 {
-  "name": "02-parcial",
+  "name": "candidagres-api",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -8,8 +8,8 @@
     "server": "nodemon --ignore data/ --ignore public/ app.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Francisco Andreo, Roni Gueiser",
+  "license": "MIT",
   "devDependencies": {
     "nodemon": "^2.0.16"
   },
