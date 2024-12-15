@@ -231,8 +231,8 @@ async function restorePassword(req, res) {
       usersService.update(userData._id, { restore_password_token: restorePasswordToken });
 
       const mailData = {
-        from: 'hola@candidagres.com',  // TODO: replace with production mail sender
-        to: 'franjandreo@gmail.com',   // TODO: replace with user.email
+        from: { address: process.env.MAIL_HELLO_SENDER, name: process.env.NAME_HELLO_SENDER },
+        to: user.email,
         subject: 'Restaurá tu contraseña',
         html: createEmailTemplate(userData, verificationCode),
       };
