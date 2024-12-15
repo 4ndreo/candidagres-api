@@ -15,6 +15,7 @@ import enrollmentsController from "../controllers/enrollments.controller.js";
 import cartController from "../controllers/cart.controller.js";
 import purchasesController from "../controllers/purchases.controller.js";
 import mpController from "../controllers/mp.controller.js";
+import { validateRecaptcha } from "../middlewares/recaptcha.middlewares.js";
 
 route.get("/", (req, res) => {
   res.send("Candida Gres - Api");
@@ -25,8 +26,8 @@ route.all('/api/*', authorization)
 
 // Auth
 route.post("/api/auth/login", authController.login)
-route.post("/api/auth/register", authController.register)
-route.post("/api/auth/restorePassword", authController.restorePassword);
+route.post("/api/auth/register", validateRecaptcha, authController.register)
+route.post("/api/auth/restorePassword", validateRecaptcha, authController.restorePassword);
 route.post("/api/auth/verifyEmailCode", authController.verifyEmailCode);
 route.post("/api/auth/changePassword", authController.changePassword);
 route.patch("/api/profile/:id", upload.single('file'), authController.updateProfile);
@@ -75,7 +76,7 @@ route.delete("/api/shifts/:id", admin, shiftsController.remove);
 // Enrollments
 route.get("/api/enrollmentsAll", enrollmentsController.find);
 route.get("/api/enrollments", admin, enrollmentsController.findQuery);
-route.get("/api/enrollments/own", enrollmentsController.findOwn); // TODO: Document
+route.get("/api/enrollments/own", enrollmentsController.findOwn);
 route.get("/api/enrollments/:id", enrollmentsController.findById);
 route.get("/api/enrollments/user/:id", admin, enrollmentsController.findByUser);
 route.post("/api/enrollments", enrollmentsController.create);
