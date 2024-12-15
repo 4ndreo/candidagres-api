@@ -9,7 +9,7 @@
 This site connects Cándida Gres, a pottery workshop, with it's students through a clean and useful interface, where they can enroll to different shifts, preview their fees and even buy some products handmade by the workshop's owner.
 
 ## Stack
-[![MIT License][license-image]][license]
+![Static Badge][license-image]
 ![Static Badge][express-image]
 ![Static Badge][cloudinary-image]
 ![Static Badge][mercadopago-image]
@@ -36,8 +36,7 @@ You may also see any lint errors in the console.
 
 [api-url]: https://img.shields.io/website?url=https%3A%2F%2Fapi.candidagres.com&style=for-the-badge&label=API%20STATUS
 
-[license]: LICENSE.md
-[license-image]: https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge
+[license-image]: https://img.shields.io/badge/unlicensed-blue.svg?style=for-the-badge&label=license
 
 [express-image]: https://img.shields.io/badge/v4.18-000?style=for-the-badge&logo=express&label=express
 
