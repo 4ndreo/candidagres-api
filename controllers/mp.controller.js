@@ -3,8 +3,8 @@ import * as purchasesService from '../services/purchases.service.js';
 import * as cartsService from '../services/cart.service.js';
 import * as usersService from '../services/users.service.js';
 import { ObjectId } from 'mongodb';
-import { purchaseConfirmationTemplate } from '../config/purchaseConfirmationTemplate.js';
 import transporter from "../config/mailConfig.cjs";
+import { purchaseConfirmationTemplate } from '../config/purchaseConfirmationTemplate.js';
 import { newOrderTemplate } from '../config/newOrderTemplate.js';
 
 
@@ -88,15 +88,15 @@ async function receiveWebhook(req, res) {
                         }
 
                         const mailData = {
-                            from: 'hola@candidagres.com',  // TODO: replace with production mail sender
-                            to: 'franjandreo@gmail.com',   // TODO: replace with user.email
+                            from: { address: process.env.MAIL_HELLO_SENDER, name: process.env.NAME_HELLO_SENDER },
+                            to: userData.email,   // TODO: replace with user.email
                             subject: 'Confirmación de compra - Cándida Gres',
                             html: purchaseConfirmationTemplate(userData, purchaseData),
                         };
 
                         const mailDataAdmin = {
-                            from: 'hola@candidagres.com',  // TODO: replace with production mail sender
-                            to: 'franjandreo@gmail.com',   // TODO: replace with admin email
+                            from: { address: process.env.MAIL_HELLO_SENDER, name: process.env.NAME_HELLO_SENDER },
+                            to: process.env.MAIL_ADMIN_SENDER,   // TODO: replace with admin email
                             subject: 'Nuevo pedido - Cándida Gres',
                             html: newOrderTemplate(userData, purchaseData),
                         };

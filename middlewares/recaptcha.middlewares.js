@@ -1,5 +1,4 @@
 async function validateRecaptcha(req, res, next) {
-  // console.log(req.body)
   const validator = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${req.body.recaptcha}`, {
     method: 'POST',
     headers: {
