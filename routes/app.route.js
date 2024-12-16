@@ -114,6 +114,7 @@ route.post("/api/webhook", mpController.receiveWebhook); // Only used for Mercad
 
 // Open Class Enrollments
 // route.get("/api/openClassEnrollmentsAll", openClassEnrollmentsController.find);
+route.get("/api/openClassEnrollments", admin, openClassEnrollmentsController.findQuery);
 route.post("/api/openClassEnrollments", validateRecaptcha, openClassEnrollmentsController.create);
 
 export default route;

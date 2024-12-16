@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import * as openClassEnrollmentsService from "../services/openClassEnrollments.service.js"
 import { validateEmail, validateTime } from "../utils/validators.js";
 
@@ -38,8 +39,22 @@ async function create(req, res) {
         });
 }
 
+async function findQuery(req, res) {
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
+    openClassEnrollmentsService.findQuery(req.query, user.role === 1 ? null : user.id)
+        .then(function (data) {
+            res.status(200).json(data);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
 
 
 export default {
     create,
+    findQuery,
 }

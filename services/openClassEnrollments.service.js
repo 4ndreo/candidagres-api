@@ -6,6 +6,9 @@ async function create(data) {
     return await dataBase.findById(collection, newEnrollment.insertedId)
 }
 
+async function findQuery(request, idUser = null) {
+    return await dataBase.findQuery(collection, request, idUser, [])
+}
 
 async function findOneByEmail(email) {
     return await dataBase.findOneByEmail(collection, email);
@@ -14,5 +17,6 @@ async function findOneByEmail(email) {
 
 export {
     create,
-    findOneByEmail
+    findQuery,
+    findOneByEmail,
 }
