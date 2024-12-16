@@ -8,6 +8,7 @@ const whitelistedEndPoints = [
   { uri: "/api/auth/restorePassword", method: "POST" },
   { uri: "/api/auth/verifyEmailCode", method: "POST" },
   { uri: "/api/auth/changePassword", method: "POST" },
+  { uri: "/api/openClassEnrollments", method: "POST" },
 
 ];
 

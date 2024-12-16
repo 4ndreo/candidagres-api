@@ -16,6 +16,7 @@ import cartController from "../controllers/cart.controller.js";
 import purchasesController from "../controllers/purchases.controller.js";
 import mpController from "../controllers/mp.controller.js";
 import { validateRecaptcha } from "../middlewares/recaptcha.middlewares.js";
+import openClassEnrollmentsController from "../controllers/openClassEnrollments.controller.js";
 
 route.get("/", (req, res) => {
   res.send("Candida Gres - Api");
@@ -110,5 +111,9 @@ route.patch("/api/purchases/:id/deliver", admin, purchasesController.setDelivere
 route.post("/api/create_preference", mpController.createPreference);
 route.post("/api/webhook", mpController.receiveWebhook); // Only used for MercadoPago's internal logic, not documented
 
+
+// Open Class Enrollments
+// route.get("/api/openClassEnrollmentsAll", openClassEnrollmentsController.find);
+route.post("/api/openClassEnrollments", validateRecaptcha, openClassEnrollmentsController.create);
 
 export default route;
