@@ -89,14 +89,14 @@ async function receiveWebhook(req, res) {
 
                         const mailData = {
                             from: { address: process.env.MAIL_HELLO_SENDER, name: process.env.NAME_HELLO_SENDER },
-                            to: userData.email,   // TODO: replace with user.email
+                            to: userData.email,
                             subject: 'Confirmación de compra - Cándida Gres',
                             html: purchaseConfirmationTemplate(userData, purchaseData),
                         };
 
                         const mailDataAdmin = {
                             from: { address: process.env.MAIL_HELLO_SENDER, name: process.env.NAME_HELLO_SENDER },
-                            to: process.env.MAIL_ADMIN_SENDER,   // TODO: replace with admin email
+                            to: process.env.MAIL_ADMIN_SENDER,
                             subject: 'Nuevo pedido - Cándida Gres',
                             html: newOrderTemplate(userData, purchaseData),
                         };
