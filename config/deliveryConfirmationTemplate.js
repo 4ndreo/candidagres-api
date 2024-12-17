@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon';
+
 const renderItems = (purchaseData) => {
   return purchaseData?.items?.map((item, index) => (
     ` <li>
@@ -77,8 +79,7 @@ export const deliveryConfirmationTemplate = (userData, purchaseData) => {
     <p class='mb-0'><span class='negritas'>Importe Total:</span> $${purchaseData?.totalCost}</p>
     <p class='mb-0'><span class='negritas'>Cantidad de Items:</span> ${purchaseData?.totalQuantity}
       artículo${purchaseData?.totalQuantity > 1 ? 's' : ''}</p>
-    <p class='mb-0'><span class='negritas'>Demora estimada:</span> ${purchaseData?.totalDelay} día${purchaseData?.totalDelay > 1 ?
-      's' : null}</p>
+    <p class='mb-0'><span class='negritas'>Fecha de entrega:</span> ${DateTime.fromISO(purchaseData?.delivered_at, { setZone: true }).toFormat('dd-MM-yyyy')}</p>
   </div>
   <div class='purchase-items'>
     <h2>Detalle de artículos</h2>
