@@ -3,6 +3,7 @@ import * as purchasesService from "../services/purchases.service.js"
 import * as usersService from "../services/users.service.js"
 import { validateDate } from "../utils/validators.js";
 import transporter from "../config/mailConfig.cjs";
+import jwt from "jsonwebtoken";
 
 async function find(req, res) {
     purchasesService.find()
@@ -16,6 +17,21 @@ async function find(req, res) {
 
 async function findQuery(req, res) {
     purchasesService.findQuery(req.query)
+        .then(function (data) {
+            res.status(200).json(data);
+        })
+        .catch(function (err) {
+            res.status(500).json({ err });
+        });
+}
+
+async function findOwn(req, res) {
+    const incomingToken = req.headers["auth-token"];
+    const user = jwt.verify(incomingToken, process.env.JWT_SECRET);
+
+    req.query.filter = `[{"field":"id_user","value":"${user.id}"}]`
+
+    purchasesService.findOwn(req.query)
         .then(function (data) {
             res.status(200).json(data);
         })
@@ -96,6 +112,7 @@ async function setDelivered(req, res) {
 export default {
     find,
     findQuery,
+    findOwn,
     findById,
     findManyByIdUser,
     setDelivered,

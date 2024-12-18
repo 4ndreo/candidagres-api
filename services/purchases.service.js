@@ -16,6 +16,10 @@ async function findQuery(request, idUser = null) {
     return await dataBase.findQuery(collection, request, idUser, [{ from: 'users', localField: 'id_user', foreignField: '_id', as: 'user' }])
 }
 
+async function findOwn(request, idUser = null) {
+    return await dataBase.findQuery(collection, request, idUser)
+}
+
 async function filter(filter) {
     return await dataBase.filter(collection, filter)
 }
@@ -44,6 +48,7 @@ export {
     create,
     find,
     findQuery,
+    findOwn,
     filter,
     findById,
     findManyByIdUser,
