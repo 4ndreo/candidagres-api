@@ -9,7 +9,7 @@ async function connectDB(action) {
   if (!client) {
     client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1, keepAlive: true });
     //const client = new MongoClient("mongodb://127.0.0.1:27017");
-    db = client.db("cgres-app-turnos");
+    db = client.db(process.env.DB_NAME);
   }
 
   let response;
